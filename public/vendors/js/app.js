@@ -1,0 +1,2 @@
+import 'laravel-datatables-vite';
+
