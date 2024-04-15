@@ -20,9 +20,15 @@
     },
     {
       "url": "purchase/all",
-      "name": "Purchase",
+      "name": "Purchases",
       "icon": "shopping-bag",
       "slug": "List-purchase"
+    },
+    {
+      "url": "sale/all",
+      "name": "Sales",
+      "icon": "shopping-cart",
+      "slug": "List-sales"
     },
     {
       "url": "bill/all",

@@ -25,7 +25,6 @@ class InventoryController extends BaseController
     
     public function index()
     {
-        $this->setTrails();
         $table = new InventoryDataTable();       
         return $table->render('main.inventory.index');
     }
@@ -33,7 +32,6 @@ class InventoryController extends BaseController
     
     public function show($id)
     {
-        $this->setTrails();
         $table = new InventoryMaterialDataTable($id);
         return $table->render('main.inventory.show', [
             'inventory' => $this->repo->findWith($id, ['materials']),
@@ -43,7 +41,6 @@ class InventoryController extends BaseController
 
     public function create()
     {        
-        $this->setTrails();
         return view('main.inventory.create', [
             'materials'=>$this->repo->getMaterial(),
         ]);

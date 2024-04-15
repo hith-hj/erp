@@ -36,7 +36,7 @@
             </div>
         </div>
         @if(isset($cards->links))
-            {{ $cards->links('Utils.paginator') }}
+            {{ $cards->links('utils.paginator') }}
         @endif
     </section>
 

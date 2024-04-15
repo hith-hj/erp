@@ -34,12 +34,6 @@
                                         </select>
                                     </div>
                                 </div>
-                                {{-- <div class="col-12">
-                                    <div class="mb-1">
-                                        <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#addItem">{{__('locale.Add Item')}}</button>
-                                    </div>
-                                </div> --}}
-
                             </div>
                             <div class="col-12">
                                 <button typex="submit"
@@ -49,7 +43,6 @@
                                 <a
                                     href="{{ url('/') }}"class="btn btn-outline-dark btn-sm">{{ __('locale.Cancel') }}</a>
                             </div>
-                            {{-- @include('utils.bill_modal') --}}
                         </div>
                     </div>
                 </div>

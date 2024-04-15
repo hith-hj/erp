@@ -20,14 +20,12 @@ class PurchaseController extends BaseController
 
     public function index()
     {
-        $this->setTrails();
         $table = new PurchaseDataTable();       
         return $table->render('main.purchase.index');
     }
 
     public function show($id)
     {
-        $this->setTrails();
         return view('main.purchase.show',[
             'purchase'=>$this->repo->findWith($id,['inventory','material','currency'])
         ]);
@@ -35,7 +33,6 @@ class PurchaseController extends BaseController
 
     public function create()
     {
-        $this->setTrails();
         return view('main.purchase.create',[
             'inventories' => $this->repo->getInventories() ?? [],
             'currencies' => $this->repo->getCurrencies() ?? [],

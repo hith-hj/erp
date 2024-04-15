@@ -21,7 +21,6 @@ class MaterialController extends BaseController
 
     public function index()
     {
-        $this->setTrails();
         $table = new MaterialDataTable();       
         return $table->render('main.material.index');
     }
@@ -29,7 +28,6 @@ class MaterialController extends BaseController
 
     public function create()
     {
-        $this->setTrails();
         return view('main.material.create', [
             'units' => $this->repo->getUnits(),
         ]);
@@ -51,7 +49,6 @@ class MaterialController extends BaseController
 
     public function show($id)
     {
-        $this->setTrails();
         return view('main.material.show', [
             'material' => $this->repo->findWith($id, ['inventories','units',]),
         ]);

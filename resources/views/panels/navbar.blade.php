@@ -139,8 +139,8 @@
                         <div class="list-item d-flex align-items-start">
                             <div class="me-1">
                                 <div class="avatar">
-                                    {{-- <img src="{{ asset('images/portrait/small/avatar-s-15.jpg') }}" alt="avatar" --}}
-                                        width="32" height="32">
+                                    {{-- <img src="{{ asset('images/portrait/small/avatar-s-15.jpg') }}" alt="avatar"
+                                        width="32" height="32"> --}}
                                 </div>
                             </div>
                             <div class="list-item-body flex-grow-1">

@@ -16,7 +16,6 @@ class CardController extends BaseController
 
     public function index()
     {
-        $this->setTrails();
         $cards = $this->repo->all();
         return view('main.card.index',['cards'=>$cards]);
     }
@@ -35,9 +34,7 @@ class CardController extends BaseController
     }
 
     public function show($id)
-    {
-        $this->setTrails();
-        
+    {        
         return view('main.card.show',[
             'card'=>$this->repo->find($id),
         ]);

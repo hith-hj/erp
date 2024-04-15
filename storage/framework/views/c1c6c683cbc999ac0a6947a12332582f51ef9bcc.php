@@ -80,7 +80,7 @@ unset($__errorArgs, $__bag); ?>"
                                     <div class="col-4">
                                         <div class="mb-1">
                                             <label class="form-label" for="phone_number"><?php echo e(__('locale.Add')); ?></label>
-                                            <span class="btn btn-outline-primary w-100" onclick="addMaterial(event)">
+                                            <span class="btn btn-primary w-100" onclick="addMaterial(event)">
                                                 <?php echo e(__('locale.New Material')); ?>
 
                                             </span>
@@ -88,7 +88,7 @@ unset($__errorArgs, $__bag); ?>"
                                     </div>
                                 </div>
 
-                                <div id="materials" class="hiddenx my-1 row mx-0">
+                                <div id="materials" class="hidden my-1 row mx-0">
                                     <div class="col-1 p-1 border">
                                         id
                                     </div>
@@ -107,8 +107,8 @@ unset($__errorArgs, $__bag); ?>"
                             </div>
                         </div>
                         <div class="col-12">
-                            <button typex="submit"
-                                class="btn btn-primary btn-sm w-25"><?php echo e(__('locale.Store')); ?></button>
+                            <button type="submit"
+                                class="btn btn-outline-primary btn-sm w-25"><?php echo e(__('locale.Store')); ?></button>
                             <button type="reset"
                                 class="btn btn-outline-primary btn-sm"><?php echo e(__('locale.Reset')); ?></button>
                             <a

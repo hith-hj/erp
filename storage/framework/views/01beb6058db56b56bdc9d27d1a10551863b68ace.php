@@ -141,7 +141,6 @@
                             <div class="me-1">
                                 <div class="avatar">
                                     
-                                        width="32" height="32">
                                 </div>
                             </div>
                             <div class="list-item-body flex-grow-1">

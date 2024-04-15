@@ -22,7 +22,6 @@ class UserController extends BaseController
 
     public function index()
     {
-        $this->setTrails();
         $table = new UserDataTable();
         return $table->render('main.user.index');
     }
@@ -30,7 +29,6 @@ class UserController extends BaseController
     
     public function create()
     {
-        $this->setTrails();
         return view('main.user.create');
     }
 
@@ -51,13 +49,7 @@ class UserController extends BaseController
         ]);
     }
 
-   
-    public function edit($id)
-    {
-        //
-    }
-
-
+    
     public function update(Request $request,UserValidator $valid , $id)
     {
         UserValidator::validateUserDetails($request);

@@ -35,8 +35,6 @@
                                         </select>
                                     </div>
                                 </div>
-                                
-
                             </div>
                             <div class="col-12">
                                 <button typex="submit"
@@ -46,7 +44,6 @@
                                 <a
                                     href="<?php echo e(url('/')); ?>"class="btn btn-outline-dark btn-sm"><?php echo e(__('locale.Cancel')); ?></a>
                             </div>
-                            
                         </div>
                     </div>
                 </div>

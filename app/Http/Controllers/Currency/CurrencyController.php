@@ -17,14 +17,12 @@ class CurrencyController extends BaseController
     
     public function index()
     {
-        $this->setTrails();
         $table = new CurrencyDataTable();       
         return $table->render('main.currency.index');
     }
 
     public function show($id)
     {
-        $this->setTrails();
         return view('main.currency.show',[
             'currencies'=>Currency::where('id','!=',$id)->get(),
             'currency'=>Currency::with('rates')->find($id),
@@ -33,7 +31,6 @@ class CurrencyController extends BaseController
 
     public function create()
     {
-        $this->setTrails();
         return view('main.currency.create',[
             'accounts' => [
                 ['id'=>1,'name'=>'acc_1'],

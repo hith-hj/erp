@@ -1,35 +1,28 @@
 <div class="content-header row">
-  <div class="content-header-left col-md-9 col-12 mb-2">
-    <div class="row breadcrumbs-top">
-      <div class="col-12">
-        <h2 class="content-header-title float-start mb-0"><?php echo $__env->yieldContent('title'); ?></h2>
-        <div class="breadcrumb-wrapper">
-          <?php if(@isset($breadcrumbs)): ?>
-          <ol class="breadcrumb">
-              
-              <?php $__currentLoopData = $breadcrumbs; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $breadcrumb): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-              <li class="breadcrumb-item">
-                  <?php if(isset($breadcrumb['link'])): ?>
-                  <a href="<?php echo e($breadcrumb['link'] == 'javascript:void(0)' ? $breadcrumb['link']:url($breadcrumb['link'])); ?>">
-                      <?php endif; ?>
-                      <?php echo e($breadcrumb['name']); ?>
-
-                      <?php if(isset($breadcrumb['link'])): ?>
-                  </a>
-                  <?php endif; ?>
-              </li>
-              <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-          </ol>
-          <?php endif; ?>
-        </div>
-      </div>
-    </div>
-  </div>
-  <?php if(request()->is('card/all')): ?>
+  <?php if (isset($component)) { $__componentOriginal852b5fefbb0d2a45750f1cd335c4e83390b91360 = $component; } ?>
+<?php $component = $__env->getContainer()->make(App\View\Components\Trails::class, ['titles' => $titles ?? []]); ?>
+<?php $component->withName('trails'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal852b5fefbb0d2a45750f1cd335c4e83390b91360)): ?>
+<?php $component = $__componentOriginal852b5fefbb0d2a45750f1cd335c4e83390b91360; ?>
+<?php unset($__componentOriginal852b5fefbb0d2a45750f1cd335c4e83390b91360); ?>
+<?php endif; ?>
+  <?php if(!request()->is('/') && !request()->is('*/create')): ?>
     <div class="content-header-right col-md-3 col-12 mb-2">
       <div class="row ">
         <div class="col-12">
-          <a href="<?php echo e(url('card/create/shift')); ?>" class="btn btn-primary w-100">Add Card</a>
+          <?php
+           $path = explode('/',request()->path());   
+          ?>
+          
+          <a href="<?php echo e(url(Str::singular($path[0]).'/create')); ?>" class="btn btn-primary w-100">
+            <?php echo e(__('locale.Create')); ?> <?php echo e(__('locale.'.Str::ucfirst($path[0]))); ?>
+
+          </a>
         </div>
       </div>
     </div>
