@@ -79,9 +79,16 @@
             <div class="card-body px-0">
                 {{ $dataTable->table() }}
             </div>
-            <form action="{{ route('bill.store.purchases',['id'=>$bill->id]) }}" method="post">
+            @php
+                $link = $bill->type == 1 ? 'bill.store.purchase':'bill.store.sale';
+            @endphp
+            <form action="{{ route($link,['id'=>$bill->id]) }}" method="post">
+                @if ($bill->type == 1)
+                    @include('utils.bill_purchase_modal')
+                @else
+                    @include('utils.bill_sale_modal')
+                @endif
                 @csrf
-                @include('utils.bill_purchase_modal')
             </form>
         </div>
     </section>

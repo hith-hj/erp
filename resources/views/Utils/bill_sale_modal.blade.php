@@ -1,7 +1,7 @@
 <!-- Edit User Modal -->
 <div class="modal fade" id="addItem" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-edit-user">
-        <div class="modal-content" x-data="{
+        <div class="modal-content"  x-data="{
             currencies: {{ $currencies->keyBy('id')->toJson() }},
         }">
             {{-- <div class="modal-header bg-transparent">
@@ -44,13 +44,14 @@
                                 </div>
                             @endif
                             <div class="card-header">
-                                <h4 class="card-title">{{ __('locale.New Purchase') }}</h4>
+                                <h4 class="card-title">{{ __('locale.New') }}</h4>
                             </div>
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-6">
                                         <div class="mb-1">
-                                            <label class="form-label" for="account">{{ __('locale.Account') }}</label>
+                                            <label class="form-label"
+                                                for="account">{{ __('locale.Account') }}</label>
                                             <select id="account" name="account" required class="form-select">
                                                 <option value="">{{ __('locale.Chose') }}</option>
                                                 @foreach ($accounts as $account)
@@ -64,17 +65,18 @@
                                     </div>
                                     <div class="col-6">
                                         <div class="mb-1">
-                                            <label class="form-label" for="vendor">{{ __('locale.Vendor') }}</label>
-                                            <select id="vendor" name="vendor" required
-                                                class="form-select @error('vendor') border-danger @enderror">
+                                            <label class="form-label"
+                                                for="client">{{ __('locale.Client') }}</label>
+                                            <select id="client" name="client" required
+                                                class="form-select @error('client') border-danger @enderror">
                                                 <option value="">{{ __('locale.Chose') }}</option>
-                                                @foreach ($vendors as $vendor)
-                                                    <option value="{{ $vendor['id'] }}"
-                                                        @if (old('vendor') == $vendor['id']) selected @endif>
-                                                        {{ $vendor['name'] }}
+                                                @foreach ($clients as $client)
+                                                    <option value="{{ $client['id'] }}"
+                                                        @if (old('client') == $client['id']) selected @endif>
+                                                        {{ $client['name'] }}
                                                     </option>
-                                                    {{-- <option value="{{ $vendor->id }}">
-                                                            {{ $vendor->name }}
+                                                    {{-- <option value="{{ $client->id }}">
+                                                            {{ $client->name }}
                                                         </option> --}}
                                                 @endforeach
                                             </select>
@@ -84,8 +86,8 @@
                                         <div class="mb-1">
                                             <label class="form-label"
                                                 for="inventory_list">{{ __('locale.Inventory') }}</label>
-                                            <select id="inventory_list" name="inventory_id" required class="form-select"
-                                                @error('inventory_id') border-danger @enderror>
+                                            <select id="inventory_list" name="inventory_id" required
+                                                class="form-select" @error('inventory_id') border-danger @enderror>
                                                 <option value="">{{ __('locale.Chose') }}</option>
                                                 @foreach ($inventories as $inventory)
                                                     <option value="{{ $inventory->id }}"
@@ -124,7 +126,8 @@
                                     </div>
                                     <div class="col-6">
                                         <div class="mb-1">
-                                            <label class="form-label" for="units_list">{{ __('locale.Units') }}</label>
+                                            <label class="form-label"
+                                                for="units_list">{{ __('locale.Units') }}</label>
                                             @foreach ($materials as $material)
                                                 <template x-if="ml == {{ $material->id }}">
                                                     <select id="units_list" name="unit_id" required
@@ -144,14 +147,15 @@
                                             @endforeach
                                             <template x-if="ml == 0">
                                                 <select class="form-select ">
-                                                    <option value="">{{__('locale.Chose')}} {{__('locale.Meterials')}}</option>
+                                                    <option value="">{{__('locale.Chose')}} {{__('locale.Material')}}</option>
                                                 </select>
                                             </template>
                                         </div>
                                     </div>
                                     <div class="col-3">
                                         <div class="mb-1">
-                                            <label class="form-label" for="cost">{{ __('locale.Cost') }}</label>
+                                            <label class="form-label"
+                                                for="cost">{{ __('locale.Cost') }}</label>
                                             <input type="number" id="cost" name="cost"
                                                 class="form-control @error('cost') border-danger @enderror"
                                                 placeholder="{{ __('locale.Cost') }}" value="{{ old('cost') }}"
@@ -165,8 +169,7 @@
                                             <select id="currency" x-model="from" x-init="$watch('from', value => setFrom(value))"
                                                 name="currency_id" required
                                                 class=" form-select @error('currency_id')
-                                                border-danger
-                                                @enderror">
+                                                            border-danger @enderror">
                                                 <option value="">{{ __('locale.Chose') }}</option>
                                                 @foreach ($currencies as $currency)
                                                     <option value="{{ $currency->id }}"
@@ -179,7 +182,8 @@
                                     </div>
                                     <div class="col-3">
                                         <div class="mb-1">
-                                            <label class="form-label" for="rate_to">{{ __('locale.Rate') }}</label>
+                                            <label class="form-label"
+                                                for="rate_to">{{ __('locale.Rate') }}</label>
                                             <select x-model="to" name="rate_to"
                                                 class="form-select @error('rate_to') border-danger @enderror"
                                                 x-init="$watch('to', value => setTotal(value))" required>
@@ -194,23 +198,26 @@
                                     </div>
                                     <div class="col-3">
                                         <div class="mb-1">
-                                            <label class="form-label" for="total">{{ __('locale.Total') }}</label>
+                                            <label class="form-label"
+                                                for="total">{{ __('locale.Total') }}</label>
                                             <input type="number" id="total" name="total"
-                                                class="form-control @error('total') border-danger @enderror" required
-                                                readonly value="" x-model="total"
+                                                class="form-control @error('total') border-danger @enderror"
+                                                required readonly value="" x-model="total"
                                                 value="{{ old('total') }}" />
                                         </div>
                                     </div>
                                     <div class="col-4">
                                         <div class="mb-1">
-                                            <label for="note" class="form-label">{{ __('locale.Note') }}</label>
+                                            <label for="note"
+                                                class="form-label">{{ __('locale.Note') }}</label>
                                             <input name="note" id="note"
                                                 placeholder="{{ __('locale.Note') }}" class="form-control">
                                         </div>
                                     </div>
                                     <div class="col-4">
                                         <div class="mb-1">
-                                            <label for="mark" class="form-label">{{ __('locale.Mark') }}</label>
+                                            <label for="mark"
+                                                class="form-label">{{ __('locale.Mark') }}</label>
                                             <select id="mark" name="mark" required
                                                 class="form-select @error('mark') border-danger @enderror">
                                                 <option value="">{{ __('locale.Chose') }}</option>
@@ -228,7 +235,8 @@
                                     </div>
                                     <div class="col-4">
                                         <div class="mb-1">
-                                            <label for="level" class="form-label">{{ __('locale.Level') }}</label>
+                                            <label for="level"
+                                                class="form-label">{{ __('locale.Level') }}</label>
                                             <select id="level" name="level" required
                                                 class="form-select @error('level') border-danger @enderror">
                                                 <option value="">{{ __('locale.Chose') }}</option>
@@ -248,11 +256,15 @@
                                 </div>
                                 <div class="col-12">
                                     <button typex="submit"
-                                        class="btn btn-primary btn-sm w-25">{{ __('locale.Store') }}</button>
+                                        class="btn btn-primary btn-sm w-25">
+                                        {{ __('locale.Store') }}
+                                    </button>
                                     <button type="reset"
-                                        class="btn btn-outline-primary btn-sm">{{ __('locale.Reset') }}</button>
+                                        class="btn btn-outline-primary btn-sm">
+                                        {{ __('locale.Reset') }}
+                                    </button>
                                     <button data-bs-dismiss="modal" aria-label="Close"
-                                        class="btn btn-outline-dark btn-sm">
+                                       class="btn btn-outline-dark btn-sm">
                                         {{ __('locale.Cancel') }}
                                     </button>
                                 </div>
@@ -260,7 +272,7 @@
                         </div>
                     </div>
                 </div>
-                <input type="hidden" name="bill_id" value="{{ $bill->id }}">
+                <input type="hidden" name="bill_id" value="{{$bill->id}}">
             </div>
         </div>
     </div>

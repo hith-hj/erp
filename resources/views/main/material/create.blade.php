@@ -52,7 +52,7 @@
                       class="form-select @error('base_unit') border-danger @enderror">
                         @foreach($units as $unit)
                           <option value="{{$unit->id}}">
-                            {{$unit->symbol}} - {{$unit->name}} 
+                            {{$unit->symbol}} - {{__('locale.'.$unit->name)}} 
                           </option>
                         @endforeach
                       </select>

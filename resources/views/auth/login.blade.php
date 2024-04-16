@@ -55,7 +55,7 @@
                 </a>
 
                 <h4 class="card-title mb-1">Welcome</h4>
-                <p class="card-text mb-1">Please sign-in to your account and start the adventure</p>
+                <p class="card-text mb-1">Please sign-in to your account</p>
             </div>
             <div class="card-body pt-0">
                 <form class="auth-login-form" id="loginForm" action="{{ route('login') }} " method="POST">

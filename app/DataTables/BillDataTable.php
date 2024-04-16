@@ -100,6 +100,7 @@ class BillDataTable extends DataTable
             Column::make('cost')->title(__('locale.Cost')),
             Column::make('created_at')->title(__('locale.Created at')),
             Column::computed('action')
+                  ->title(__('locale.Action'))
                   ->exportable(false)
                   ->printable(false)
                   ->addClass('text-center'),

@@ -1,7 +1,7 @@
 <!-- Edit User Modal -->
 <div class="modal fade" id="addItem" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-edit-user">
-        <div class="modal-content" x-data="{
+        <div class="modal-content"  x-data="{
             currencies: <?php echo e($currencies->keyBy('id')->toJson()); ?>,
         }">
             
@@ -42,13 +42,14 @@
                                 </div>
                             <?php endif; ?>
                             <div class="card-header">
-                                <h4 class="card-title"><?php echo e(__('locale.New Purchase')); ?></h4>
+                                <h4 class="card-title"><?php echo e(__('locale.New')); ?></h4>
                             </div>
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-6">
                                         <div class="mb-1">
-                                            <label class="form-label" for="account"><?php echo e(__('locale.Account')); ?></label>
+                                            <label class="form-label"
+                                                for="account"><?php echo e(__('locale.Account')); ?></label>
                                             <select id="account" name="account" required class="form-select">
                                                 <option value=""><?php echo e(__('locale.Chose')); ?></option>
                                                 <?php $__currentLoopData = $accounts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $account): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
@@ -63,9 +64,10 @@
                                     </div>
                                     <div class="col-6">
                                         <div class="mb-1">
-                                            <label class="form-label" for="vendor"><?php echo e(__('locale.Vendor')); ?></label>
-                                            <select id="vendor" name="vendor" required
-                                                class="form-select <?php $__errorArgs = ['vendor'];
+                                            <label class="form-label"
+                                                for="client"><?php echo e(__('locale.Client')); ?></label>
+                                            <select id="client" name="client" required
+                                                class="form-select <?php $__errorArgs = ['client'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
@@ -74,10 +76,10 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>">
                                                 <option value=""><?php echo e(__('locale.Chose')); ?></option>
-                                                <?php $__currentLoopData = $vendors; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $vendor): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                    <option value="<?php echo e($vendor['id']); ?>"
-                                                        <?php if(old('vendor') == $vendor['id']): ?> selected <?php endif; ?>>
-                                                        <?php echo e($vendor['name']); ?>
+                                                <?php $__currentLoopData = $clients; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $client): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                    <option value="<?php echo e($client['id']); ?>"
+                                                        <?php if(old('client') == $client['id']): ?> selected <?php endif; ?>>
+                                                        <?php echo e($client['name']); ?>
 
                                                     </option>
                                                     
@@ -89,8 +91,8 @@ unset($__errorArgs, $__bag); ?>">
                                         <div class="mb-1">
                                             <label class="form-label"
                                                 for="inventory_list"><?php echo e(__('locale.Inventory')); ?></label>
-                                            <select id="inventory_list" name="inventory_id" required class="form-select"
-                                                <?php $__errorArgs = ['inventory_id'];
+                                            <select id="inventory_list" name="inventory_id" required
+                                                class="form-select" <?php $__errorArgs = ['inventory_id'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
@@ -152,7 +154,8 @@ unset($__errorArgs, $__bag); ?>"
                                     </div>
                                     <div class="col-6">
                                         <div class="mb-1">
-                                            <label class="form-label" for="units_list"><?php echo e(__('locale.Units')); ?></label>
+                                            <label class="form-label"
+                                                for="units_list"><?php echo e(__('locale.Units')); ?></label>
                                             <?php $__currentLoopData = $materials; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $material): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                 <template x-if="ml == <?php echo e($material->id); ?>">
                                                     <select id="units_list" name="unit_id" required
@@ -180,14 +183,15 @@ unset($__errorArgs, $__bag); ?> ">
                                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                             <template x-if="ml == 0">
                                                 <select class="form-select ">
-                                                    <option value=""><?php echo e(__('locale.Chose')); ?> <?php echo e(__('locale.Meterials')); ?></option>
+                                                    <option value=""><?php echo e(__('locale.Chose')); ?> <?php echo e(__('locale.Material')); ?></option>
                                                 </select>
                                             </template>
                                         </div>
                                     </div>
                                     <div class="col-3">
                                         <div class="mb-1">
-                                            <label class="form-label" for="cost"><?php echo e(__('locale.Cost')); ?></label>
+                                            <label class="form-label"
+                                                for="cost"><?php echo e(__('locale.Cost')); ?></label>
                                             <input type="number" id="cost" name="cost"
                                                 class="form-control <?php $__errorArgs = ['cost'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -212,8 +216,7 @@ $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?>
-                                                border-danger
-                                                <?php unset($message);
+                                                            border-danger <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>">
@@ -230,7 +233,8 @@ unset($__errorArgs, $__bag); ?>">
                                     </div>
                                     <div class="col-3">
                                         <div class="mb-1">
-                                            <label class="form-label" for="rate_to"><?php echo e(__('locale.Rate')); ?></label>
+                                            <label class="form-label"
+                                                for="rate_to"><?php echo e(__('locale.Rate')); ?></label>
                                             <select x-model="to" name="rate_to"
                                                 class="form-select <?php $__errorArgs = ['rate_to'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -253,7 +257,8 @@ unset($__errorArgs, $__bag); ?>"
                                     </div>
                                     <div class="col-3">
                                         <div class="mb-1">
-                                            <label class="form-label" for="total"><?php echo e(__('locale.Total')); ?></label>
+                                            <label class="form-label"
+                                                for="total"><?php echo e(__('locale.Total')); ?></label>
                                             <input type="number" id="total" name="total"
                                                 class="form-control <?php $__errorArgs = ['total'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -262,21 +267,23 @@ if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?> border-danger <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
-unset($__errorArgs, $__bag); ?>" required
-                                                readonly value="" x-model="total"
+unset($__errorArgs, $__bag); ?>"
+                                                required readonly value="" x-model="total"
                                                 value="<?php echo e(old('total')); ?>" />
                                         </div>
                                     </div>
                                     <div class="col-4">
                                         <div class="mb-1">
-                                            <label for="note" class="form-label"><?php echo e(__('locale.Note')); ?></label>
+                                            <label for="note"
+                                                class="form-label"><?php echo e(__('locale.Note')); ?></label>
                                             <input name="note" id="note"
                                                 placeholder="<?php echo e(__('locale.Note')); ?>" class="form-control">
                                         </div>
                                     </div>
                                     <div class="col-4">
                                         <div class="mb-1">
-                                            <label for="mark" class="form-label"><?php echo e(__('locale.Mark')); ?></label>
+                                            <label for="mark"
+                                                class="form-label"><?php echo e(__('locale.Mark')); ?></label>
                                             <select id="mark" name="mark" required
                                                 class="form-select <?php $__errorArgs = ['mark'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -301,7 +308,8 @@ unset($__errorArgs, $__bag); ?>">
                                     </div>
                                     <div class="col-4">
                                         <div class="mb-1">
-                                            <label for="level" class="form-label"><?php echo e(__('locale.Level')); ?></label>
+                                            <label for="level"
+                                                class="form-label"><?php echo e(__('locale.Level')); ?></label>
                                             <select id="level" name="level" required
                                                 class="form-select <?php $__errorArgs = ['level'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -328,11 +336,17 @@ unset($__errorArgs, $__bag); ?>">
                                 </div>
                                 <div class="col-12">
                                     <button typex="submit"
-                                        class="btn btn-primary btn-sm w-25"><?php echo e(__('locale.Store')); ?></button>
+                                        class="btn btn-primary btn-sm w-25">
+                                        <?php echo e(__('locale.Store')); ?>
+
+                                    </button>
                                     <button type="reset"
-                                        class="btn btn-outline-primary btn-sm"><?php echo e(__('locale.Reset')); ?></button>
+                                        class="btn btn-outline-primary btn-sm">
+                                        <?php echo e(__('locale.Reset')); ?>
+
+                                    </button>
                                     <button data-bs-dismiss="modal" aria-label="Close"
-                                        class="btn btn-outline-dark btn-sm">
+                                       class="btn btn-outline-dark btn-sm">
                                         <?php echo e(__('locale.Cancel')); ?>
 
                                     </button>
@@ -347,4 +361,4 @@ unset($__errorArgs, $__bag); ?>">
     </div>
 </div>
 <!--/ Edit User Modal -->
-<?php /**PATH C:\Users\96393\Desktop\y1s\erp_v1\resources\views/utils/bill_purchase_modal.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\Users\96393\Desktop\y1s\erp_v1\resources\views/utils/bill_sale_modal.blade.php ENDPATH**/ ?>

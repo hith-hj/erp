@@ -133,4 +133,13 @@ return [
 
     "Is Default" => "الافتراضي",
     "Default" => "افتراضي", 
+    "Sale" => "مبيع",
+    "Sales" => "مبيعات",
+    "Client" => "زبون",
+    "Clients" => "زبائن",
+
+    "None" => "بلا",
+    "Closed" => "مغلق",
+    "Secret" => "سري",
+    
 ];

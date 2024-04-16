@@ -17,9 +17,13 @@ class trails extends Component
      */
     public function __construct($titles = [])
     {
+        if(request()->is('/'))
+        {
+            return $this->breadcrumbs = [['link' => "/", 'name' => __('locale.Home')]];
+        }
         $path_arr = explode('/',request()->path());
         $name = __('locale.'.Str::ucfirst(Str::plural($path_arr[0])));
-        $tail = __('locale.'.Str::ucfirst($path_arr[1]));
+        $tail = __('locale.'.Str::ucfirst($path_arr[1]?? ''));
         $link = str_contains(request()->path(),'all') ? 
             "javascript:void(0)" :
              $path_arr[0].'/all';

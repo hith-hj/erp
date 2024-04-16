@@ -4,6 +4,7 @@ namespace App\DataTables;
 
 use App\Models\BillItem;
 use App\Models\Purchase;
+use App\Models\Sale;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Services\DataTable;
@@ -13,11 +14,10 @@ use Yajra\DataTables\Html\Editor\Editor;
 class BillItemsDataTable extends DataTable
 {
     private $type;
-    private $bill_id;
-    public function __construct($type , $bill_id)
+    private $bill;
+    public function __construct($bill)
     {
-        $this->type = $type;
-        $this->bill_id = $bill_id;
+        $this->bill = $bill;
     }
     /**
      * Build DataTable class.
@@ -29,22 +29,23 @@ class BillItemsDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->addColumn('action', function($purchase){
-                if($purchase->bill->status ==0){
-                    return "<a href='/bill/$purchase->bill_id/purchase/$purchase->id/delete'>delete</a>";
+            ->addColumn('action', function($item){
+                if($item->bill->status ==0){
+                    $type = $item->type == 1 ? 'purchase':'sale';
+                    return "<a href='/bill/$item->bill_id/$type/$item->id/delete'>delete</a>";
                 }
             })
-            ->addColumn('material',function($purchase){
-                return $purchase->material->name;
+            ->addColumn('material',function($item){
+                return $item->material->name;
             })
-            ->addColumn('inventory',function($purchase){
-                return $purchase->inventory->name;
+            ->addColumn('inventory',function($item){
+                return $item->inventory->name;
             })
-            ->addColumn('unit',function($purchase){
-                return $purchase->unit->name;
+            ->addColumn('unit',function($item){
+                return $item->unit->name;
             })
-            ->addColumn('currency',function($purchase){
-                return $purchase->currency->name;
+            ->addColumn('currency',function($item){
+                return $item->currency->name;
             })
             ;
     }
@@ -58,14 +59,14 @@ class BillItemsDataTable extends DataTable
     public function query()
     {
         $model = $this->getModelType();
-        return $model->newQuery()->where('bill_id',$this->bill_id);
+        return $model->newQuery()->where('bill_id',$this->bill->id);
     }
 
     private function getModelType()
     {
-        return match($this->type){
+        return match($this->bill->type){
             1=>new Purchase(),
-            // 2=>new Sale(),
+            2=>new Sale(),
             default=>new Purchase(),
         };
     }
@@ -106,7 +107,9 @@ class BillItemsDataTable extends DataTable
             Column::make('cost')->title(__('locale.Cost')),
             Column::make('currency')->title(__('locale.Currency')),
             Column::make('account')->title(__('locale.Account')),
-            Column::make('vendor')->title(__('locale.Vendor')),
+            $this->bill->type == 1 ?
+            Column::make('vendor')->title(__('locale.Vendor')):
+            Column::make('client')->title(__('locale.Client')),
             Column::computed('action')
                   ->title(__('locale.Action'))
                   ->exportable(false)

@@ -328,5 +328,13 @@ return [
     
     "Is Default" => "Is Default",
     "Default" => "Default",
+    "Client" => "Client",
+    "Clients" => "Clients",
+    "Sale" => "Sale",
+    "Sales" => "Sales",
+
+    "None" => "None",
+    "Closed" => "Closed",
+    "Secret" => "Secret",
 
 ];

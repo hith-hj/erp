@@ -18,7 +18,6 @@
           <?php
            $path = explode('/',request()->path());   
           ?>
-          
           <a href="<?php echo e(url(Str::singular($path[0]).'/create')); ?>" class="btn btn-primary w-100">
             <?php echo e(__('locale.Create')); ?> <?php echo e(__('locale.'.Str::ucfirst($path[0]))); ?>
 

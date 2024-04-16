@@ -18,18 +18,7 @@
       "icon": "grid",
       "slug": "List-inventory"
     },
-    {
-      "url": "purchase/all",
-      "name": "Purchases",
-      "icon": "shopping-bag",
-      "slug": "List-purchase"
-    },
-    {
-      "url": "sale/all",
-      "name": "Sales",
-      "icon": "shopping-cart",
-      "slug": "List-sales"
-    },
+    
     {
       "url": "bill/all",
       "name": "Bills",
@@ -67,6 +56,18 @@
           "name": "eCommerce",
           "icon": "circle",
           "slug": "dashboard-ecommerce"
+        },
+        {
+          "url": "purchase/all",
+          "name": "Purchases",
+          "icon": "shopping-bag",
+          "slug": "List-purchase"
+        },
+        {
+          "url": "sale/all",
+          "name": "Sales",
+          "icon": "shopping-cart",
+          "slug": "List-sales"
         }
       ]
     },

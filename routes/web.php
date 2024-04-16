@@ -7,8 +7,10 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Inventory\InventoryController;
 use App\Http\Controllers\Material\MaterialController;
 use App\Http\Controllers\Purchase\PurchaseController;
+use App\Http\Controllers\Sale\SaleController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Section\SectionController;
+use App\Models\Sale;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -80,6 +82,16 @@ Route::group(['middleware'=>'auth',],function(){
         Route::get('delete/{id}','delete')->name('purchase.delete');
     });
     Route::group([
+        'prefix'=>'sale',
+        'controller'=>SaleController::class
+        ],function(){
+        Route::get('all','index')->name('purchase.all');
+        Route::get('show/{id}','show')->name('purchase.show');
+        Route::get('create','create')->name('purchase.create');
+        Route::post('store','store')->name('purchase.store');
+        Route::get('delete/{id}','delete')->name('purchase.delete');
+    });
+    Route::group([
         'prefix'=>'bill',
         'controller'=>BillController::class
     ],function(){
@@ -88,8 +100,13 @@ Route::group(['middleware'=>'auth',],function(){
         Route::get('create','create')->name('bill.create');
         Route::post('store','store')->name('bill.store');
         Route::delete('delete/{id}','delete')->name('bill.delete');
-        Route::post('bill_store_purchases/{id}','bill_store_purchases')->name('bill.store.purchases');
-        Route::get('{bill_id}/purchase/{purchase_id}/delete','bill_delete_purchases')->name('bill.delete.purchases');
+
+        Route::post('bill_store_purchase/{id}','bill_store_purchase')->name('bill.store.purchase');
+        Route::get('{bill_id}/purchase/{purchase_id}/delete','bill_delete_purchase')->name('bill.delete.purchase');
+
+        Route::post('bill_store_sale/{id}','bill_store_sale')->name('bill.store.sale');
+        Route::get('{bill_id}/sale/{sale_id}/delete','bill_delete_sale')->name('bill.delete.sale');
+
         Route::post('save/{id}','save')->name('bill.save');
         Route::post('audit/{id}','audit')->name('bill.audit');
 

@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 use App\Http\Repositories\BaseRepository;
 use Illuminate\Database\Eloquent\Collection;
 use App\Http\Controllers\Purchase\PurchaseController;
+use App\Http\Controllers\Sale\SaleController;
 use App\Models\Inventory;
 use App\Models\Material;
 use App\Models\Currency;
@@ -128,12 +129,22 @@ class BillRepository implements BaseRepository
 
     public function storePurchases($request)
     {
-        return (new PurchaseController())->storeTobill($request);
+        return (new PurchaseController())->storeToBill($request);
     }
     
     
     public function deletePurchases($purchase_id)
     {
-        return (new PurchaseController())->deleteFrombill($purchase_id);
+        return (new PurchaseController())->deleteFromBill($purchase_id);
+    }
+
+    public function storeSale($request)
+    {
+        return (new SaleController())->storeToBill($request);
+    }
+    
+    public function deleteSale($sale_id)
+    {
+        return (new SaleController())->deleteFromBill($sale_id);
     }
 }

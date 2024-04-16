@@ -89,9 +89,16 @@
                 <?php echo e($dataTable->table()); ?>
 
             </div>
-            <form action="<?php echo e(route('bill.store.purchases',['id'=>$bill->id])); ?>" method="post">
+            <?php
+                $link = $bill->type == 1 ? 'bill.store.purchase':'bill.store.sale';
+            ?>
+            <form action="<?php echo e(route($link,['id'=>$bill->id])); ?>" method="post">
+                <?php if($bill->type == 1): ?>
+                    <?php echo $__env->make('utils.bill_purchase_modal', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+                <?php else: ?>
+                    <?php echo $__env->make('utils.bill_sale_modal', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+                <?php endif; ?>
                 <?php echo csrf_field(); ?>
-                <?php echo $__env->make('utils.bill_purchase_modal', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
             </form>
         </div>
     </section>

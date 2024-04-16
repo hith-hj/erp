@@ -58,14 +58,14 @@ class PurchaseController extends BaseController
         return redirect()->route('purchase.show',['id'=>$purchase->id]);
     }
 
-    public function storeTobill(Request $request)
+    public function storeToBill(Request $request)
     {
         PurchaseValidator::validate($request);
         $purchase = $this->repo->add($request);
         return $this->repo->updateInventoryMaterial($request);
     }
 
-    public function deleteFrombill($purchase_id)
+    public function deleteFromBill($purchase_id)
     {
         $this->repo->restorInventoryMaterial($purchase_id);
         return $this->repo->delete($purchase_id);
