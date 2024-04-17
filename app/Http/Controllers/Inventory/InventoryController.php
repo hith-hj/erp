@@ -105,4 +105,14 @@ class InventoryController extends BaseController
         $material = $inventory->materials()->detach($material_id);
         return redirect()->route('inventory.show',['id'=>$inventory->id]);
     }
+
+    public function material_update(Request $request, $inventory_id, $material_id, $type = 'add')
+    {
+        $inventory = $this->repo->find($inventory_id);
+        $material = $inventory->materials()->where('material_id',$material_id);
+        $material->pivot->quantity = $type == 'add' ?
+            $material->pivot->quantity + $request->quantity :
+            $material->pivot->quantity - $request->quantity ;
+        return true;
+    }
 }

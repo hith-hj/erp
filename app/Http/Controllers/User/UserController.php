@@ -43,7 +43,6 @@ class UserController extends BaseController
 
     public function show($id)
     {
-        $this->setTrails([Auth::user()->full_name,]);
         return view('main.user.profile',[
             'user'=>$this->repo->findWith($id,['settings']),
         ]);
