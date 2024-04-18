@@ -18,9 +18,11 @@ class CreateMaterialUnitTable extends Migration
         Schema::create('material_unit', function (Blueprint $table) {
             $table->id();
             $table->boolean('is_default')->default(0);
-            $table->timestamps();
-            $table->foreignIdFor(Unit::class)->nullable();
             $table->foreignIdFor(Material::class)->nullable();
+            $table->foreignIdFor(Unit::class)->nullable();
+            $table->foreignIdFor(Unit::class,'main_unit')->nullable();
+            $table->integer('rate_to_main_unit')->default(0);
+            $table->timestamps();
         });
     }
 

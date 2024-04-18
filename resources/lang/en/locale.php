@@ -336,5 +336,10 @@ return [
     "None" => "None",
     "Closed" => "Closed",
     "Secret" => "Secret",
+    "Main" => "Main",
+    "Unit" => "Unit",
+    
+    "Main unit" => "Main Unit",
+    "Main material" => "Main Unit",
 
 ];

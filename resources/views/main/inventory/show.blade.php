@@ -58,13 +58,13 @@
                               id
                           </div>
                           <div class="col-5 p-1 border">
-                              {{ __('locale.Material') }} name
+                              {{ __('locale.Material') }} {{__('locale.Name')}}
                           </div>
                           <div class="col-5 p-1 border">
-                              {{ __('locale.Material') }} quantity
+                              {{ __('locale.Material') }} {{__('locale.Quantity')}}
                           </div>
                           <div class="col-1 p-1 border">
-                              options
+                              {{__('locale.Options')}}
                           </div>
                       </div>
                   </div>
@@ -86,51 +86,7 @@
                 </div>
             </div>
         </div>
-    </section>
-    {{-- <section id="card-content-types">
-        <div class="row">
-            <div class="col-6">
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h4 class="card-title">{{ $inventory->name }}</h4>
-
-                        <div class="btn-group">
-                            <i id="cardDropDown" data-bs-toggle="dropdown" data-feather="more-vertical"
-                                class="font-medium-3 cursor-pointer dropdown-toggle"></i>
-                            <div class="dropdown-menu" aria-labelledby="cardDropDown">
-                                <a href="{{ url('user/show', ['id' => 1]) }}" class="dropdown-item">owner</a>
-                                <a href="{{ url('section/show', ['id' => 1]) }}"class="dropdown-item">Section</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="card-subtitle text-muted">
-                            {{ $inventory->created_at->diffForHumans() }}
-                            |
-                            {{ $inventory->status() }}
-                        </div>
-                        <ul class="list-group list-group-flush">
-
-                            @forelse($inventory->materials as $unit)
-                                <li class="list-group-item">
-                                    Material Name: {{ $unit->name }}
-                                    Material Quantity: {{ $unit->pivot->quantity }}
-                                </li>
-                            @empty
-                                <li class="list-group-item ">
-                                    No Materials Found
-                                </li>
-                            @endforelse
-                        </ul>
-                        <a href="{{ url('card/show', ['id' => $inventory->id]) }}" class="card-link">Edit</a>
-                        <a href="{{ url('card/show', ['id' => $inventory->id]) }}"
-                            class="card-link color-danger">Delete</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section> --}}
-    
+    </section>    
 @endsection
 @push('scripts')
     {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
@@ -196,7 +152,7 @@
           id_div.textContent = material.selectedIndex
           name_div.textContent = material.options[material.selectedIndex].text;
           quantiy_div.textContent = quantity.value;
-          delete_div.textContent = 'delete';
+          delete_div.textContent = "{{__('locale.Delete')}}";
           delete_div.setAttribute('onclick', 'deleteMaterial(' + material.selectedIndex + ')');
   
           parent.appendChild(id_div);

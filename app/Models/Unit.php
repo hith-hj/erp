@@ -13,17 +13,18 @@ class Unit extends Model
     public function materials()
     {
         return $this
-        ->belongsToMany(Material::class)
-        ->using(MaterialUnit::class)
-        ->withPivot('is_default')
-        ->withTimestamps();
+            ->belongsToMany(Material::class)
+            ->using(MaterialUnit::class)
+            ->withPivot(['is_default','main_unit','rate_to_main_unit'])
+            ->withTimestamps();
     }
 
     public function inventory()
     {
-        return $this->belongsToMany(Inventory::class)
-        ->unsig(InventoryMaterial::class)
-        ->withPivot('')
-        ->withTimestamps();
+        return $this
+            ->belongsToMany(Inventory::class)
+            ->unsig(InventoryMaterial::class)
+            ->withPivot('')
+            ->withTimestamps();
     }
 }

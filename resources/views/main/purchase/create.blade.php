@@ -3,15 +3,11 @@
 @section('title')
     {{ __('locale.New Purchase') }}
 @endsection
-@if(request()->old())
-    {{-- {{dd(request()->old())}} --}}
-@endif
 @section('content')
     <section id="multiple-column-form" x-data="{
         currencies: {{ $currencies->keyBy('id')->toJson() }},
     }">
         <form id="inventory_form" method="POST" action="{{ route('purchase.store') }}" class="form form-vertical">
-
             @csrf
             <div class="row">
                 <div class="col-12">

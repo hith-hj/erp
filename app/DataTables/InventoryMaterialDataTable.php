@@ -50,7 +50,7 @@ class InventoryMaterialDataTable extends DataTable
                 ";      
             })
             ->addColumn('name', function($material){
-                return $material->material->name;
+                return $material->material->name ?? __('locale.Deleted');
             })
             ->addColumn('status', function($material){
                 return $material->status();

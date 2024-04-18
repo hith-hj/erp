@@ -49,6 +49,7 @@ Route::group(['middleware'=>'auth',],function(){
         Route::get('show/{id}','show')->name('material.show');
         Route::get('create','create')->name('material.create');
         Route::post('store','store')->name('material.store');
+        Route::delete('delete/{material}','delete')->name('material.delete');
     });
     Route::group([
         'prefix'=>'inventory',

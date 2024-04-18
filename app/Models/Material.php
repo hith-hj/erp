@@ -9,14 +9,14 @@ class Material extends Model
 {
     use HasFactory, \Illuminate\Database\Eloquent\SoftDeletes;
 
-    protected $fillable = ['name','type','status'];
+    protected $fillable = ['name','type','status','main_material'];
 
     public function units()
     {
         return $this
         ->belongsToMany(Unit::class)
         ->using(MaterialUnit::class)
-        ->withPivot('is_default')
+        ->withPivot(['is_default','main_unit','rate_to_main_unit'])
         ->withTimestamps();
     }
 
@@ -43,13 +43,11 @@ class Material extends Model
         };
     }
 
-    // public function status()
-    // {
-    //     return match($this->status){
-    //         1=>'In Stock',
-    //         0=>'Requested',
-    //         -1=>'Out of stock',
-    //         default=>'Not Set'
-    //     };
-    // }
+    public function mainMaterial()
+    {
+        if($this->main_material)
+        {
+            return $this->find($this->main_material);
+        }
+    }
 }

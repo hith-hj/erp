@@ -15,7 +15,7 @@ class UnitFactory extends Factory
     {
         return [
           'name'=>$this->faker->randomElement(['kilogram','ton','insh','meter']),
-          'symbol'=>null       
+          'code'=>null       
         ];
     }
 }

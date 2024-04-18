@@ -11,7 +11,20 @@
         <div class="card-head mb-1 row">
             <h4 class="col-10"><?php echo e(__('locale.Show')); ?></h4>
             <div class="col-2">
-                <button class="btn btn-sm btn-outline-danger w-100"><?php echo e(__('locale.Delete')); ?></button>
+                <button class="btn btn-sm btn-outline-danger w-100" 
+                    onclick="
+                        if(confirm('<?php echo e(__('locale.Delete')); ?> ?')){
+                            document.getElementById('deleteMaterialForm').submit();
+                        }
+                    " >
+                    <?php echo e(__('locale.Delete')); ?>
+
+                </button>
+                <form id="deleteMaterialForm" 
+                    method="Post" 
+                    action="<?php echo e(route('material.delete',['material'=>$material->id])); ?>">
+                    <?php echo csrf_field(); ?> <?php echo method_field('delete'); ?>
+                </form>
             </div>
         </div>
         <div class="row">
@@ -19,12 +32,24 @@
                 <h5><?php echo e(__('locale.Details')); ?></h5>
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title"><?php echo e($material->name); ?></h4>
+                        <h4 class="card-title">
+                            <?php echo e(__('locale.Name')); ?> :
+                            <?php echo e($material->name); ?>
+
+                        </h4>
                         <div class="card-text">
+                            <?php echo e(__('locale.Type')); ?> : 
                             <?php echo e($material->type()); ?>
 
                         </div>
+                        <div class="card-text">
+                            <?php echo e(__('locale.Main material')); ?>: 
+                            <?php echo e($material->mainMaterial()->name); ?>
+
+                        </div>
                         <p class="card-text">
+                            <?php echo e(__('locale.Created at')); ?>
+
                             <?php echo e($material->created_at->diffForHumans()); ?>
 
                         </p>
@@ -37,6 +62,8 @@
                                     <th><?php echo e(__('locale.Name')); ?></th>
                                     <th><?php echo e(__('locale.Code')); ?></th>
                                     <th><?php echo e(__('locale.Is Default')); ?></th>
+                                    <th><?php echo e(__('locale.Main unit')); ?></th>
+                                    <th><?php echo e(__('locale.Rate')); ?></th>
                                     <th><?php echo e(__('locale.Created at')); ?></th>
                                 </tr>
                             </thead>
@@ -45,13 +72,19 @@
                                     <tr>
                                         <td><?php echo e($unit->id); ?></td>
                                         <td><?php echo e($unit->name); ?></td>
-                                        <td><?php echo e($unit->symbol); ?></td>
+                                        <td><?php echo e($unit->code); ?></td>
                                         <td>
                                             <span class="badge rounded-pill badge-light-success me-1">
                                                 <?php echo e($unit->pivot->is_default ? 'default' : ''); ?>
 
                                             </span>
                                         </td>
+                                        <?php if(!is_null($unit->pivot->main_unit)): ?>
+                                            <td><?php echo e($unit->pivot->mainUnit()->name); ?></td>
+                                        <?php else: ?>
+                                            <td>-</td>
+                                        <?php endif; ?>
+                                        <td><?php echo e($unit->pivot->rate_to_main_unit); ?></td>
                                         <td><?php echo e($unit->pivot->created_at->format('Y-m-d')); ?></td>
                                     </tr>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>

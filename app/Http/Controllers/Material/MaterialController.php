@@ -6,6 +6,7 @@ use App\DataTables\MaterialDataTable;
 use App\Http\Controllers\BaseController;
 use App\Http\Repositories\Material\MaterialRepository;
 use App\Http\Validator\Material\MaterialValidator;
+use App\Models\Material;
 use Illuminate\Http\Request;
 
 class MaterialController extends BaseController
@@ -30,6 +31,7 @@ class MaterialController extends BaseController
     {
         return view('main.material.create', [
             'units' => $this->repo->getUnits(),
+            'materials' => $this->repo->all(['id','name']),
         ]);
     }
 
@@ -39,11 +41,7 @@ class MaterialController extends BaseController
         MaterialValidator::validateMaterialDetails($request);
         MaterialValidator::preventDublicateUnits($request);
         $material = $this->repo->add($request);        
-        $material->units()
-            ->attach($request->units);
-        $material->units()
-            ->attach($request->base_unit, ['is_default' => true]
-            );
+        $this->repo->addUnits($request,$material);
         return redirect()->route('material.show',['id'=>$material->id]);
     }
 
@@ -67,8 +65,11 @@ class MaterialController extends BaseController
     }
 
 
-    public function destroy($id)
+    public function delete(Material $material)
     {
-        //
+        $material->inventories()->detach();
+        $material->units()->detach();
+        $material->delete();
+        return redirect()->route('material.all')->with('success','Deleted Successfuly');
     }
 }

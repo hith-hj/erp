@@ -68,13 +68,16 @@ unset($__errorArgs, $__bag); ?>"
                               id
                           </div>
                           <div class="col-5 p-1 border">
-                              <?php echo e(__('locale.Material')); ?> name
+                              <?php echo e(__('locale.Material')); ?> <?php echo e(__('locale.Name')); ?>
+
                           </div>
                           <div class="col-5 p-1 border">
-                              <?php echo e(__('locale.Material')); ?> quantity
+                              <?php echo e(__('locale.Material')); ?> <?php echo e(__('locale.Quantity')); ?>
+
                           </div>
                           <div class="col-1 p-1 border">
-                              options
+                              <?php echo e(__('locale.Options')); ?>
+
                           </div>
                       </div>
                   </div>
@@ -97,9 +100,7 @@ unset($__errorArgs, $__bag); ?>"
                 </div>
             </div>
         </div>
-    </section>
-    
-    
+    </section>    
 <?php $__env->stopSection(); ?>
 <?php $__env->startPush('scripts'); ?>
     <?php echo e($dataTable->scripts(attributes: ['type' => 'module'])); ?>
@@ -166,7 +167,7 @@ unset($__errorArgs, $__bag); ?>"
           id_div.textContent = material.selectedIndex
           name_div.textContent = material.options[material.selectedIndex].text;
           quantiy_div.textContent = quantity.value;
-          delete_div.textContent = 'delete';
+          delete_div.textContent = "<?php echo e(__('locale.Delete')); ?>";
           delete_div.setAttribute('onclick', 'deleteMaterial(' + material.selectedIndex + ')');
   
           parent.appendChild(id_div);

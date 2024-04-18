@@ -15,30 +15,29 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        \App\Models\User::factory(10)->create();
         \App\Models\User::factory()->create([
             'email'=>'admin@admin.com',
             'password'=>Hash::make('password'),
-            // 'password'=>bcrypt('password'),
             ]);
         
         \App\Models\Unit::factory()->createMany(
             [
                 [
                     'name'=>'gram',
-                    'symbol'=>'Gr'
+                    'code'=>'Gr'
                 ],
                 [
                     'name'=>'kilogram',
-                    'symbol'=>'Kg'
+                    'code'=>'Kg'
                 ],
                 [
                     'name'=>'ton',
-                    'symbol'=>'Tn'
+                    'code'=>'Tn'
                 ],                
                 [
                     'name'=>'meter',
-                    'symbol'=>'m'
+                    'code'=>'m'
                 ]
             ]
         );
@@ -62,22 +61,25 @@ class DatabaseSeeder extends Seeder
         foreach($currencies as $cur)
         {
             $cur->rates()->attach(1,['rate'=> rand(1,5)]);
+            $cur->rates()->attach(2,['rate'=> rand(1,5)]);
+            $cur->rates()->attach(3,['rate'=> rand(1,5)]);
         }
 
         $materials = \App\Models\Material::factory(10)->create();
         $inventories = \App\Models\Inventory::factory(10)->create();
         foreach($materials as $key=>$mat)
         {
-            $mat->units()->attach(rand(1,4),['is_default'=>rand(0,1)]);
+            $mat->units()->attach(rand(1,4),[
+                'is_default'=>$rand = rand(0,1),
+                'main_unit'=>$rand==0 ? rand(1,10):0,
+                'rate_to_main_unit'=>$rand==0 ? rand(1,30):0
+            ]);
             $invo = $inventories[$key];
             $invo->materials()->attach($mat->id,[
                 'quantity'=>array_rand([1,2,3,4,5,6,7,8]),
             ]);
         }
 
-        \App\Models\Card::factory(10)->create();
-
-
-        
+        \App\Models\Card::factory(10)->create();        
     }
 }
