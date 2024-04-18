@@ -57,8 +57,9 @@
                                         <label class="form-label" for="main">
                                             {{ __('locale.Main material') }} 
                                         </label>
-                                        <select name="main_material" tabindex="3" required id="main"
+                                        <select name="main_material" tabindex="3" id="main"
                                             class="form-select @error('main') border-danger @enderror">
+                                                <option value="">{{__('locale.None')}}</option>
                                             @forelse ($materials as $material)
                                                 <option value="{{ $material->id }}">{{ $material->name }}</option>
                                             @empty

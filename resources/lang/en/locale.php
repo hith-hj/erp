@@ -340,6 +340,6 @@ return [
     "Unit" => "Unit",
     
     "Main unit" => "Main Unit",
-    "Main material" => "Main Unit",
+    "Main material" => "Main Material",
 
 ];

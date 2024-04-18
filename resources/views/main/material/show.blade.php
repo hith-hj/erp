@@ -38,10 +38,12 @@
                             {{__('locale.Type')}} : 
                             {{ $material->type() }}
                         </div>
-                        <div class="card-text">
-                            {{__('locale.Main material')}}: 
-                            {{ $material->mainMaterial()->name }}
-                        </div>
+                        @if($material->main_material)
+                            <div class="card-text">
+                                {{__('locale.Main material')}}: 
+                                {{ $material->mainMaterial()->name }}
+                            </div>
+                        @endif
                         <p class="card-text">
                             {{__('locale.Created at')}}
                             {{ $material->created_at->diffForHumans() }}

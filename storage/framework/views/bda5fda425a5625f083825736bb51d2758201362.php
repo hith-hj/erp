@@ -72,7 +72,7 @@ unset($__errorArgs, $__bag); ?>">
                                         <label class="form-label" for="main">
                                             <?php echo e(__('locale.Main material')); ?> 
                                         </label>
-                                        <select name="main_material" tabindex="3" required id="main"
+                                        <select name="main_material" tabindex="3" id="main"
                                             class="form-select <?php $__errorArgs = ['main'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -81,6 +81,7 @@ $message = $__bag->first($__errorArgs[0]); ?> border-danger <?php unset($message
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>">
+                                                <option value=""><?php echo e(__('locale.None')); ?></option>
                                             <?php $__empty_1 = true; $__currentLoopData = $materials; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $material): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                                                 <option value="<?php echo e($material->id); ?>"><?php echo e($material->name); ?></option>
                                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>

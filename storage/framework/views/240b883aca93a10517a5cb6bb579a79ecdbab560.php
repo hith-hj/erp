@@ -42,11 +42,13 @@
                             <?php echo e($material->type()); ?>
 
                         </div>
-                        <div class="card-text">
-                            <?php echo e(__('locale.Main material')); ?>: 
-                            <?php echo e($material->mainMaterial()->name); ?>
+                        <?php if($material->main_material): ?>
+                            <div class="card-text">
+                                <?php echo e(__('locale.Main material')); ?>: 
+                                <?php echo e($material->mainMaterial()->name); ?>
 
-                        </div>
+                            </div>
+                        <?php endif; ?>
                         <p class="card-text">
                             <?php echo e(__('locale.Created at')); ?>
 
