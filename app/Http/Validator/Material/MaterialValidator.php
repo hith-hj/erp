@@ -13,7 +13,7 @@ class MaterialValidator
     return $request->validate([
       'name' => ['required', 'string', "max:40"],
       'type' => ['required', 'numeric', 'in:1,2,3'],
-      'main_unit' => ['required', 'exists:units,id'],
+      'main_unit' => ['nullable', 'exists:units,id'],
       'units' => ['required', 'array', 'max:5'],
       'units.*.unit' => ['exists:units,id'],
       'units.*.rate' => ['numeric'],
