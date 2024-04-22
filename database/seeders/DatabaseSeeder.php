@@ -81,5 +81,7 @@ class DatabaseSeeder extends Seeder
         }
 
         \App\Models\Card::factory(10)->create();        
+        \App\Models\Client::factory(5)->create();        
+        \App\Models\Vendor::factory(5)->create();        
     }
 }

@@ -55,11 +55,11 @@
                                 <div class="col-6">
                                     <div class="mb-1">
                                         <label class="form-label" for="main">
-                                            {{ __('locale.Main material') }} 
+                                            {{ __('locale.Main material') }}
                                         </label>
                                         <select name="main_material" tabindex="3" id="main"
                                             class="form-select @error('main') border-danger @enderror">
-                                                <option value="">{{__('locale.None')}}</option>
+                                            <option value="">{{ __('locale.None') }}</option>
                                             @forelse ($materials as $material)
                                                 <option value="{{ $material->id }}">{{ $material->name }}</option>
                                             @empty
@@ -71,7 +71,7 @@
                                 <div class="col-6">
                                     <div class="mb-1">
                                         <label class="form-label" for="main_unit">
-                                            {{ __('locale.Main unit') }} 
+                                            {{ __('locale.Main unit') }}
                                         </label>
                                         <select name="main_unit" tabindex="2" id="main_unit"required
                                             class="form-select @error('main_unit') border-danger @enderror">
@@ -135,14 +135,18 @@
                         </div>
                     </div>
                     <div class="p-1 pt-0">
-                        <button typex="submit" class="btn btn-primary btn-sm w-25">{{ __('locale.Store') }}</button>
-                        <button type="reset" class="btn btn-outline-primary btn-sm">{{ __('locale.Reset') }}</button>
-                        <a
-                            href="{{ url('/') }}"class="btn btn-outline-dark btn-sm">{{ __('locale.Cancel') }}</a>
+                        <button typex="submit" class="btn btn-primary btn-sm w-25">
+                            {{ __('locale.Store') }}
+                        </button>
+                        <button type="reset" class="btn btn-outline-primary btn-sm">
+                            {{ __('locale.Reset') }}
+                        </button>
+                        <a href="{{ url('/') }}"class="btn btn-outline-dark btn-sm">
+                            {{ __('locale.Cancel') }}
+                        </a>
                     </div>
                 </div>
             </div>
-        </div>
         </div>
     </form>
 </section>

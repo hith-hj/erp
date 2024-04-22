@@ -2,16 +2,15 @@
 
 namespace App\DataTables;
 
-use App\Models\User;
+use App\Models\Client;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
-use Yajra\DataTables\Html\Editor\Editor;
-use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
+use Yajra\DataTables\Html\Editor\Fields;
+use Yajra\DataTables\Html\Editor\Editor;
 
-class UserDataTable extends DataTable
+class ClientDataTable extends DataTable
 {
-    protected $actions = ['newUser'];
     /**
      * Build DataTable class.
      *
@@ -22,26 +21,32 @@ class UserDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->setRowId('id')
-            ->addColumn('Phone',function($user){
-              return $user->getSetting('phone_number');
+            ->addColumn('action', function($client){
+                $view = __('locale.View');
+                $options = __('locale.Options');
+                return "
+                <div class='dropdown'>
+                  <button type='button' class='btn btn-sm dropdown-toggle hide-arrow py-0' data-bs-toggle='dropdown'>
+                    $options
+                  </button>
+                  <div class='dropdown-menu dropdown-menu-end'>
+                    <a class='dropdown-item' href='/client/show/$client->id'>
+                      <i data-feather='edit-2' class='me-50'></i>
+                      <span>$view</span>
+                    </a>
+                  </div>
+                </div>";
             })
-            // ->addColumn('Settings',function($user){
-            //   return !is_null($user->settings)?count($user->settings):0;
-            // })
-            ->addColumn('action',function ($user){
-              $lang = __('locale.View');
-              return "<a href='show/$user->id'>$lang</a>";
-            });
+            ;
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\User $model
+     * @param \App\Models\Client $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(User $model)
+    public function query(Client $model)
     {
         return $model->newQuery();
     }
@@ -54,11 +59,11 @@ class UserDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-                    ->setTableId('users_table')
-                    ->setTableAttribute('class','table datatables-basic')
+                    ->setTableId('client-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
                     ->dom('Bfrtip')
+                    ->orderBy(1)
                     ->buttons(
                         Button::make('pdf')->addClass('btn btn-outline-primary'),
                         Button::make('print')->addClass('btn btn-outline-primary'),
@@ -66,7 +71,6 @@ class UserDataTable extends DataTable
                         Button::make('copy')->addClass('btn btn-outline-primary'),
                     );
     }
-
 
     /**
      * Get columns.
@@ -77,18 +81,17 @@ class UserDataTable extends DataTable
     {
         return [
             Column::make('id'),
-            Column::make('username')->title(__('locale.Username')),
-            Column::make('full_name')->title(__('locale.Full Name')),
-            Column::make('Phone')->title(__('locale.Phone')),
+            Column::make('first_name')->title(__('locale.First name')),
+            Column::make('last_name')->title(__('locale.Last name')),
             Column::make('email')->title(__('locale.Email')),
-            // Column::make('Settings'),
-            // Column::make('created_at'),
+            Column::make('phone')->title(__('locale.Phone')),
+            Column::make('created_at')->title(__('locale.Created at')),
             Column::computed('action')
+                  ->title(__('locale.Action'))
                   ->exportable(false)
                   ->printable(false)
-                  ->width(50)
-                  ->addClass('text-center')
-                  ->title(__('locale.Action')),
+                  ->width(60)
+                  ->addClass('text-center'),
         ];
     }
 
@@ -99,6 +102,6 @@ class UserDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'Users_' . date('YmdHis');
+        return 'Client_' . date('YmdHis');
     }
 }

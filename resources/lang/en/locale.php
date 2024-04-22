@@ -341,5 +341,14 @@ return [
     
     "Main unit" => "Main Unit",
     "Main material" => "Main Material",
+    "First name" => "First Name",
+    "Last name" => "Last Name",
 
+    
+    "New Client" => "New Client",
+    "Clients" => "Clients",
+    "Client" => "Client",
+    "New vendor" => "New Vendor",
+    "Vendors" => "Vendors",
+    "Vendor" => "Vendor",
 ];

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Helper;
 use App\Models\User;
+use App\Models\UserSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -47,5 +49,24 @@ class HomeController extends Controller
         }
     }
 
+    public function themeCustomizer(Request $request)
+    {
+        $data = [
+            'theme'=>$request->skinColor,
+            'navbarColor'=>$request->navColor,
+            'verticalMenuNavbarType'=>$request->navType,
+        ];
+        foreach($data as $key=>$value)
+        {
+            if(!is_null($value))
+            {
+                UserSetting::updateOrCreate(['key'=>$key],[
+                    'user_id'=>auth()->user()->id,
+                    'value'=>$value,
+                ]);
+            }
+        }
+        return redirect('/')->with('success','theme stored');
+    }
     
 }

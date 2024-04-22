@@ -24,6 +24,7 @@ class CreatePurchasesTable extends Migration
             $table->string('vendor');
             $table->integer('quantity');
             $table->integer('cost');
+            $table->integer('discount')->default(0);
             $table->string('note')->nullable();
             $table->smallInteger('mark')->default(0);
             $table->smallInteger('level')->default(0);

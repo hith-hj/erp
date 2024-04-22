@@ -3,6 +3,9 @@
 namespace App\Helpers;
 
 // use Config;
+
+use App\Models\UserSetting;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 
@@ -11,18 +14,37 @@ class Helper
     public static function applClasses()
     {
         // Demo
-        $fullURL = request()->fullurl();
-        if (App()->environment() === 'production') {
-            for ($i = 1; $i < 7; $i++) {
-                $contains = Str::contains($fullURL, 'demo-' . $i);
-                if ($contains === true) {
-                    $data = config('custom.' . 'demo-' . $i);
-                }
+        // $fullURL = request()->fullurl();
+        // if (App()->environment() === 'production') {
+        //     for ($i = 1; $i < 7; $i++) {
+        //         $contains = Str::contains($fullURL, 'demo-' . $i);
+        //         if ($contains === true) {
+        //             $data = config('custom.' . 'demo-' . $i);
+        //         }
+        //     }
+        // } else {
+        //     $data = config('custom.main-dark');
+        // } 
+        // $data = config('custom.main-dark');
+        $data = [];
+        if(auth()->check())
+        {
+            $settings = UserSetting::where('user_id',auth()->user()->id)->get(['key','value'])->toArray();
+            foreach($settings as $setting)
+            {
+                match($setting['key']){
+                    'theme'=>$data[$setting['key']]=str_replace('-layout','',$setting['value']),
+                    'navbarColor'=>$data[$setting['key']]=$setting['value'],
+                    'verticalMenuNavbarType'=>$data[$setting['key']]=str_replace('navbar-','',$setting['value']),
+                    default=>'',
+                };
             }
-        } else {
-            $data = config('custom.main-dark');
-        } 
-
+        }
+        $data = count($data)>0 ? $data :[
+            'theme'=>'dark',
+            'navbarColor'=>'',
+            'verticalMenuNavbarType'=>'floating',
+        ];
         // default data array
         $DefaultData = [
             'mainLayoutType' => 'vertical',
@@ -53,7 +75,7 @@ class Helper
             'sidebarCollapsed' => array(true, false),
             'showMenu' => array(true, false),
             'layoutWidth' => array('full', 'boxed'),
-            'navbarColor' => array('bg-primary', 'bg-info', 'bg-warning', 'bg-success', 'bg-danger', 'bg-dark'),
+            'navbarColor' => array('bg-primary', 'bg-secondary', 'bg-info', 'bg-warning', 'bg-success', 'bg-danger', 'bg-dark'),
             'horizontalMenuType' => array('floating' => 'navbar-floating', 'static' => 'navbar-static', 'sticky' => 'navbar-sticky'),
             'horizontalMenuClass' => array('static' => '', 'sticky' => 'fixed-top', 'floating' => 'floating-nav'),
             'verticalMenuNavbarType' => array('floating' => 'navbar-floating', 'static' => 'navbar-static', 'sticky' => 'navbar-sticky', 'hidden' => 'navbar-hidden'),

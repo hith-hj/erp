@@ -146,5 +146,13 @@ return [
     "Unit" => "الوحدة",
     "Main unit" => "الوحدة الاساسية",
     "Main material" => "المادة الاساسية ",
+    "First name" => "الاسم الاول",
+    "Last name" => "الكنية",
+    "New Client" => "اضافة زبون",
+    "Clients" => "الزبائن",
+    "Client" => "زبون",
+    "New vendor" => "اضافة مزود",
+    "Vendors" => "المزودين",
+    "Vendor" => "مزود",
     "" => "",
 ];

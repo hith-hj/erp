@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Bill\BillController;
 use App\Http\Controllers\Card\CardController;
+use App\Http\Controllers\Client\ClientController;
 use App\Http\Controllers\Currency\CurrencyController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Inventory\InventoryController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\Purchase\PurchaseController;
 use App\Http\Controllers\Sale\SaleController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Section\SectionController;
+use App\Http\Controllers\Vendors\VendorController;
 use App\Models\Sale;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -86,11 +88,11 @@ Route::group(['middleware'=>'auth',],function(){
         'prefix'=>'sale',
         'controller'=>SaleController::class
         ],function(){
-        Route::get('all','index')->name('purchase.all');
-        Route::get('show/{id}','show')->name('purchase.show');
-        Route::get('create','create')->name('purchase.create');
-        Route::post('store','store')->name('purchase.store');
-        Route::get('delete/{id}','delete')->name('purchase.delete');
+        Route::get('all','index')->name('sale.all');
+        Route::get('show/{id}','show')->name('sale.show');
+        Route::get('create','create')->name('sale.create');
+        Route::post('store','store')->name('sale.store');
+        Route::get('delete/{id}','delete')->name('sale.delete');
     });
     Route::group([
         'prefix'=>'bill',
@@ -112,6 +114,28 @@ Route::group(['middleware'=>'auth',],function(){
         Route::post('audit/{id}','audit')->name('bill.audit');
 
     });
+
+    Route::group([
+        'prefix'=>'vendor',
+        'controller'=>VendorController::class
+    ],function(){
+        Route::get('all','index')->name('vendor.all');
+        Route::get('show/{vendor}','show')->name('vendor.show');
+        Route::get('create','create')->name('vendor.create');
+        Route::post('store','store')->name('vendor.store');
+        Route::delete('delete/{vendor}','delete')->name('vendor.delete');
+    });
+
+    Route::group([
+        'prefix'=>'client',
+        'controller'=>ClientController::class
+    ],function(){
+        Route::get('all','index')->name('client.all');
+        Route::get('show/{client}','show')->name('client.show');
+        Route::get('create','create')->name('client.create');
+        Route::post('store','store')->name('client.store');
+        Route::delete('delete/{client}','delete')->name('client.delete');
+    });
     
     
     Route::group([
@@ -127,7 +151,8 @@ Route::group(['middleware'=>'auth',],function(){
     Route::group(['controller'=>HomeController::class,],function(){
         Route::get('/home','index')->name('home');
         Route::get('/changePassword/{user}','changePasswordForm');
-        Route::post('/changePassword/{user}','changePassword')->name('changePassword');    
+        Route::post('/changePassword/{user}','changePassword')->name('changePassword');  
+        Route::post('themeCustomizer','themeCustomizer')->name('themeCustomizer');
     });
 });
 

@@ -14,7 +14,7 @@
 <script sync src="{{ asset(mix('js/core/scripts.js')) }}"></script>
 
 {{-- @if($configData['blankPage'] === false)
-<script src="{{ asset(mix('js/scripts/customizer.js')) }}"></script>
+<script src="{{ asset('customizer.js') }}"></script>
 @endif --}}
 <!-- END: Theme JS-->
 <!-- BEGIN: Page JS-->

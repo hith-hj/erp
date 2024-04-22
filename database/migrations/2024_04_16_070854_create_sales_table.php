@@ -24,6 +24,7 @@ class CreateSalesTable extends Migration
             $table->string('client');
             $table->integer('quantity');
             $table->integer('cost');
+            $table->integer('discount')->default(0);
             $table->foreignIdFor(Inventory::class);
             $table->foreignIdFor(Material::class);
             $table->foreignIdFor(Unit::class);

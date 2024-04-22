@@ -31,13 +31,28 @@
       "icon": "dollar-sign",
       "slug": "List-currency"
     },
-    {
-      "url": "card/all",
-      "name": "Cards",
-      "icon": "archive",
-      "slug": "List-users"
-    },
 
+    {
+      "name": "Cards",
+      "badge": "2",
+      "badgeClass": "badge badge-light-warning rounded-pill ms-auto me-1",
+      "icon": "credit-card",
+      "slug": "Cards",
+      "submenu": [
+        {
+          "url": "client/all",
+          "name": "Clients",
+          "icon": "users",
+          "slug": "Clients-cards"
+        },
+        {
+          "url": "vendor/all",
+          "name": "Vendors",
+          "icon": "users",
+          "slug": "Vendors-cards"
+        }
+      ]
+    },
     {
       "name": "Dashboards",
       "badge": "2",
