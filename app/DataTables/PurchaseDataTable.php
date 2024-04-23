@@ -32,7 +32,7 @@ class PurchaseDataTable extends DataTable
                 return $purchase->unit->name;
             })
             ->addColumn('bill',function($purchase){
-                return $purchase->bill->serial;
+                return $purchase->bill->serial ?? '';
             })
             ->addColumn('currency',function($purchase){
                 return $purchase->currency->name;
@@ -64,7 +64,7 @@ class PurchaseDataTable extends DataTable
                     ->minifiedAjax()
                     ->dom('Bfrtip')
                     ->orderBy(1)
-                    ->buttons(                        
+                    ->buttons(
                         Button::make('pdf')->addClass('btn btn-outline-primary'),
                         Button::make('print')->addClass('btn btn-outline-primary'),
                         Button::make('excel')->addClass('btn btn-outline-primary'),
