@@ -4,6 +4,7 @@ namespace App\Http\Repositories\Purchase;
 
 use App\Http\Repositories\BaseRepository;
 use App\Http\Repositories\Inventory\InventoryRepository;
+use App\Http\Repositories\Vendors\VendorRepository;
 use App\Models\Currency;
 use App\Models\Inventory;
 use App\Models\Material;
@@ -24,15 +25,15 @@ class PurchaseRepository implements BaseRepository
         return Purchase::findOrFail($id, $columns);
     }
 
-    public function add($request): Purchase
+    public function add($data): Purchase
     {
-        return Purchase::create($request->all());
+        return Purchase::create($data);
     }
 
 
-    public function update($request, int $id): bool
+    public function update($data, int $id): bool
     {
-        return Purchase::findOrFail($id)->update($request->all());
+        return Purchase::findOrFail($id)->update($data);
     }
 
 
@@ -72,7 +73,7 @@ class PurchaseRepository implements BaseRepository
 
     public function getCurrencies()
     {
-        return Currency::with(['rates:id'])->get(['id', 'name', 'code']);
+        return Currency::with(['rates:id,name'])->get(['id', 'name', 'code']);
     }
 
     public function getMaterials()
@@ -85,18 +86,24 @@ class PurchaseRepository implements BaseRepository
         return Inventory::all(['id', 'name']);
     }
 
-    public function updateInventoryMaterial($request)
+    public function getVendors()
     {
+        return (new VendorRepository())->all(['id','first_name','last_name']);
+    }
+
+    public function updateInventoryMaterial($data)
+    {
+        $data = (object)$data;
         $inventoryRepo = new InventoryRepository();
-        $inventory = $inventoryRepo->find($request->inventory_id);
-        if ($inventory->materials()->where('material_id', $request->material_id)->exists()) {
+        $inventory = $inventoryRepo->find($data->inventory_id);
+        if ($inventory->materials()->where('material_id', $data->material_id)->exists()) {
             $inventory->materials()
-                ->syncWithPivotValues($request->material_id, [
-                    'quantity' => $request->quantity + $inventory->materials()
-                        ->where('material_id', $request->material_id)->first()->pivot->quantity
-                ], false);
+                ->updateExistingPivot($data->material_id, [
+                    'quantity'=> $data->quantity + $inventory->materials()
+                        ->where('material_id', $data->material_id)->first()->pivot->quantity
+                ]);
         } else {
-            $inventory->materials()->attach($request->material_id, ['quantity' => $request->quantity]);
+            $inventory->materials()->attach($data->material_id, ['quantity' => $data->quantity]);
         }
         return true;
     }

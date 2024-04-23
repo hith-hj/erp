@@ -31,6 +31,19 @@
       "icon": "dollar-sign",
       "slug": "List-currency"
     },
+    
+    {
+      "url": "purchase/all",
+      "name": "Purchases",
+      "icon": "shopping-bag",
+      "slug": "List-purchase"
+    },
+    {
+      "url": "sale/all",
+      "name": "Sales",
+      "icon": "shopping-cart",
+      "slug": "List-sales"
+    },
 
     {
       "name": "Cards",

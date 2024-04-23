@@ -82,7 +82,7 @@ Route::group(['middleware'=>'auth',],function(){
         Route::get('show/{id}','show')->name('purchase.show');
         Route::get('create','create')->name('purchase.create');
         Route::post('store','store')->name('purchase.store');
-        Route::get('delete/{id}','delete')->name('purchase.delete');
+        Route::delete('delete/{purchase}','delete')->name('purchase.delete');
     });
     Route::group([
         'prefix'=>'sale',
@@ -92,7 +92,7 @@ Route::group(['middleware'=>'auth',],function(){
         Route::get('show/{id}','show')->name('sale.show');
         Route::get('create','create')->name('sale.create');
         Route::post('store','store')->name('sale.store');
-        Route::get('delete/{id}','delete')->name('sale.delete');
+        Route::get('delete/{sale}','delete')->name('sale.delete');
     });
     Route::group([
         'prefix'=>'bill',

@@ -9,7 +9,7 @@ class SaleValidator
     public static function validate(Request $request)
     {
         return $request->validate([
-            'account' => ['required',],
+            'discount' => ['nullable',],
             'client' => ['required',],
             'inventory_id' => ['required',],
             'material_id' => ['required',],

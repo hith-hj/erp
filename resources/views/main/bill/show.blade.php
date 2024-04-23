@@ -79,20 +79,37 @@
             <div class="card-body px-0">
                 {{ $dataTable->table() }}
             </div>
-            @php
-                $link = $bill->type == 1 ? 'bill.store.purchase':'bill.store.sale';
-            @endphp
-            <form action="{{ route($link,['id'=>$bill->id]) }}" method="post">
-                @if ($bill->type == 1)
-                    @include('utils.bill_purchase_modal')
-                @else
-                    @include('utils.bill_sale_modal')
-                @endif
-                @csrf
-            </form>
+            @if ($bill->type == 1)
+                @include('utils.bill_purchase_modal')
+            @else
+                @include('utils.bill_sale_modal')
+            @endif
         </div>
     </section>
 @endsection
 @push('scripts')
     {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.repeater/1.2.1/jquery.repeater.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $(function() {
+            'use strict';
+            $('.purchases-repeater').repeater({
+                isFirstItemUndeletable: true,
+                initEmpty: false,
+                show: function() {
+                    $(this).slideDown();
+                },
+                hide: function(deleteElement) {
+                    if (confirm(
+                            "{{ __('Are you sure you want to delete this element?') }}"
+                        )) {
+                        $(this).slideUp(deleteElement);
+                    }
+                },
+
+            });
+        });
+    });
+</script>
 @endpush

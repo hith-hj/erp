@@ -6,6 +6,8 @@ use App\DataTables\BillDataTable;
 use App\DataTables\BillItemsDataTable;
 use App\Http\Controllers\BaseController;
 use App\Http\Repositories\Bill\BillRepository;
+use App\Http\Repositories\Client\ClientRepository;
+use App\Http\Repositories\Vendors\VendorRepository;
 use Illuminate\Http\Request;
 
 class BillController extends BaseController
@@ -52,27 +54,13 @@ class BillController extends BaseController
     {
         $fromToIndex = $bill->type ==1 ?'vendors':'clients';
         $fromToArray = $bill->type ==1 ? 
-            [
-                ['id'=>1,'name'=>'vend_1'],
-                ['id'=>2,'name'=>'vend_2'],
-                ['id'=>3,'name'=>'vend_3']
-            ] : 
-            [
-                ['id'=>1,'name'=>'client_1'],
-                ['id'=>2,'name'=>'client_2'],
-                ['id'=>3,'name'=>'client_3']
-            ];
+            (new VendorRepository())->all() : (new ClientRepository())->all();
         
         return [
             'bill'=>$bill,
             'inventories' => $this->repo->getInventories() ?? [],
             'currencies' => $this->repo->getCurrencies() ?? [],
             'materials' => $this->repo->getMaterials() ?? [],
-            'accounts' => [
-                ['id'=>1,'name'=>'acc_1'],
-                ['id'=>2,'name'=>'acc_2'],
-                ['id'=>3,'name'=>'acc_3']
-            ],
             $fromToIndex => $fromToArray,
         ];
     }

@@ -31,6 +31,9 @@ class PurchaseDataTable extends DataTable
             ->addColumn('unit',function($purchase){
                 return $purchase->unit->name;
             })
+            ->addColumn('bill',function($purchase){
+                return $purchase->bill->serial;
+            })
             ->addColumn('currency',function($purchase){
                 return $purchase->currency->name;
             })
@@ -83,6 +86,7 @@ class PurchaseDataTable extends DataTable
             Column::make('unit')->title(__('locale.Unit')),
             Column::make('cost')->title(__('locale.Cost')),
             Column::make('currency')->title(__('locale.Currency')),
+            Column::make('bill')->title(__('locale.Bill')),
             Column::make('created_at')->title(__('locale.Created at')),
             Column::computed('action')
                   ->title(__('locale.Action'))

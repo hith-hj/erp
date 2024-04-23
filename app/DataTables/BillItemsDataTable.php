@@ -31,7 +31,7 @@ class BillItemsDataTable extends DataTable
             ->eloquent($query)
             ->addColumn('action', function($item){
                 if($item->bill->status ==0){
-                    $type = $item->type == 1 ? 'purchase':'sale';
+                    $type = $item->bill->type == 1 ? 'purchase':'sale';
                     return "<a href='/bill/$item->bill_id/$type/$item->id/delete'>delete</a>";
                 }
             })
@@ -106,7 +106,7 @@ class BillItemsDataTable extends DataTable
             Column::make('quantity')->title(__('locale.Quantity')),
             Column::make('cost')->title(__('locale.Cost')),
             Column::make('currency')->title(__('locale.Currency')),
-            Column::make('account')->title(__('locale.Account')),
+            Column::make('discount')->title(__('locale.Discount')),
             $this->bill->type == 1 ?
             Column::make('vendor')->title(__('locale.Vendor')):
             Column::make('client')->title(__('locale.Client')),

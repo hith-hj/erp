@@ -31,18 +31,19 @@ class BillRepository implements BaseRepository
     }
 
 
-    public function add($request): Bill
+    public function add($data): Bill
     {
+        $data = (object)$data;
         return Bill::create([
             'serial'=> Str::random(8),
-            'type'=>$request->type ?? 1,
+            'type'=>$data->type ?? 1,
         ]);
     }
 
 
-    public function update($request, int $id): bool
+    public function update($data, int $id): bool
     {
-        return Bill::findOrFail($id)->update($request->all());
+        return Bill::findOrFail($id)->update($data);
     }
 
 
@@ -111,7 +112,7 @@ class BillRepository implements BaseRepository
 
     public function getCurrencies()
     {
-        return Currency::with(['rates:id'])->get(['id','name','code']);
+        return Currency::with(['rates:id,name'])->get(['id','name','code']);
     }
 
 

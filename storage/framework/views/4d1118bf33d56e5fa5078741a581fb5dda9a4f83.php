@@ -1,10 +1,11 @@
-@extends('layouts.tableLayout')
 
-@section('title')
-    {{ __('locale.Purchase') }}
-@endsection
 
-@section('content')
+<?php $__env->startSection('title'); ?>
+    <?php echo e(__('locale.Purchase')); ?>
+
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
     <section id="card-content-types">
         <div class="row">
             <div class="col-12">
@@ -30,17 +31,17 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>{{ $purchase->id }}</td>
-                                    <td>{{ $purchase->bill_id }}</td>
-                                    <td>{{ $purchase->vendor }}</td>
-                                    <td>{{ $purchase->inventory->name }}</td>
-                                    <td>{{ $purchase->material->name }}</td>
-                                    <td>{{ $purchase->quantity }}</td>
-                                    <td>{{ $purchase->unit->name }}</td>
-                                    <td>{{ $purchase->cost }}</td>
-                                    <td>{{ $purchase->currency->name }}</td>
-                                    <td>{{ $purchase->discount }}</td>
-                                    <td>{{ $purchase->note }}</td>
+                                    <td><?php echo e($purchase->id); ?></td>
+                                    <td><?php echo e($purchase->bill_id); ?></td>
+                                    <td><?php echo e($purchase->vendor); ?></td>
+                                    <td><?php echo e($purchase->inventory->name); ?></td>
+                                    <td><?php echo e($purchase->material->name); ?></td>
+                                    <td><?php echo e($purchase->quantity); ?></td>
+                                    <td><?php echo e($purchase->unit->name); ?></td>
+                                    <td><?php echo e($purchase->cost); ?></td>
+                                    <td><?php echo e($purchase->currency->name); ?></td>
+                                    <td><?php echo e($purchase->discount); ?></td>
+                                    <td><?php echo e($purchase->note); ?></td>
                                     <td><span class="badge rounded-pill badge-light-success me-1">Active</span></td>
                                     <td>
                                         <div class="dropdown">
@@ -56,10 +57,10 @@
                                                 </a>
                                                 <form 
                                                     id="deletePurchaseForm"
-                                                    action="{{route('purchase.delete',['purchase'=>$purchase->id])}}"
+                                                    action="<?php echo e(route('purchase.delete',['purchase'=>$purchase->id])); ?>"
                                                     method="POST"
                                                     >
-                                                    @csrf @method('delete')
+                                                    <?php echo csrf_field(); ?> <?php echo method_field('delete'); ?>
                                                 </form>
                                             </div>
                                         </div>
@@ -72,4 +73,6 @@
             </div>
         </div>
     </section>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.tableLayout', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\Users\96393\Desktop\y1s\erp_v1\resources\views/main/purchase/show.blade.php ENDPATH**/ ?>

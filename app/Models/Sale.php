@@ -18,9 +18,12 @@ class Sale extends Model
         'bill_id',
         'unit_id',
         'rate_to',
-        'account',
+        'discount',
         'client',
         'cost',
+        'level',
+        'note',
+        'mark',
     ];
 
     public function bill()

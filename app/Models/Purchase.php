@@ -17,7 +17,7 @@ class Purchase extends Model
         'bill_id',
         'unit_id',
         'rate_to',
-        'account',
+        'discount',
         'vendor',
         'level',
         'cost',

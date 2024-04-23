@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Purchase;
 
 use App\DataTables\PurchaseDataTable;
 use App\Http\Controllers\BaseController;
+use App\Http\Repositories\Bill\BillRepository;
 use App\Http\Repositories\Purchase\PurchaseRepository;
 use App\Http\Validator\Purchase\PurchaseValidator;
 use App\Models\Purchase;
@@ -37,25 +38,28 @@ class PurchaseController extends BaseController
             'inventories' => $this->repo->getInventories() ?? [],
             'currencies' => $this->repo->getCurrencies() ?? [],
             'materials' => $this->repo->getMaterials() ?? [],
-            'accounts' => [
-                ['id'=>1,'name'=>'acc_1'],
-                ['id'=>2,'name'=>'acc_2'],
-                ['id'=>3,'name'=>'acc_3']
-            ],
-            'vendors' => [
-                ['id'=>1,'name'=>'vend_1'],
-                ['id'=>2,'name'=>'vend_2'],
-                ['id'=>3,'name'=>'vend_3']
-            ],
+            'vendors' => $this->repo->getVendors() ?? [] ,
+            'bill' => (new BillRepository())->add(['type'=>1]),
         ]);   
     }
 
     public function store(Request $request)
     {
         PurchaseValidator::validate($request);
-        $purchase = $this->repo->add($request);
-        $this->repo->updateInventoryMaterial($request);        
-        return redirect()->route('purchase.show',['id'=>$purchase->id]);
+        foreach($request->purchases as $purchase)
+        {
+            $purchase['bill_id'] = $request->bill_id;
+            $purchase = $this->repo->add($purchase);
+            $this->repo->updateInventoryMaterial($purchase);        
+        }
+        return redirect()->route('bill.show',['id'=>$request->bill_id]);
+    }
+
+    public function delete(Purchase $purchase)
+    {
+        $this->repo->restorInventoryMaterial($purchase->id);
+        $this->repo->delete($purchase->id);
+        return redirect()->route('bill.show',['id'=>$purchase->bill_id]);
     }
 
     public function storeToBill(Request $request)
