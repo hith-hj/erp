@@ -31,23 +31,17 @@ class CurrencyController extends BaseController
 
     public function create()
     {
-        return view('main.currency.create',[
-            'accounts' => [
-                ['id'=>1,'name'=>'acc_1'],
-                ['id'=>2,'name'=>'acc_2'],
-                ['id'=>3,'name'=>'acc_3']
-            ],
-            'vendors' => [
-                ['id'=>1,'name'=>'vend_1'],
-                ['id'=>2,'name'=>'vend_2'],
-                ['id'=>3,'name'=>'vend_3']
-            ],
-        ]);   
+        return view('main.currency.create');   
     }
 
     public function store(Request $request)
     {
-        dd($request->all());
+        $request->validate([
+            'name'=>['required','string','unique:currencies,name'],
+            'code'=>['required','string'],
+        ]);
+        Currency::create($request->all());
+        return redirect()->route('currency.all')->with('success','Currency Added');
     }
 
     public function currency_rate_store(Request $request)

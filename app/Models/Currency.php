@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Currency extends Model
 {
     use HasFactory;
+    protected $fillable = ['name','code'];
 
     public function rates()
     {

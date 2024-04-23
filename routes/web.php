@@ -71,7 +71,7 @@ Route::group(['middleware'=>'auth',],function(){
         Route::get('all','index')->name('currency.all');
         Route::get('show/{id}','show')->name('currency.show');
         Route::get('create','create')->name('currency.create');
-        Route::get('store','store')->name('currency.store');
+        Route::post('store','store')->name('currency.store');
         Route::post('rates/store','currency_rate_store')->name('currency.rates.store');
     });
     Route::group([

@@ -154,5 +154,6 @@ return [
     "New vendor" => "اضافة مزود",
     "Vendors" => "المزودين",
     "Vendor" => "مزود",
-    "" => "",
+    "Discount" => "الحسم",
+    "New Sale" => "بند مبيع",
 ];

@@ -21,8 +21,9 @@ class MaterialUnit extends Pivot
         return $this->belongsTo(Material::class,'material_id');
     }
 
-    public function mainUnit()
+    public function mainUnitName()
     {
-        return !is_null($this->main_unit) ? Unit::find($this->main_unit) : '';
+        $main = Unit::find($this->main_unit);
+        return !is_null($this->main_unit) && !is_null($main) ? $main->name : __('locale.None');
     }
 }

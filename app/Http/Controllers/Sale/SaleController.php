@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers\Sale;
 
+use App\DataTables\SaleDataTable;
 use App\Http\Controllers\BaseController;
+use App\Http\Repositories\Bill\BillRepository;
 use App\Http\Repositories\Sale\SaleRepository;
 use App\Http\Validator\Sale\SaleValidator;
+use App\Models\Sale;
 use Illuminate\Http\Request;
 
 class SaleController extends BaseController
 {
-    private $repo;
 
+    private $repo;
 
     public function __construct()
     {
@@ -19,9 +22,47 @@ class SaleController extends BaseController
 
     public function index()
     {
-        return 'sales';
+        $table = new SaleDataTable();       
+        return $table->render('main.sale.index');
     }
 
+    public function show($id)
+    {
+        return view('main.sale.show',[
+            'sale'=>$this->repo->findWith($id,['inventory','material','currency'])
+        ]);
+    }
+
+    public function create()
+    {
+        return view('main.sale.create',[
+            'inventories' => $this->repo->getInventories() ?? [],
+            'currencies' => $this->repo->getCurrencies() ?? [],
+            'materials' => $this->repo->getMaterials() ?? [],
+            'clients' => $this->repo->getClients() ?? [] ,
+            'bill' => (new BillRepository())->add(['type'=>2]),
+        ]);   
+    }
+
+    public function store(Request $request)
+    {
+        SaleValidator::validate($request);
+        foreach($request->sales as $sale)
+        {
+            $sale['bill_id'] = $request->bill_id;
+            $sale = $this->repo->add($sale);
+            $this->repo->updateInventoryMaterial($sale);        
+        }
+        return redirect()->route('bill.show',['id'=>$request->bill_id]);
+    }
+
+    public function delete(Sale $sale)
+    {
+        $this->repo->restorInventoryMaterial($sale->id);
+        $this->repo->delete($sale->id);
+        return redirect()->route('bill.show',['id'=>$sale->bill_id]);
+    }
+    
     public function storeToBill(Request $request)
     {
         SaleValidator::validate($request);
@@ -38,4 +79,4 @@ class SaleController extends BaseController
         $this->repo->restorInventoryMaterial($sale_id);
         return $this->repo->delete($sale_id);
     }
-}
+} 

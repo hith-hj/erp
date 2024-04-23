@@ -71,7 +71,7 @@ class DatabaseSeeder extends Seeder
         {
             $mat->units()->attach(rand(1,4),[
                 'is_default'=>$rand = rand(0,1),
-                'main_unit'=>$rand==0 ? rand(1,10):0,
+                'main_unit'=>$rand==0 ? rand(1,4):null,
                 'rate_to_main_unit'=>$rand==0 ? rand(1,30):0
             ]);
             $invo = $inventories[$key];

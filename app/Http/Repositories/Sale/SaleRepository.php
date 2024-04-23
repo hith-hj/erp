@@ -3,6 +3,7 @@
 namespace App\Http\Repositories\Sale;
 
 use App\Http\Repositories\BaseRepository;
+use App\Http\Repositories\Client\ClientRepository;
 use App\Http\Repositories\Inventory\InventoryRepository;
 use App\Models\Currency;
 use App\Models\Inventory;
@@ -25,17 +26,15 @@ class SaleRepository implements BaseRepository
         return Sale::findOrFail($id, $columns);
     }
 
-    public function add($request): Sale
+    public function add($data): Sale
     {
-        return Sale::create($request->all());
+        return Sale::create($data);
     }
 
-
-    public function update($request, int $id): bool
+    public function update($data, int $id): bool
     {
-        return Sale::findOrFail($id)->update($request->all());
+        return Sale::findOrFail($id)->update($data);
     }
-
 
     public function delete(int $id): bool
     {
@@ -84,6 +83,11 @@ class SaleRepository implements BaseRepository
     public function getInventories()
     {
         return Inventory::all(['id', 'name']);
+    }
+
+    public function getClients()
+    {
+        return (new ClientRepository())->all();
     }
 
     public function updateInventoryMaterial($request)

@@ -351,4 +351,7 @@ return [
     "New vendor" => "New Vendor",
     "Vendors" => "Vendors",
     "Vendor" => "Vendor",
+    
+    "Discount" => "Discount",
+    "New Sale" => "New Sale",
 ];

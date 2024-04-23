@@ -73,8 +73,8 @@
                                                 {{ $unit->pivot->is_default ? 'default' : '' }}
                                             </span>
                                         </td>
-                                        @if(!is_null($unit->pivot->main_unit))
-                                            <td>{{ $unit->pivot->mainUnit()->name}}</td>
+                                        @if(! is_null($unit->pivot->main_unit))
+                                            <td>{{ $unit->pivot->mainUnitName()}}</td>
                                         @else
                                             <td>-</td>
                                         @endif
