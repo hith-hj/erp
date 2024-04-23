@@ -106,7 +106,7 @@ return [
     "Note" => "ملاحظات",
     "Mark" => "العلامة",
     "Level" => "المستوى",
-    "Account" => "الحساب",    
+    "Account" => "الحساب",
     "New Purchase" => "بند شراء",
     "Purchase" => "شراء",
     "Purchases" => "مشتريات",
@@ -125,14 +125,15 @@ return [
     "Save" => "حفظ",
     "Audit" => "مدقق",
     "Check" => "مراجع",
-    
+
     "Saved" => "محفوظ",
     "Unsaved" => "غير محفوظ",
     "Audited" => "مدقق",
     "Checked" => "مراجع",
 
     "Is Default" => "الافتراضي",
-    "Default" => "افتراضي", 
+    "Default" => "افتراضي",
+    "Sale" => "مبيع",
     "Sale" => "مبيع",
     "Sales" => "مبيعات",
     "Client" => "زبون",
@@ -142,7 +143,7 @@ return [
     "Closed" => "مغلق",
     "Secret" => "سري",
     "Main" => 'الرئيسية',
-    
+
     "Unit" => "الوحدة",
     "Main unit" => "الوحدة الاساسية",
     "Main material" => "المادة الاساسية ",
