@@ -54,8 +54,8 @@ class InventoryDataTable extends DataTable
     {
         return $this->builder()
                     ->setTableId('inventory-table')
+                    ->addTableClass('table-sm')
                     ->columns($this->getColumns())
-                    ->setTableAttribute('class','table datatables-basic')
                     ->minifiedAjax()
                     ->dom('Bfrtip')
                     ->buttons(

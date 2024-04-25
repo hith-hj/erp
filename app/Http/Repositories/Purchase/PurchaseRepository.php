@@ -91,37 +91,59 @@ class PurchaseRepository implements BaseRepository
         return (new VendorRepository())->all(['id','first_name','last_name']);
     }
 
-    public function updateInventoryMaterial($data)
+    public function updateInventoryMaterial($request)
     {
-        $data = (object)$data;
+        $data = (object)$request;
         $inventoryRepo = new InventoryRepository();
         $inventory = $inventoryRepo->find($data->inventory_id);
-        if ($inventory->materials()->where('material_id', $data->material_id)->exists()) {
-            $inventory->materials()
+        $material = $inventory
+            ->materials()
+            ->where('material_id', $data->material_id)
+            ->first();
+        if ( $material ) {
+            $inventory
+                ->materials()
                 ->updateExistingPivot($data->material_id, [
-                    'quantity'=> $data->quantity + $inventory->materials()
-                        ->where('material_id', $data->material_id)->first()->pivot->quantity
+                    'quantity'=> $material->pivot->quantity + 
+                    $this->getBaseUnitQuantity($material->units,$data)
                 ]);
         } else {
-            $inventory->materials()->attach($data->material_id, ['quantity' => $data->quantity]);
+            $material = Material::find($data->material_id);
+            $inventory
+                ->materials()
+                ->attach($data->material_id, [
+                    'quantity' => $this->getBaseUnitQuantity($material->units,$data)
+                ]);
         }
         return true;
     }
-    
     
     public function restorInventoryMaterial($purchase_id)
     {
         $purchase = $this->find($purchase_id);
         $inventoryRepo = new InventoryRepository();
         $inventory = $inventoryRepo->find($purchase->inventory_id);
+        $material = $inventory
+            ->materials()
+            ->where('material_id', $purchase->material_id)
+            ->first();
         return  $inventory->materials()
-                ->syncWithPivotValues($purchase->material_id, [
-                    'quantity' => $inventory->materials()
-                        ->where('material_id', $purchase->material_id)
-                        ->first()
-                        ->pivot->quantity - $purchase->quantity
-                ], false);
+                ->updateExistingPivot($purchase->material_id, [
+                    'quantity' => $material->pivot->quantity - 
+                    $this->getBaseUnitQuantity($material->units,$purchase)
+                ]);
     }
 
-
+    public function getBaseUnitQuantity($collection,$data)
+    {
+        $unit = $collection->first(function($value)use($data){
+            return $value->pivot->unit_id == $data->unit_id;
+        });
+        $quantity = $data->quantity;
+        if(! $unit->pivot->is_default )
+        {
+            $quantity = $data->quantity * $unit->pivot->rate_to_main_unit;
+        }
+        return $quantity;
+    }
 }

@@ -10,9 +10,10 @@ class PurchaseValidator
 {
   public static function validate(Request $request){
     return $request->validate([
+      'bill_id' => ['required','exists:bills,id'],
       'purchases'=>['required','array','min:1'],
       'purchases.*.discount' => ['nullable',],
-      'purchases.*.vendor' => ['required',],
+      'purchases.*.vendor_id' => ['required',],
       'purchases.*.inventory_id' => ['required',],
       'purchases.*.material_id' => ['required',],
       'purchases.*.quantity' => ['required',],

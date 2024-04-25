@@ -118,7 +118,7 @@ class BillRepository implements BaseRepository
 
     public function getMaterials()
     {
-        return Material::with('units')->get(['id','name']);
+        return Material::with(['units','inventories'])->get(['id','name']);
     }
 
     

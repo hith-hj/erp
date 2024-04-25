@@ -94,7 +94,7 @@
     $(document).ready(function() {
         $(function() {
             'use strict';
-            $('.purchases-repeater').repeater({
+            $('.items-repeater').repeater({
                 isFirstItemUndeletable: true,
                 initEmpty: false,
                 show: function() {

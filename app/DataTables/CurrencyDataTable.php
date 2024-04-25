@@ -51,6 +51,7 @@ class CurrencyDataTable extends DataTable
     {
         return $this->builder()
                     ->setTableId('currency-table')
+                    ->addTableClass('table-sm')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
                     ->dom('Bfrtip')

@@ -59,6 +59,7 @@ class VendorDataTable extends DataTable
     {
         return $this->builder()
                     ->setTableId('vendor-table')
+                    ->addTableClass('table-sm')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
                     ->dom('Bfrtip')

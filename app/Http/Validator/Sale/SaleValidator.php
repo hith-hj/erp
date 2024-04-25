@@ -9,16 +9,21 @@ class SaleValidator
     public static function validate(Request $request)
     {
         return $request->validate([
-            'discount' => ['nullable',],
-            'client' => ['required',],
-            'inventory_id' => ['required',],
-            'material_id' => ['required',],
-            'quantity' => ['required',],
-            'unit_id' => ['required',],
-            'cost' => ['required',],
-            'currency_id' => ['required',],
-            'rate_to' => ['required',],
-            'total' => ['required',],
+            'bill_id' => ['required','exists:bills,id'],
+            'sales'=>['required','array','min:1'],
+            'sales.*.discount' => ['nullable',],
+            'sales.*.client_id' => ['required',],
+            'sales.*.inventory_id' => ['required',],
+            'sales.*.material_id' => ['required',],
+            'sales.*.quantity' => ['required',],
+            'sales.*.unit_id' => ['required',],
+            'sales.*.cost' => ['required',],
+            'sales.*.currency_id' => ['required',],
+            'sales.*.rate_to' => ['required',],
+            'sales.*.total' => ['required',],
+            'sales.*.note' => ['nullable',],
+            'sales.*.mark' => ['required',],
+            'sales.*.level' => ['required',],
         ]);
     }
 }

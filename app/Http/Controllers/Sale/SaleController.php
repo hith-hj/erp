@@ -50,8 +50,13 @@ class SaleController extends BaseController
         foreach($request->sales as $sale)
         {
             $sale['bill_id'] = $request->bill_id;
-            $sale = $this->repo->add($sale);
-            $this->repo->updateInventoryMaterial($sale);        
+            $sale['created_by'] = auth()->user()->id;
+            try {
+                $this->repo->updateInventoryMaterial($sale); 
+                $sale = $this->repo->add($sale);
+            } catch (\Throwable $th) {
+                return back()->with('error',$th->getMessage());
+            }       
         }
         return redirect()->route('bill.show',['id'=>$request->bill_id]);
     }

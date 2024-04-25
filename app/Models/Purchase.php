@@ -13,12 +13,13 @@ class Purchase extends Model
         'inventory_id',
         'material_id',
         'currency_id',
+        'created_by',
+        'vendor_id',
         'quantity',
         'bill_id',
         'unit_id',
         'rate_to',
         'discount',
-        'vendor',
         'level',
         'cost',
         'note',
@@ -50,5 +51,14 @@ class Purchase extends Model
         return $this->belongsTo(bill::class);
     }
     
+    public function user()
+    {
+        return $this->belongsTo(User::class,'created_by');
+    }
+
+    public function vendor()
+    {
+        return $this->belongsTo(Vendor::class);
+    }
 
 }

@@ -1,6 +1,4 @@
-<?php
-    $configData = Helper::applClasses();
-?>
+
 <div class="main-menu menu-fixed <?php echo e($configData['theme'] === 'dark' || $configData['theme'] === 'semi-dark' ? 'menu-dark' : 'menu-light'); ?> menu-accordion menu-shadow"
     data-scroll-to-active="true">
     <div class="navbar-header">

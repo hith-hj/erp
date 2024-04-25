@@ -81,7 +81,7 @@ class InventoryMaterialDataTable extends DataTable
     {
         return $this->builder()
                     ->setTableId('inventorymaterial-table')
-                    ->setTableAttribute('class','table datatables-basic')
+                    ->addTableClass('table-sm')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
                     ->dom('Bfrtip')

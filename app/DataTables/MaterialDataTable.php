@@ -65,8 +65,8 @@ class MaterialDataTable extends DataTable
     public function html()
     {
         return $this->builder()
+                    ->addTableClass('table-sm')
                     ->setTableId('materials-table')
-                    ->setTableAttribute('class','table datatables-basic')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
                     ->dom('Bfrtip')

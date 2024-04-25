@@ -14,12 +14,13 @@ class Sale extends Model
         'inventory_id',
         'material_id',
         'currency_id',
+        'created_by',
+        'client_id',
         'quantity',
         'bill_id',
         'unit_id',
         'rate_to',
         'discount',
-        'client',
         'cost',
         'level',
         'note',
@@ -49,5 +50,15 @@ class Sale extends Model
     public function currency()
     {
         return $this->belongsTo(Currency::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class,'created_by');
+    }
+
+    public function client()
+    {
+        return $this->belongsTo(Client::class);
     }
 }

@@ -63,4 +63,14 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->settings()->where('key',$key)->first()->value ?? 'Not Set';
     }
 
+    public function sale()
+    {
+        return $this->hasMany(Sale::class);
+    }
+    
+    public function purchase()
+    {
+        return $this->hasMany(Purchase::class);
+    }
+
 }

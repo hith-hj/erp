@@ -60,6 +60,7 @@ class ClientDataTable extends DataTable
     {
         return $this->builder()
                     ->setTableId('client-table')
+                    ->addTableClass('table-sm')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
                     ->dom('Bfrtip')

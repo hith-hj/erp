@@ -49,6 +49,7 @@ class PurchaseController extends BaseController
         foreach($request->purchases as $purchase)
         {
             $purchase['bill_id'] = $request->bill_id;
+            $purchase['created_by'] = auth()->user()->id;
             $purchase = $this->repo->add($purchase);
             $this->repo->updateInventoryMaterial($purchase);        
         }

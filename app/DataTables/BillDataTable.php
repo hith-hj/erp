@@ -69,6 +69,7 @@ class BillDataTable extends DataTable
     {
         return $this->builder()
                     ->setTableId('bill-table')
+                    ->addTableClass('table-sm')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
                     ->dom('Bfrtip')

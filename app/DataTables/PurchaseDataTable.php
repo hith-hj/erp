@@ -60,6 +60,7 @@ class PurchaseDataTable extends DataTable
     {
         return $this->builder()
                     ->setTableId('purchase-table')
+                    ->addTableClass('table-sm')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
                     ->dom('Bfrtip')

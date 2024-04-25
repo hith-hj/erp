@@ -1,4 +1,4 @@
-<?php $configData = Helper::applClasses(); ?>
+
 <!-- BEGIN: Theme CSS-->
 
 <!-- BEGIN: Vendor CSS-->

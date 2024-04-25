@@ -1,4 +1,4 @@
-@php $configData = Helper::applClasses(); @endphp
+{{-- @php $configData = Helper::applClasses(); @endphp --}}
 <!-- BEGIN: Theme CSS-->
 
 <!-- BEGIN: Vendor CSS-->

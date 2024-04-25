@@ -21,7 +21,23 @@ class SaleDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->addColumn('action', 'sale.action');
+            ->addColumn('action', function($sale){
+                $lang = __('locale.View');
+                return "<a href='/sale/show/$sale->id'>$lang</a>";
+            })
+            ->addColumn('name',function($sale){
+                return $sale->material->name;
+            })
+            ->addColumn('unit',function($sale){
+                return $sale->unit->name;
+            })
+            ->addColumn('bill',function($sale){
+                return $sale->bill->serial ?? '';
+            })
+            ->addColumn('currency',function($sale){
+                return $sale->currency->name;
+            })
+            ;
     }
 
     /**
@@ -44,16 +60,16 @@ class SaleDataTable extends DataTable
     {
         return $this->builder()
                     ->setTableId('sale-table')
+                    ->addTableClass('table-sm')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
                     ->dom('Bfrtip')
                     ->orderBy(1)
                     ->buttons(
-                        Button::make('create'),
-                        Button::make('export'),
-                        Button::make('print'),
-                        Button::make('reset'),
-                        Button::make('reload')
+                        Button::make('pdf')->addClass('btn btn-outline-primary'),
+                        Button::make('print')->addClass('btn btn-outline-primary'),
+                        Button::make('excel')->addClass('btn btn-outline-primary'),
+                        Button::make('copy')->addClass('btn btn-outline-primary'),
                     );
     }
 
@@ -65,15 +81,19 @@ class SaleDataTable extends DataTable
     protected function getColumns()
     {
         return [
+            Column::make('id'),
+            Column::make('name')->title(__('locale.Name')),
+            Column::make('quantity')->title(__('locale.Quantity')),
+            Column::make('unit')->title(__('locale.Unit')),
+            Column::make('cost')->title(__('locale.Cost')),
+            Column::make('currency')->title(__('locale.Currency')),
+            Column::make('bill')->title(__('locale.Bill')),
+            Column::make('created_at')->title(__('locale.Created at')),
             Column::computed('action')
                   ->exportable(false)
                   ->printable(false)
                   ->width(60)
                   ->addClass('text-center'),
-            Column::make('id'),
-            Column::make('add your columns'),
-            Column::make('created_at'),
-            Column::make('updated_at'),
         ];
     }
 

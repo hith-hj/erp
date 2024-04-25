@@ -11,6 +11,11 @@ class Client extends Model
     use HasFactory,SoftDeletes;
     protected $fillable = ['first_name','last_name','email','phone'];
 
+    public function sales()
+    {
+        return $this->hasMany(Sale::class);
+    }
+
     public function getfullNameAttribute()
     {
         return $this->first_name.' '.$this->last_name;

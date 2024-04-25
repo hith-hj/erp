@@ -29,10 +29,29 @@ class BillItemsDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->addColumn('action', function($item){
+            ->addColumn('action', function($item){                
+                $view = __('locale.View');
+                $options = __('locale.Options');
+                $delete = __('locale.Delete');
                 if($item->bill->status ==0){
                     $type = $item->bill->type == 1 ? 'purchase':'sale';
-                    return "<a href='/bill/$item->bill_id/$type/$item->id/delete'>delete</a>";
+                    // return "<a href='/bill/$item->bill_id/$type/$item->id/delete'>delete</a>";
+                    return "
+                    <div class='dropdown'>
+                      <button type='button' class='btn btn-sm dropdown-toggle hide-arrow py-0' data-bs-toggle='dropdown'>
+                        $options
+                      </button>
+                      <div class='dropdown-menu dropdown-menu-end'>
+                        <a class='dropdown-item' href='/$type/show/$item->id'>
+                          <i data-feather='edit-2' class='me-50'></i>
+                          <span>$view</span>
+                        </a>
+                        <a class='dropdown-item' href='/bill/$item->bill_id/$type/$item->id/delete'>
+                          <i data-feather='edit-2' class='me-50'></i>
+                          <span>$delete</span>
+                        </a>
+                      </div>
+                    </div>";
                 }
             })
             ->addColumn('material',function($item){
@@ -46,6 +65,11 @@ class BillItemsDataTable extends DataTable
             })
             ->addColumn('currency',function($item){
                 return $item->currency->name;
+            })
+            ->addColumn($this->bill->type == 1?'vendor':'client',function($item){
+                return $this->bill->type == 1 ?
+                    $item->vendor->full_name :
+                    $item->client->full_name ;
             })
             ;
     }
@@ -80,6 +104,7 @@ class BillItemsDataTable extends DataTable
     {
         return $this->builder()
                     ->setTableId('billitems-table')
+                    ->addTableClass('table-sm')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
                     ->dom('Bfrtip')
@@ -104,6 +129,7 @@ class BillItemsDataTable extends DataTable
             Column::make('inventory')->title(__('locale.Inventory')),
             Column::make('material')->title(__('locale.Material')),
             Column::make('quantity')->title(__('locale.Quantity')),
+            Column::make('unit')->title(__('locale.Unit')),
             Column::make('cost')->title(__('locale.Cost')),
             Column::make('currency')->title(__('locale.Currency')),
             Column::make('discount')->title(__('locale.Discount')),
