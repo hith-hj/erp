@@ -13,9 +13,9 @@
 <!-- custome scripts file for user -->
 <script sync src="{{ asset(mix('js/core/scripts.js')) }}"></script>
 
-{{-- @if($configData['blankPage'] === false)
+@if($configData['blankPage'] === false)
 <script src="{{ asset('customizer.js') }}"></script>
-@endif --}}
+@endif
 <!-- END: Theme JS-->
 <!-- BEGIN: Page JS-->
 @yield('page-script')

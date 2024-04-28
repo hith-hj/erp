@@ -57,7 +57,9 @@
     </div>
     <!-- End: Content-->
 
-    
+    <?php if(isset($configData['blankPage']) && $configData['blankPage'] == false): ?>
+        <?php echo $__env->make('content/pages/customizer', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+    <?php endif; ?>
 
     <div class="sidenav-overlay"></div>
     <div class="drag-target"></div>

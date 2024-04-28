@@ -25,7 +25,7 @@ class SaleDataTable extends DataTable
                 $lang = __('locale.View');
                 return "<a href='/sale/show/$sale->id'>$lang</a>";
             })
-            ->addColumn('name',function($sale){
+            ->addColumn('material',function($sale){
                 return $sale->material->name;
             })
             ->addColumn('unit',function($sale){
@@ -82,7 +82,7 @@ class SaleDataTable extends DataTable
     {
         return [
             Column::make('id'),
-            Column::make('name')->title(__('locale.Name')),
+            Column::make('material')->title(__('locale.Material')),
             Column::make('quantity')->title(__('locale.Quantity')),
             Column::make('unit')->title(__('locale.Unit')),
             Column::make('cost')->title(__('locale.Cost')),

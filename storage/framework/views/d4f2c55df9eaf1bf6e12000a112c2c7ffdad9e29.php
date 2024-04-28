@@ -13,7 +13,9 @@
 <!-- custome scripts file for user -->
 <script sync src="<?php echo e(asset(mix('js/core/scripts.js'))); ?>"></script>
 
-
+<?php if($configData['blankPage'] === false): ?>
+<script src="<?php echo e(asset('customizer.js')); ?>"></script>
+<?php endif; ?>
 <!-- END: Theme JS-->
 <!-- BEGIN: Page JS-->
 <?php echo $__env->yieldContent('page-script'); ?>
