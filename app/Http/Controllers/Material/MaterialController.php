@@ -40,7 +40,7 @@ class MaterialController extends BaseController
     {
         MaterialValidator::validateMaterialDetails($request);
         MaterialValidator::preventDublicateUnits($request);
-        $material = $this->repo->add($request);        
+        $material = $this->repo->add($request->only(['name','type','main_material']));        
         $this->repo->addUnits($request,$material);
         return redirect()->route('material.show',['id'=>$material->id]);
     }

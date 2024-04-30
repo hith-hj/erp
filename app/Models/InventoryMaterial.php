@@ -4,22 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class InventoryMaterial extends Pivot
 {
-    use HasFactory, \Illuminate\Database\Eloquent\SoftDeletes;
+    use HasFactory, SoftDeletes;
     
     public $incrementing = true;
     protected $casts = ['status'=>'integer'];
-
-
     protected $fillable = [
         'inventory_id',
         'material_id',
         'quantity',
     ];
-
-    // protected $with = ['material'];
 
     public function material()
     {
@@ -29,10 +26,10 @@ class InventoryMaterial extends Pivot
     public function status()
     {
         return match($this->status){
-            1=>'In Stock',
-            0=>'Requested',
-            -1=>'Out of stock',
-            default=>'Not Set'
+            1=>__('locale.In stock'),
+            0=>__('locale.Requested'),
+            -1=>__('locale.Out of stock'),
+            default=>__('locale.None')
         };
     }
 }

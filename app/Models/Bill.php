@@ -24,19 +24,19 @@ class Bill extends Model
     public function getGetTypeAttribute()
     {
         return match($this->type){
-            1=>'Purchase',
-            2=>'Sale',
-            default=>'Not Set'
+            1=>__('locale.Purchase'),
+            2=>__('locale.Sale'),
+            default=>__('locale.None'),
         };
     }
 
     public function getGetStatusAttribute()
     {
         return match($this->status){
-            0=>'Unsaved',
-            1=>'Saved',
-            2=>'Audited',
-            default=>'Not Set'
+            0=>__('locale.Unsaved'),
+            1=>__('locale.Saved'),
+            2=>__('locale.Audited'),
+            default=>__('locale.None')
         };
     }
 }

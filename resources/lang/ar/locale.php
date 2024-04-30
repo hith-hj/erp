@@ -157,4 +157,13 @@ return [
     "Vendor" => "مزود",
     "Discount" => "الحسم",
     "New Sale" => "بند مبيع",
+
+    "Active" => "نشط",
+    "Suspended" => "متوقف",
+    "In stock" => "موجود",
+    "Requested" => "تم الطلب",
+    "Out of stock" => "غير موجود",
+    "New Unit" => "أضافة وحدة",
+
+    
 ];

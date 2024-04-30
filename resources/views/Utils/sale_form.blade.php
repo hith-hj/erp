@@ -30,13 +30,12 @@
                             Object.keys(this.materialInventories).forEach(inventory => {
                                 if(this.materialInventories[inventory].id == id)
                                 {
-                                    this.limit = Number(this.materialInventories[inventory].pivot.quantity);
+                                    return this.limit = Number(this.materialInventories[inventory].pivot.quantity);
                                 }
                             }) 
-                            console.log(this.quantity,this.limit);
                         },
                         setCurrencyRates(id){
-                            this.currencyRates = this.currencies[id].rates;
+                            return this.currencyRates = this.currencies[id].rates;
                         },
                         setTotal(id){
                             this.total = 0;

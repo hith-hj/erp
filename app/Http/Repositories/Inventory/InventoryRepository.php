@@ -20,24 +20,19 @@ class InventoryRepository implements BaseRepository
         return Inventory::findOrFail($id,$columns);
     }
 
-    public function add($request) : Inventory
+    public function add($data) : Inventory
     {        
-        $Inventory = Inventory::create($request->all());       
-        return $Inventory;
+        return Inventory::create($data);       
     }
 
-
-    public function update($request,int $id) :bool
+    public function update($data,int $id) :bool
     {
-        $Inventory = Inventory::findOrFail($id);        
-        return $Inventory->update($request->all());
+        return Inventory::findOrFail($id)->update($data);
     }
-
 
     public function delete(int $id) : bool
     {
-        $Inventory = Inventory::findOrFail($id);
-        return $Inventory->delete();
+        return Inventory::findOrFail($id)->delete();
     }
 
     public function allWith(
@@ -71,4 +66,20 @@ class InventoryRepository implements BaseRepository
         return (new MaterialRepository())->all();
     }
 
+    public function checkForMaterialDoublication($data)
+    {
+        $data = $data['materials'];
+        for($i = 0 ; $i < count($data) ; $i++ )
+        {
+            for($j = $i+1 ; $j < count($data) ; $j++ )
+            {
+                if($data[$i]['material_id'] == $data[$j]['material_id'])
+                {
+                    $data[$i]['quantity'] = $data[$i]['quantity'] + $data[$j]['quantity'];
+                    array_splice($data,$j,1);
+                }
+            }
+        }
+        return $data;
+    }
 }

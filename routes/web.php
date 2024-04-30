@@ -1,18 +1,18 @@
 <?php
 
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Bill\BillController;
 use App\Http\Controllers\Card\CardController;
 use App\Http\Controllers\Client\ClientController;
 use App\Http\Controllers\Currency\CurrencyController;
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Inventory\InventoryController;
 use App\Http\Controllers\Material\MaterialController;
 use App\Http\Controllers\Purchase\PurchaseController;
-use App\Http\Controllers\Sale\SaleController;
-use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Section\SectionController;
 use App\Http\Controllers\Vendors\VendorController;
-use App\Models\Sale;
+use App\Http\Controllers\Sale\SaleController;
+use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\Unit\UnitController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -32,6 +32,7 @@ Route::group(['middleware'=>'auth',],function(){
         Route::get('delete/{id}','delete')->name('card.delete');
 
     });
+
     Route::group([
         'prefix'=>'user',
         'controller'=>UserController::class
@@ -43,6 +44,7 @@ Route::group(['middleware'=>'auth',],function(){
         Route::post('update/{id}','update')->name('user.update');
         Route::delete('delete/{user}','delete')->name('user.delete');
     });
+    
     Route::group([
         'prefix'=>'material',
         'controller'=>MaterialController::class
@@ -53,6 +55,7 @@ Route::group(['middleware'=>'auth',],function(){
         Route::post('store','store')->name('material.store');
         Route::delete('delete/{material}','delete')->name('material.delete');
     });
+
     Route::group([
         'prefix'=>'inventory',
         'controller'=>InventoryController::class
@@ -64,6 +67,7 @@ Route::group(['middleware'=>'auth',],function(){
         Route::post('{inventory_id}/material/store','material_store')->name('inventory.material.store');
         Route::get('{inventory_id}/material/{material_id}/delete','material_delete')->name('inventory.material.delete');
     });
+
     Route::group([
         'prefix'=>'currency',
         'controller'=>CurrencyController::class
@@ -74,6 +78,7 @@ Route::group(['middleware'=>'auth',],function(){
         Route::post('store','store')->name('currency.store');
         Route::post('rates/store','currency_rate_store')->name('currency.rates.store');
     });
+
     Route::group([
         'prefix'=>'purchase',
         'controller'=>PurchaseController::class
@@ -84,6 +89,7 @@ Route::group(['middleware'=>'auth',],function(){
         Route::post('store','store')->name('purchase.store');
         Route::delete('delete/{purchase}','delete')->name('purchase.delete');
     });
+
     Route::group([
         'prefix'=>'sale',
         'controller'=>SaleController::class
@@ -94,6 +100,7 @@ Route::group(['middleware'=>'auth',],function(){
         Route::post('store','store')->name('sale.store');
         Route::get('delete/{sale}','delete')->name('sale.delete');
     });
+
     Route::group([
         'prefix'=>'bill',
         'controller'=>BillController::class
@@ -115,6 +122,17 @@ Route::group(['middleware'=>'auth',],function(){
 
     });
 
+    Route::group([
+        'prefix'=>'unit',
+        'controller'=>UnitController::class
+    ],function(){
+        Route::get('all','index')->name('unit.all');
+        Route::get('show/{unit}','show')->name('unit.show');
+        Route::get('create','create')->name('unit.create');
+        Route::post('store','store')->name('unit.store');
+        Route::delete('delete/{unit}','delete')->name('unit.delete');
+    });
+    
     Route::group([
         'prefix'=>'vendor',
         'controller'=>VendorController::class

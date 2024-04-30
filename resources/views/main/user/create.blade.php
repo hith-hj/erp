@@ -116,9 +116,9 @@
               </div> --}}
             </div>
             <div class="col-12">
-              <button typex="submit" class="btn btn-primary btn-sm w-25">Submit</button>
-              <button type="reset" class="btn btn-outline-secondary btn-sm">Reset</button>
-              <a href="{{url('/')}}"class="btn btn-outline-dark btn-sm">Cancel</a>
+              <button typex="submit" class="btn btn-primary btn-sm w-25">{{__('locale.Submit')}}</button>
+              <button type="reset" class="btn btn-outline-secondary btn-sm">{{__('locale.Reset')}}</button>
+              <a href="{{url('/')}}"class="btn btn-outline-dark btn-sm">{{__('locale.Cancel')}}</a>
             </div>
         </div>
       </div>

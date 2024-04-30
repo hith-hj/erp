@@ -40,7 +40,7 @@ class BillController extends BaseController
 
     public function store(Request $request)
     {
-        $bill = $this->repo->add($request);
+        $bill = $this->repo->add($request->only('type'));
         return redirect()->route('bill.show',['id'=>$bill->id])->with('success','Bill Created');
     }
 

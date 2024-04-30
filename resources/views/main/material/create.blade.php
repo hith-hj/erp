@@ -96,7 +96,7 @@
                                                     @foreach ($units as $unit)
                                                         <option value="{{ $unit->id }}">
                                                             {{ $unit->code }} -
-                                                            {{ __('locale.' . $unit->name) }}
+                                                            {{ $unit->name }}
                                                         </option>
                                                     @endforeach
                                                 </select>

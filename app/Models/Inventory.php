@@ -4,11 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Inventory extends Model
 {
-    use HasFactory, \Illuminate\Database\Eloquent\SoftDeletes;
+    use HasFactory, SoftDeletes;
     protected $fillable = ['name'];
 
     protected $casts = ['status'=>'integer'];
@@ -22,32 +22,13 @@ class Inventory extends Model
         ->withTimestamps();
     }
 
-    public function units()
-    {
-        return $this
-        ->belongsToMany(Unit::class)
-        ->using(InventoryMaterial::class)
-        ->withPivot([''])
-        ->withTimestamps();
-    }
-
-    public function currency()
-    {
-        return $this
-        ->belongsToMany(Currency::class)
-        ->using(InventoryMaterial::class)
-        ->withPivot([''])
-        ->withTimestamps();
-    }
-
     public function status()
     {
-        // dd($this->status);
         return match($this->status){
-            1=>'Active',
-            0=>'suspended',
-            -1=>'deleted',
-            default=>'Not Set'
+            1=>__('locale.Active'),
+            0=>__('locale.Suspended'),
+            -1=>__('locale.Deleted'),
+            default=>__('locale.None'),
         };
     }
 }

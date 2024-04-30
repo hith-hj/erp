@@ -34,8 +34,19 @@ class MaterialDataTable extends DataTable
                     return $material->type == 'base' ? 'border border-info':'border border-warning';
                 }
             ])
+            ->addColumn('quantity',function($material){
+                $quantity = 0;
+                foreach($material->inventories as $invo)
+                {
+                    $quantity += $invo->pivot->quantity;
+                }
+                return $quantity;
+            })
+            ->addColumn('unit',function($material){
+                return $material->defaultUnit();
+            })
             ->addColumn('units',function($material){
-                return count($material->units);
+                return $material->units()->count();
             })
             ->addColumn('type',function($material){
                 return $material->type();
@@ -90,6 +101,8 @@ class MaterialDataTable extends DataTable
             Column::make('id'),
             Column::make('name')->title(__('locale.Name')),
             Column::make('type')->title(__('locale.Type')),
+            Column::make('quantity')->title(__('locale.Quantity')),
+            Column::make('unit')->title(__('locale.Main unit')),
             Column::make('units')->title(__('locale.Units')),
             Column::make('created_at')->title(__('locale.Created at')),
             Column::computed('action')

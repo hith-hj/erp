@@ -24,14 +24,7 @@
       "name": "Bills",
       "icon": "file-text",
       "slug": "List-purchase"
-    },
-    {
-      "url": "currency/all",
-      "name": "Currencies",
-      "icon": "dollar-sign",
-      "slug": "List-currency"
-    },
-    
+    },   
     {
       "url": "purchase/all",
       "name": "Purchases",
@@ -47,7 +40,7 @@
 
     {
       "name": "Cards",
-      "badge": "2",
+      "badge": "4",
       "badgeClass": "badge badge-light-warning rounded-pill ms-auto me-1",
       "icon": "credit-card",
       "slug": "Cards",
@@ -63,6 +56,18 @@
           "name": "Vendors",
           "icon": "users",
           "slug": "Vendors-cards"
+        },
+        {
+          "url": "unit/all",
+          "name": "Units",
+          "icon": "octagon",
+          "slug": "Vendors-cards"
+        },
+        {
+          "url": "currency/all",
+          "name": "Currencies",
+          "icon": "dollar-sign",
+          "slug": "List-currency"
         }
       ]
     },
@@ -84,18 +89,6 @@
           "name": "eCommerce",
           "icon": "circle",
           "slug": "dashboard-ecommerce"
-        },
-        {
-          "url": "purchase/all",
-          "name": "Purchases",
-          "icon": "shopping-bag",
-          "slug": "List-purchase"
-        },
-        {
-          "url": "sale/all",
-          "name": "Sales",
-          "icon": "shopping-cart",
-          "slug": "List-sales"
         }
       ]
     },

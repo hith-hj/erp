@@ -19,15 +19,15 @@ class MaterialRepository implements BaseRepository
         return Material::findOrFail($id,$columns);
     }
 
-    public function add($request) : Material
+    public function add($data) : Material
     {        
-        return Material::create($request->all());
+        return Material::create($data);
     }
 
 
-    public function update($request,int $id) :bool
+    public function update($data,int $id) :bool
     {     
-        return Material::findOrFail($id)->update($request->all());
+        return Material::findOrFail($id)->update($data);
     }
 
 

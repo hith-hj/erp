@@ -50,9 +50,10 @@ class InventoryController extends BaseController
     public function store(Request $request)
     {
         InventoryValidator::validateInventorylDetails($request);
-        $inventory = $this->repo->add($request);
-        foreach($request->materials as $key=>$value){
-            $inventory->materials()->attach($key,['quantity'=>$value]);
+        $inventory = $this->repo->add($request->only('name'));
+        $materials = $this->repo->checkForMaterialDoublication($request->only('materials'));
+        foreach($materials as $materila){
+            $inventory->materials()->attach($materila['material_id'],['quantity'=>$materila['quantity']]);
         }
         return redirect()->route('inventory.show',['id'=>$inventory->id]);
     }
@@ -84,16 +85,17 @@ class InventoryController extends BaseController
     {
         InventoryValidator::validateInventorylDetails($request);
         $inventory = $this->repo->find($inventory_id);
-        foreach($request->materials as $key=>$value){
-            if($inventory->materials()->where('material_id',$key)->exists())
+        $materials = $this->repo->checkForMaterialDoublication($request->only('materials'));
+        foreach($materials as $material){
+            $item = $inventory->materials()->where('material_id',$material['material_id']);
+            if($item->exists())
             {
                 $inventory->materials()
-                ->syncWithPivotValues($key,[
-                    'quantity'=>$value + $inventory->materials()
-                    ->where('material_id',$key)->first()->pivot->quantity
-                ],false);
+                ->updateExistingPivot($material['material_id'],[
+                    'quantity'=>$material['quantity'] + $item->first()->pivot->quantity
+                ]);
             }else{
-                $inventory->materials()->attach($key,['quantity'=>$value]);
+                $inventory->materials()->attach($material['material_id'],['quantity'=>$material['quantity']]);
             }
         }
         return redirect()->route('inventory.show',['id'=>$inventory->id]);

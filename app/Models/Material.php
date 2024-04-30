@@ -4,10 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use \Illuminate\Database\Eloquent\SoftDeletes;
 class Material extends Model
 {
-    use HasFactory, \Illuminate\Database\Eloquent\SoftDeletes;
+    use HasFactory,SoftDeletes;
 
     protected $fillable = ['name','type','status','main_material'];
 
@@ -31,15 +31,21 @@ class Material extends Model
 
     public function defaultUnit()
     {
-        return $this->units()->where('is_default',1)->first()->value ?? '';
+        return Unit::where('id',
+                $this
+                ->units()
+                ->where('is_default',1)
+                ->first()?->id
+            )
+            ->first()?->name ?? __('locale.None');
     }
 
     public function type()
     {
         return match($this->type){
-            1=>'Base',
-            2=>'Manufactured',
-            default=>$this->type,
+            1=>__('locale.Base'),
+            2=>__('locale.Manufactured'),
+            default=>__('locale.None'),
         };
     }
 

@@ -354,4 +354,13 @@ return [
     
     "Discount" => "Discount",
     "New Sale" => "New Sale",
+
+    
+    "Active" => "Active",
+    "Suspended" => "Suspended",
+    "In stock" => "In stock",
+    "Requested" => "Requested",
+    "Out of stock" => "Out of stock",
+    "New Unit" => "New Unit",
+
 ];

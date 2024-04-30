@@ -60,7 +60,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getSetting($key)
     {
-        return $this->settings()->where('key',$key)->first()->value ?? 'Not Set';
+        return $this->settings()->where('key',$key)->first()?->value ?? __('locale.None');
     }
 
     public function sale()

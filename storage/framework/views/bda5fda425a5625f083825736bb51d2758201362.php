@@ -135,7 +135,7 @@ unset($__errorArgs, $__bag); ?>">
                                                     <?php $__currentLoopData = $units; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $unit): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                         <option value="<?php echo e($unit->id); ?>">
                                                             <?php echo e($unit->code); ?> -
-                                                            <?php echo e(__('locale.' . $unit->name)); ?>
+                                                            <?php echo e($unit->name); ?>
 
                                                         </option>
                                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
