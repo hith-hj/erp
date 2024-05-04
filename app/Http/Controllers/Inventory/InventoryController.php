@@ -22,27 +22,27 @@ class InventoryController extends BaseController
         $this->repo = new InventoryRepository();
     }
 
-    
+
     public function index()
     {
-        $table = new InventoryDataTable();       
+        $table = new InventoryDataTable();
         return $table->render('main.inventory.index');
     }
 
-    
+
     public function show($id)
     {
         $table = new InventoryMaterialDataTable($id);
         return $table->render('main.inventory.show', [
             'inventory' => $this->repo->findWith($id, ['materials']),
-            'materials'=>$this->repo->getMaterial(),
+            'materials' => $this->repo->getWithWhere(model: 'material'),
         ]);
     }
 
     public function create()
-    {        
+    {
         return view('main.inventory.create', [
-            'materials'=>$this->repo->getMaterial(),
+            'materials' => $this->repo->getWithWhere(model: 'material'),
         ]);
     }
 
@@ -51,11 +51,11 @@ class InventoryController extends BaseController
     {
         InventoryValidator::validateInventorylDetails($request);
         $inventory = $this->repo->add($request->only('name'));
-        $materials = $this->repo->checkForMaterialDoublication($request->only('materials'));
-        foreach($materials as $materila){
-            $inventory->materials()->attach($materila['material_id'],['quantity'=>$materila['quantity']]);
+        $materials = $this->repo->checkForMaterialDuplication($request->only('materials'));
+        foreach ($materials as $materila) {
+            $inventory->materials()->attach($materila['material_id'], ['quantity' => $materila['quantity']]);
         }
-        return redirect()->route('inventory.show',['id'=>$inventory->id]);
+        return redirect()->route('inventory.show', ['id' => $inventory->id]);
     }
 
 
@@ -69,10 +69,10 @@ class InventoryController extends BaseController
     {
         InventoryValidator::validateInventorylDetails($request);
         $inventory = $this->repo->find($inventory_id);
-        foreach($request->materials as $key=>$value){
-            $inventory->materials()->syncWithPivotValues($key,['quantity'=>$value]);
+        foreach ($request->materials as $key => $value) {
+            $inventory->materials()->syncWithPivotValues($key, ['quantity' => $value]);
         }
-        return redirect()->route('inventory.show',['id'=>$inventory->id]);
+        return redirect()->route('inventory.show', ['id' => $inventory->id]);
     }
 
 
@@ -81,40 +81,39 @@ class InventoryController extends BaseController
         //
     }
 
-    public function material_store(Request $request,$inventory_id)
+    public function material_store(Request $request, $inventory_id)
     {
         InventoryValidator::validateInventorylDetails($request);
         $inventory = $this->repo->find($inventory_id);
-        $materials = $this->repo->checkForMaterialDoublication($request->only('materials'));
-        foreach($materials as $material){
-            $item = $inventory->materials()->where('material_id',$material['material_id']);
-            if($item->exists())
-            {
+        $materials = $this->repo->checkForMaterialDuplication($request->only('materials'));
+        foreach ($materials as $material) {
+            $item = $inventory->materials()->where('material_id', $material['material_id']);
+            if ($item->exists()) {
                 $inventory->materials()
-                ->updateExistingPivot($material['material_id'],[
-                    'quantity'=>$material['quantity'] + $item->first()->pivot->quantity
-                ]);
-            }else{
-                $inventory->materials()->attach($material['material_id'],['quantity'=>$material['quantity']]);
+                    ->updateExistingPivot($material['material_id'], [
+                        'quantity' => $material['quantity'] + $item->first()->pivot->quantity
+                    ]);
+            } else {
+                $inventory->materials()->attach($material['material_id'], ['quantity' => $material['quantity']]);
             }
         }
-        return redirect()->route('inventory.show',['id'=>$inventory->id]);
+        return redirect()->route('inventory.show', ['id' => $inventory->id]);
     }
 
-    public function material_delete(Request $request,$inventory_id,$material_id)
+    public function material_delete(Request $request, $inventory_id, $material_id)
     {
         $inventory = $this->repo->find($inventory_id);
         $material = $inventory->materials()->detach($material_id);
-        return redirect()->route('inventory.show',['id'=>$inventory->id]);
+        return redirect()->route('inventory.show', ['id' => $inventory->id]);
     }
 
     public function material_update(Request $request, $inventory_id, $material_id, $type = 'add')
     {
         $inventory = $this->repo->find($inventory_id);
-        $material = $inventory->materials()->where('material_id',$material_id);
+        $material = $inventory->materials()->where('material_id', $material_id);
         $material->pivot->quantity = $type == 'add' ?
             $material->pivot->quantity + $request->quantity :
-            $material->pivot->quantity - $request->quantity ;
+            $material->pivot->quantity - $request->quantity;
         return true;
     }
 }

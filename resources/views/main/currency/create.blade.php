@@ -46,7 +46,7 @@
                             </div>
                         </div>
                         <div class="col-12">
-                            <button typex="submit"
+                            <button type="submit"
                                 class="btn btn-primary btn-sm w-25">{{ __('locale.Store') }}</button>
                             <button type="reset"
                                 class="btn btn-outline-primary btn-sm">{{ __('locale.Reset') }}</button>

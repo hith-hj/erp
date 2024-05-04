@@ -1,11 +1,10 @@
 <?php
 
-use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCardsTable extends Migration
+class CreateAccountsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,18 +13,15 @@ class CreateCardsTable extends Migration
      */
     public function up()
     {
-        Schema::create('cards', function (Blueprint $table) {
+        Schema::create('accounts', function (Blueprint $table) {
             $table->id();
-            $table->string('code');
-            $table->string('name');
             $table->string('type');
-            $table->string('note');
+            $table->string('accountable_id');
+            $table->string('accountable_type');
             $table->timestamps();
-            $table->softDeletes();
-            $table->foreignIdFor(User::class)->nullable();
-            // $table->foreignId('section_id')->restrictOnDelete();
         });
     }
+
     /**
      * Reverse the migrations.
      *
@@ -33,6 +29,6 @@ class CreateCardsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cards');
+        Schema::dropIfExists('accounts');
     }
 }

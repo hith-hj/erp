@@ -35,15 +35,8 @@ class BillDataTable extends DataTable
             ->addColumn('items', function($bill){
                 return $bill->items()->count();
             })
-            ->addColumn('cost', function($bill){
-                $total = 0;
-                foreach( $bill->items as $item){
-                    $total += $item->cost;
-                }
-                return $total;
-            })
-            ->setRowId(function($bill){
-                return $bill->id;
+            ->addColumn('total', function($bill){
+                return $bill->items()->sum('cost');
             })
             
             ;
@@ -57,7 +50,7 @@ class BillDataTable extends DataTable
      */
     public function query(Bill $model)
     {
-        return $model->newQuery();
+        return $model->newQuery()->with('items');
     }
 
     /**
@@ -98,7 +91,7 @@ class BillDataTable extends DataTable
                 ->orderable()
                 ->title(__('locale.Status')),
             Column::make('items')->title(__('locale.Items')),
-            Column::make('cost')->title(__('locale.Cost')),
+            Column::make('total')->title(__('locale.Total')),
             Column::make('created_at')->title(__('locale.Created at')),
             Column::computed('action')
                   ->title(__('locale.Action'))

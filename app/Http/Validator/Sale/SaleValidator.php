@@ -17,7 +17,7 @@ class SaleValidator
             'sales.*.material_id' => ['required',],
             'sales.*.quantity' => ['required',],
             'sales.*.unit_id' => ['required',],
-            'sales.*.cost' => ['required',],
+            'sales.*.cost' => ['required','min:1'],
             'sales.*.currency_id' => ['required',],
             'sales.*.rate_to' => ['required',],
             'sales.*.total' => ['required',],

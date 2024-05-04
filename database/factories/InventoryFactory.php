@@ -23,7 +23,7 @@ class InventoryFactory extends Factory
     public function configure()
     {
         return $this->afterCreating(function(Inventory $inventory){
-            foreach(Material::pluck('id')->take(rand(1,10)) as $id)
+            foreach(Material::where('type',1)->pluck('id')->random(2) as $id)
             {
                 $inventory->materials()->attach($id,[
                     'quantity'=>rand(1,9),

@@ -36,7 +36,7 @@
                                 <label class="form-label" for="accountLastName">
                                     {{ __('locale.Username') }}
                                 </label>
-                                <input type="text" class="form-control" id="accountLastName" name="username"
+                                <input type="text" class="form-control" id="accountLastName"
                                     placeholder="{{ __('locale.Username') }}" value="{{ $user->username }}" readonly />
                             </div>
                             <div class="col-12 col-sm-6 mb-1">
@@ -58,7 +58,8 @@
                                 <label class="form-label" for="accountPhoneNumber">
                                     {{ __('locale.Phone') }} No2
                                 </label>
-                                <input type="text" class="form-control " id="accountPhoneNumber"name="phone_number_n2"
+                                <input type="text" class="form-control" 
+                                    id="accountPhoneNumber" name="phone_number_n2"
                                     placeholder="{{ __('locale.Phone') }} No2"
                                     value="{{ $user->getSetting('phone_number_n2') }}" />
                             </div>

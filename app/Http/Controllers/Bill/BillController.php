@@ -9,6 +9,7 @@ use App\Http\Repositories\Bill\BillRepository;
 use App\Http\Repositories\Client\ClientRepository;
 use App\Http\Repositories\Vendors\VendorRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class BillController extends BaseController
 {
@@ -27,7 +28,7 @@ class BillController extends BaseController
 
     public function show($id)
     {
-        $bill = $this->repo->findWith($id,['items']);
+        $bill = $this->repo->findWith($id,relation:['items']);
         $table = new BillItemsDataTable($bill);
         $data = $this->setDataArray($bill);
         return $table->render('main.bill.show',$data);
@@ -53,24 +54,29 @@ class BillController extends BaseController
     public function setDataArray($bill)
     {
         $fromToIndex = $bill->type ==1 ?'vendors':'clients';
-        $fromToArray = $bill->type ==1 ? 
-            (new VendorRepository())->all() : (new ClientRepository())->all();
+        $fromToArray = $this->repo->getWithWhere(
+            model: Str::singular($fromToIndex),
+            columns:['id','first_name','last_name'],
+        );
         
         return [
             'bill'=>$bill,
-            'inventories' => $this->repo->getInventories() ?? [],
-            'currencies' => $this->repo->getCurrencies() ?? [],
-            'materials' => $this->repo->getMaterials() ?? [],
+            'inventories' => $this->repo->getWithWhere(
+                model: 'Inventory',
+                columns: ['id','name',]
+                ) ?? [],
+            'currencies' => $this->repo->getWithWhere(
+                model: 'currency',
+                with: ['rates:id,name'],
+                columns:['id','name','code']
+            ) ?? [],
+            'materials' => $this->repo->getWithWhere(
+                model: 'material',
+                with: ['units','inventories'],
+                columns: ['id','name']
+            ) ?? [],
             $fromToIndex => $fromToArray,
         ];
-    }
-
-    public function bill_store_purchase(Request $request,$id)
-    {
-        $this->repo->storePurchases($request);
-        return redirect()
-            ->route('bill.show',['id'=>$this->repo->find($id)])
-            ->with('success','Stored Succefuly');
     }
    
     public function bill_delete_purchase($bill_id,$purchase_id)
@@ -79,14 +85,6 @@ class BillController extends BaseController
         return redirect()
             ->route('bill.show',['id'=>$this->repo->find($bill_id)])
             ->with('success','Purchase Deleted');
-    }
-
-    public function bill_store_sale(Request $request,$id)
-    {
-        $this->repo->storeSale($request);
-        return redirect()
-            ->route('bill.show',['id'=>$this->repo->find($id)])
-            ->with('success','Stored Succefuly');
     }
 
     public function bill_delete_sale($bill_id,$sale_id)

@@ -2,12 +2,10 @@
 
 namespace Database\Factories;
 
-use App\Models\Section;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class SectionFactory extends Factory
+class AccountTypeFactory extends Factory
 {
-    protected $model = Section::class;
     /**
      * Define the model's default state.
      *
@@ -16,7 +14,7 @@ class SectionFactory extends Factory
     public function definition()
     {
         return [
-            'name'=>$this->faker->domainWord(),
+            'name'=>$this->faker->colorName()
         ];
     }
 }

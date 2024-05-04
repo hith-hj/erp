@@ -7,67 +7,17 @@ use App\Http\Repositories\BaseRepository;
 use App\Models\Currency;
 use Illuminate\Database\Eloquent\Collection;
 
-class CurrencyRepository implements BaseRepository
+class CurrencyRepository extends BaseRepository
 {
-    public function all(array|string $columns = ['*']) : Collection
+    public function __construct()
     {
-        return Currency::all($columns);
+        parent::__construct(Currency::class);
     }
 
-
-    public function find(int $id, $columns = ['*']): Currency
+    public function delete($id):bool
     {
-        return Currency::findOrFail($id,$columns);
-    }
-
-
-    public function add($data) : Currency
-    {       
-        return Currency::create($data);
-    }
-
-
-    public function update($data,int $id) :bool
-    {     
-        return Currency::findOrFail($id)->update($data);
-    }
-
-
-    public function delete(int|Currency $unit) : bool
-    {
-        if(! $unit instanceof Currency)
-        {
-            $unit = Currency::findOrFail($unit);
-        }
-        return $unit->delete();
-    }
-
-
-    public function allWith(
-        array|string $relation = [],
-        array|string $columns = ['*'],
-        ) : Collection
-    {
-        return Currency::select($columns)->with($relation)->get();
-    }
-
-
-    public function paginateWith(
-        int $perPage = 5,
-        array|string $relation = [],
-        array|string $columns = ['*'],
-        ) 
-    {
-        return Currency::with($relation)->paginate($perPage,$columns);
-    }
-
-
-    public function findWith(
-        int $id,
-        array|string $relation = [],
-        array|string $columns = ['*']
-    ) : Currency 
-    {
-        return Currency::with($relation)->findOrFail($id,$columns);
+        $currency = $this->findWith($id,'rates');
+        $currency->rates()->detach();
+        return $currency->delete();
     }
 }

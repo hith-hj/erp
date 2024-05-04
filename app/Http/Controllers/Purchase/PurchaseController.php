@@ -35,10 +35,28 @@ class PurchaseController extends BaseController
     public function create()
     {
         return view('main.purchase.create',[
-            'inventories' => $this->repo->getInventories() ?? [],
-            'currencies' => $this->repo->getCurrencies() ?? [],
-            'materials' => $this->repo->getMaterials() ?? [],
-            'vendors' => $this->repo->getVendors() ?? [] ,
+            'inventories' => $this->repo->getWithWhere(
+                model: 'Inventory',
+                columns: ['id','name']
+            ) ?? [],
+
+            'currencies' => $this->repo->getWithWhere(
+                model: 'Currency',
+                with: ['rates:id,name'],
+                columns: ['id', 'name', 'code']
+            ) ?? [],
+
+            'materials' => $this->repo->getWithWhere(
+                model: 'Material',
+                with: 'units',
+                columns: ['id', 'name']
+            ) ?? [],
+
+            'vendors' => $this->repo->getWithWhere(
+                model: 'Vendor',
+                columns: ['id','first_name','last_name']
+            ) ?? [] ,
+            
             'bill' => (new BillRepository())->add(['type'=>1]),
         ]);   
     }
@@ -53,14 +71,18 @@ class PurchaseController extends BaseController
             $purchase = $this->repo->add($purchase);
             $this->repo->updateInventoryMaterial($purchase);        
         }
-        return redirect()->route('bill.show',['id'=>$request->bill_id]);
+        return redirect()
+            ->route('bill.show',['id'=>$request->bill_id])
+            ->with('success','Purchase created');
     }
 
     public function delete(Purchase $purchase)
     {
         $this->repo->restorInventoryMaterial($purchase->id);
         $this->repo->delete($purchase->id);
-        return redirect()->route('bill.show',['id'=>$purchase->bill_id]);
+        return redirect()
+        ->route('bill.show',['id'=>$purchase->bill_id])
+        ->with('success','Purchase deleted');
     }
 
     public function storeToBill(Request $request)

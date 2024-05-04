@@ -39,7 +39,7 @@ class CurrencyDataTable extends DataTable
      */
     public function query(Currency $model)
     {
-        return $model->newQuery();
+        return $model->newQuery()->with('rates');
     }
 
     /**

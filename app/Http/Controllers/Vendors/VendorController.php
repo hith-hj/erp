@@ -43,9 +43,9 @@ class VendorController extends Controller
         return redirect()->route('vendor.all')->with('success','Vendors Created');
     }
     
-    public function delete(Vendor $vendor)
+    public function delete($id)
     {
-        $this->repo->delete($vendor);
+        $this->repo->delete($id);
         return redirect()->route('vendor.all')->with('success','Vendors Deleted');
     }
 }

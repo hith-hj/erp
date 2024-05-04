@@ -13,7 +13,14 @@
                             <i id="card{{ $currency->code }}DropDown" data-bs-toggle="dropdown" data-feather="more-vertical"
                                 class="font-medium-3 cursor-pointer dropdown-toggle"></i>
                             <div class="dropdown-menu" aria-labelledby="card{{ $currency->code }}DropDown">
-                                <a href="">{{__('locale.Delete')}}</a>
+                                <button form="deleteCurrencyForm" type="submit" class="btn btn-danger" >
+                                    {{__('locale.Delete')}}
+                                </button>
+                                <form id="deleteCurrencyForm" method="post" 
+                                    action="{{route('currency.delete',['id'=>$currency->id])}}">
+                                    @csrf
+                                    @method('delete')
+                                </form>
                             </div>
                         </div>
                     </div>

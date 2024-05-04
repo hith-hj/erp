@@ -45,9 +45,9 @@ class UnitController extends BaseController
         return redirect()->route('unit.all')->with('success','Unit Created');
     }
 
-    public function delete(Unit $unit)
+    public function delete($id)
     {
-        $this->repo->delete($unit);
+        $this->repo->delete($id);
         return redirect()->route('unit.all')->with('success','Unit Deleted');
     }
 }

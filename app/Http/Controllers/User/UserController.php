@@ -49,19 +49,19 @@ class UserController extends BaseController
     }
 
     
-    public function update(Request $request,UserValidator $valid , $id)
+    public function update(Request $request, $id)
     {
         UserValidator::validateUserDetails($request);
         $user = $this->repo->find($id);
-        $this->repo->update($request,$id);
+        $this->repo->update($request->only(['full_name']),$id);
         $this->repo->updateUserExtraInfo($request,$user);
         return redirect()->route('user.show',['id'=>$user->id])->with('success','user account is updated');
     }
 
 
-    public function delete(Request $request,$user_id)
+    public function delete($id)
     {
-        $this->repo->delete($user_id);
+        $this->repo->delete($id);
         return redirect()->route('user.all')->with('success','user account is deleted');
     }
 }

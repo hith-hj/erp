@@ -44,6 +44,14 @@ class CurrencyController extends BaseController
         return redirect()->route('currency.all')->with('success','Currency Added');
     }
 
+    public function delete($id)
+    {
+        $this->repo->delete($id);
+        return redirect()
+            ->route('currency.all')
+            ->with('success','currency deleted');
+    }
+
     public function currency_rate_store(Request $request)
     {
         $currency = $this->repo->find($request->currency_id);

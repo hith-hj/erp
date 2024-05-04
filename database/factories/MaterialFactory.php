@@ -23,6 +23,22 @@ class MaterialFactory extends Factory
         ];
     }
 
+    public function base()
+    {
+        return $this->state([
+            'name'=>$this->faker->colorName(),
+            'type'=>1,
+        ]);
+    }
+    
+    public function manufactured()
+    {
+        return $this->state([
+            'name'=>$this->faker->colorName(),
+            'type'=>2,
+        ]);
+    }
+
     public function configure()
     {
         return $this->afterCreating(function(Material $material){

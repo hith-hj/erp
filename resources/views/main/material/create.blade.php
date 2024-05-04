@@ -34,16 +34,16 @@
                                 <div class="col-6">
                                     <div class="mb-1">
                                         <label class="form-label" for="fullname">{{ __('locale.Name') }}</label>
-                                        <input type="text" id="name"
-                                            class="form-control @error('name') border-danger @enderror" name="name"
-                                            placeholder="{{ __('locale.Name') }}" value="{{ old('name') }}" required
-                                            tabindex="1" />
+                                        <input type="text" id="name" name="name" required
+                                            class="form-control @error('name') border-danger @enderror" 
+                                            placeholder="{{ __('locale.Name') }}" value="{{ old('name') }}" 
+                                         />
                                     </div>
                                 </div>
                                 <div class="col-6">
                                     <div class="mb-1">
                                         <label class="form-label" for="type">{{ __('locale.Type') }}</label>
-                                        <select name="type" tabindex="2" id="type"required
+                                        <select name="type" id="type"required
                                             class="form-select @error('type') border-danger @enderror">
                                             <option value="1">{{ __('locale.Base') }}</option>
                                             <option value="2">{{ __('locale.Manufactured') }}</option>
@@ -57,7 +57,7 @@
                                         <label class="form-label" for="main">
                                             {{ __('locale.Main material') }}
                                         </label>
-                                        <select name="main_material" tabindex="3" id="main"
+                                        <select name="main_material" id="main"
                                             class="form-select @error('main') border-danger @enderror">
                                             <option value="">{{ __('locale.None') }}</option>
                                             @forelse ($materials as $material)
@@ -73,7 +73,7 @@
                                         <label class="form-label" for="main_unit">
                                             {{ __('locale.Main unit') }}
                                         </label>
-                                        <select name="main_unit" tabindex="2" id="main_unit"required
+                                        <select name="main_unit" id="main_unit" required
                                             class="form-select @error('main_unit') border-danger @enderror">
                                             @foreach ($units as $unit)
                                                 <option value="{{ $unit->id }}">
@@ -91,7 +91,7 @@
                                             <div class="mb-1">
                                                 <label class="form-label"
                                                     for="phone_number">{{ __('locale.Units') }}</label>
-                                                <select name="unit" tabindex="4"required
+                                                <select name="unit" required
                                                     class="form-select @error('units') border-danger @enderror">
                                                     @foreach ($units as $unit)
                                                         <option value="{{ $unit->id }}">
@@ -109,7 +109,7 @@
                                                 <input type="number" id="rate"
                                                     class="form-control @error('rate') border-danger @enderror"
                                                     name="rate" placeholder="{{ __('locale.Rate') }}"
-                                                    value="{{ old('rate') }}" required tabindex="1" />
+                                                    value="{{ old('rate') }}" required />
                                             </div>
                                         </div>
                                         <div class="col-2" data-repeater-delete>
@@ -135,7 +135,7 @@
                         </div>
                     </div>
                     <div class="p-1 pt-0">
-                        <button typex="submit" class="btn btn-primary btn-sm w-25">
+                        <button type="submit" class="btn btn-primary btn-sm w-25">
                             {{ __('locale.Store') }}
                         </button>
                         <button type="reset" class="btn btn-outline-primary btn-sm">

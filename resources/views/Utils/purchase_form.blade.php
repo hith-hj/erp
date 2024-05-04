@@ -245,7 +245,8 @@
                             class="btn btn-outline-primary">
                             {{ __('locale.Reset') }}
                         </button>
-                        <a href="{{ url('/') }}"class="btn btn-outline-dark">
+                        <a class="btn btn-outline-dark"
+                            data-bs-dismiss="modal" aria-label="Close">
                             {{ __('locale.Cancel') }}
                         </a>
                     </div>

@@ -42,9 +42,9 @@ class ClientController extends BaseController
         return redirect()->route('client.all')->with('success','Client Created');
     }
 
-    public function delete(Client $client)
+    public function delete($id)
     {
-        $this->repo->delete($client);
+        $this->repo->delete($id);
         return redirect()->route('client.all')->with('success','Client Deleted');
     }
 }

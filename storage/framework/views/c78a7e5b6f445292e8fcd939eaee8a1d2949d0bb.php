@@ -110,7 +110,7 @@ unset($__errorArgs, $__bag); ?>"
                         </div>
                         <div class="col-6">
                             <div class="p-1 pt-0">
-                                <button typex="submit" class="btn btn-primary btn-sm w-50">
+                                <button type="submit" class="btn btn-primary btn-sm w-50">
                                     <?php echo e(__('locale.Store')); ?>
 
                                 </button>

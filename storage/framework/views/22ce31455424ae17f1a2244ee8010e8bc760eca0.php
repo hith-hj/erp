@@ -13,7 +13,15 @@
                             <i id="card<?php echo e($currency->code); ?>DropDown" data-bs-toggle="dropdown" data-feather="more-vertical"
                                 class="font-medium-3 cursor-pointer dropdown-toggle"></i>
                             <div class="dropdown-menu" aria-labelledby="card<?php echo e($currency->code); ?>DropDown">
-                                <a href=""><?php echo e(__('locale.Delete')); ?></a>
+                                <button form="deleteCurrencyForm" type="submit" class="btn btn-danger" >
+                                    <?php echo e(__('locale.Delete')); ?>
+
+                                </button>
+                                <form id="deleteCurrencyForm" method="post" 
+                                    action="<?php echo e(route('currency.delete',['id'=>$currency->id])); ?>">
+                                    <?php echo csrf_field(); ?>
+                                    <?php echo method_field('delete'); ?>
+                                </form>
                             </div>
                         </div>
                     </div>

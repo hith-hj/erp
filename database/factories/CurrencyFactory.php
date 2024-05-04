@@ -15,44 +15,43 @@ class CurrencyFactory extends Factory
      */
     public function definition()
     {
-        $currency = $this->faker->currencyCode() ;
+        $currency = $this->faker->currencyCode();
         return [
-            'code'=>$currency,
-            'name'=>$currency,
+            'code' => $currency,
+            'name' => $currency,
         ];
     }
 
     public function configure()
     {
-        return $this->afterCreating(function(Currency $cur){
-            foreach(Currency::where('id','!=',$cur->id)->pluck('id') as $id)
-            {
-                $cur->rates()->attach($id,['rate'=> rand(5,10)]);
+        return $this->afterCreating(function (Currency $cur) {
+            foreach (Currency::where('id', '!=', $cur->id)->pluck('id') as $id) {
+                $cur->rates()->attach($id, ['rate' => rand(5, 10)]);
             }
         });
     }
 
     public function dollar()
     {
-        return $this->state(fn(array $attr)=>[
-            'name'=>'dollar',
-            'code'=>'USD',
+        return $this->state([
+            'name' => 'dollar',
+            'code' => 'USD',
         ]);
     }
 
     public function pound()
     {
-        return $this->state(fn(array $attr)=>[
-            'name'=>'pound',
-            'code'=>'p',
+        return $this->state([
+            'name' => 'pound',
+            'code' => 'p',
         ]);
     }
 
     public function syp()
     {
-        return $this->state(fn(array $attr)=>[
-            'name'=>'syp',
-            'code'=>'syp',
+        return $this->state([
+            'name' => 'syp',
+            'code' => 'syp',
         ]);
     }
 }

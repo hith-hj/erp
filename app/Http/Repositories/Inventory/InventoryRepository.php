@@ -8,65 +8,14 @@ use App\Http\Repositories\Material\MaterialRepository;
 use App\Models\Inventory;
 
 
-class InventoryRepository implements BaseRepository
+class InventoryRepository extends BaseRepository
 {
-    public function all(array|string $columns = ['*']) : Collection
+    public function __construct()
     {
-        return Inventory::all($columns);
+        parent::__construct(Inventory::class);
     }
 
-    public function find(int $id, $columns = ['*']): Inventory
-    {
-        return Inventory::findOrFail($id,$columns);
-    }
-
-    public function add($data) : Inventory
-    {        
-        return Inventory::create($data);       
-    }
-
-    public function update($data,int $id) :bool
-    {
-        return Inventory::findOrFail($id)->update($data);
-    }
-
-    public function delete(int $id) : bool
-    {
-        return Inventory::findOrFail($id)->delete();
-    }
-
-    public function allWith(
-        array|string $relation = [],
-        array|string $columns = ['*'],
-        ) : Collection
-    {
-        return Inventory::select($columns)->with($relation)->get();
-    }
-
-    public function paginateWith(
-        int $perPage = 5,
-        array|string $relation = [],
-        array|string $columns = ['*'],
-        ) 
-    {
-        return Inventory::with($relation)->paginate($perPage,$columns);
-    }
-
-    public function findWith(
-        int $id,
-        array|string $relation = [],
-        array|string $columns = ['*']
-    ) : Inventory 
-    {
-        return Inventory::with($relation)->findOrFail($id,$columns);
-    }
-
-    public function getMaterial()
-    {
-        return (new MaterialRepository())->all();
-    }
-
-    public function checkForMaterialDoublication($data)
+    public function checkForMaterialDuplication($data)
     {
         $data = $data['materials'];
         for($i = 0 ; $i < count($data) ; $i++ )

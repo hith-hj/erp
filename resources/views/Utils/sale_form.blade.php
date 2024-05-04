@@ -119,7 +119,10 @@
                             <div class="col-6">
                                 <div class="mb-1">
                                     <label class="form-label"
-                                        for="material_quantity">{{ __('locale.Quantity') }}</label>
+                                        for="material_quantity" 
+                                        x-text="quantity > limit ?
+                                         'Limit Excieded':'{{ __('locale.Quantity') }}' ">
+                                    </label>
                                     <input type="number" id="material_quantity" name="quantity"
                                         class="form-control @error('quantity') border-danger @enderror"
                                         placeholder="{{ __('locale.Quantity') }}" value="{{ old('quantity') }}"
@@ -258,7 +261,8 @@
                             class="btn btn-outline-primary">
                             {{ __('locale.Reset') }}
                         </button>
-                        <a href="{{ url('/') }}"class="btn btn-outline-dark">
+                        <a class="btn btn-outline-dark" 
+                            data-bs-dismiss="modal" aria-label="Close">
                             {{ __('locale.Cancel') }}
                         </a>
                     </div>

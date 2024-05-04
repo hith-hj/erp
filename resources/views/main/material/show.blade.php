@@ -1,65 +1,67 @@
 @extends('layouts/contentLayoutMaster')
 
 @section('title')
-    {{-- {{ __('locale.Show') }} {{ __('locale.Material') }} --}}
-    {{ $material->name }}
+    {{ __('locale.Material') }} {{ $material->name }}
 @endsection
 
 @section('content')
     <section id="card-content-types">
-        <div class="card-head mb-1 row">
-            <h4 class="col-10">{{ __('locale.Show') }}</h4>
-            <div class="col-2">
-                <button class="btn btn-sm btn-outline-danger w-100" 
+        <div class="d-flex justify-content-between">
+            <h4 class=""> {{ $material->name }} {{ __('locale.Material') }} </h4>
+            <div class="d-flex justify-content-around">
+                <button class="btn btn-sm btn-outline-info w-100 mx-1">
+                    {{ __('locale.Edit') }}
+                </button>
+                <button class="btn btn-sm btn-outline-danger w-100"
                     onclick="
-                        if(confirm('{{__('locale.Delete')}} ?')){
+                        if(confirm('{{ __('locale.Delete') }} ?')){
                             document.getElementById('deleteMaterialForm').submit();
                         }
-                    " >
+                    ">
                     {{ __('locale.Delete') }}
                 </button>
-                <form id="deleteMaterialForm" 
-                    method="Post" 
-                    action="{{route('material.delete',['material'=>$material->id])}}">
+                <form id="deleteMaterialForm" method="Post"
+                    action="{{ route('material.delete', ['material' => $material->id]) }}">
                     @csrf @method('delete')
                 </form>
             </div>
         </div>
         <div class="row">
             <div class="col-12">
-                <h5>{{__('locale.Details')}}</h5>
+                <h3>{{ __('locale.Details') }}</h3>
                 <div class="card">
                     <div class="card-header">
                         <h4 class="card-title">
-                            {{__('locale.Name')}} :
+                            {{ __('locale.Name') }} :
                             {{ $material->name }}
                         </h4>
                         <div class="card-text">
-                            {{__('locale.Type')}} : 
-                            {{ $material->type() }}
+                            {{ __('locale.Type') }} :
+                            {{ $material->getType() }}
                         </div>
-                        @if($material->main_material)
+                        @if ($material->main_material)
                             <div class="card-text">
-                                {{__('locale.Main material')}}: 
+                                {{ __('locale.Main material') }}:
                                 {{ $material->mainMaterial()->name }}
                             </div>
                         @endif
-                        <p class="card-text">
-                            {{__('locale.Created at')}}
+                        <div class="card-text">
+                            {{ __('locale.Created at') }}
                             {{ $material->created_at->diffForHumans() }}
-                        </p>
+                        </div>
+
                     </div>
                     <div class="card-body">
                         <table class="table table-sm table-bordered">
                             <thead>
                                 <tr>
                                     <th>Id</th>
-                                    <th>{{__('locale.Name')}}</th>
-                                    <th>{{__('locale.Code')}}</th>
-                                    <th>{{__('locale.Is Default')}}</th>
-                                    <th>{{__('locale.Main unit')}}</th>
-                                    <th>{{__('locale.Rate')}}</th>
-                                    <th>{{__('locale.Created at')}}</th>
+                                    <th>{{ __('locale.Name') }}</th>
+                                    <th>{{ __('locale.Code') }}</th>
+                                    <th>{{ __('locale.Is Default') }}</th>
+                                    <th>{{ __('locale.Main unit') }}</th>
+                                    <th>{{ __('locale.Rate') }}</th>
+                                    <th>{{ __('locale.Created at') }}</th>
                                 </tr>
                             </thead>
                             <tbody class="table-hover">
@@ -73,8 +75,8 @@
                                                 {{ $unit->pivot->is_default ? 'default' : '' }}
                                             </span>
                                         </td>
-                                        @if(! is_null($unit->pivot->main_unit))
-                                            <td>{{ $unit->pivot->mainUnitName()}}</td>
+                                        @if (!is_null($unit->pivot->main_unit))
+                                            <td>{{ $unit->pivot->mainUnitName() }}</td>
                                         @else
                                             <td>-</td>
                                         @endif
@@ -89,58 +91,167 @@
                     </div>
                 </div>
             </div>
+            @if ($material->type === 2)
+                <div class="col-12">
+                    <h3>Manufacture Model</h3>
+                    <div class="card">
+                        @if (!$material->hasManufactureModel())
+                            <div class="card-header">
+                                <div class="card-text">
+                                    <h3 class="text-danger">
+                                        No manufacture model Found Create it now.
+                                    </h3>
+                                </div>
+                                <div class="card-text">
+                                    <a class="btn btn-primary"
+                                        href="{{ route('material.create_manufactured_material', ['id' => $material->id]) }}">
+                                        Create manufactured Model
+                                    </a>
+                                </div>
+                            </div>
+                        @else
+                            <div class="card-body">
+                                <table class="table table-sm table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>{{ __('locale.Name') }}</th>
+                                            <th>{{ __('locale.Inventory') }}</th>
+                                            <th>{{ __('locale.Quantity') }}</th>
+                                            <th>{{ __('locale.Unit') }}</th>
+                                            <th>{{ __('locale.Cost') }}</th>
+                                            <th>{{ __('locale.Currency') }}</th>
+                                            <th>{{ __('locale.Created at') }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-hover">
+                                        @forelse ($material->manufactureModel as $model)
+                                            <tr>
+                                                <td>{{ $model->id }}</td>
+                                                <td>{{ $model->material->name }}</td>
+                                                <td>{{ $model->inventory->name }}</td>
+                                                <td>{{ $model->quantity }}</td>
+                                                <td>{{ $model->unit->name }}</td>
+                                                <td>{{ $model->cost }}</td>
+                                                <td>{{ $model->currency->name }}</td>
+                                                <td>{{ $model->created_at->format('Y-m-d') }}</td>
+                                            </tr>
+                                        @empty
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            @endif
+            <div class="col-12">
+                <h3>Accounts</h3>
+                <div class="card">
+                    @if ($material->accounts()->count() == 0)
+                        <div class="card-header">
+                            <div class="card-text">
+                                <h3 class="text-danger">
+                                    No Accounts Found.
+                                </h3>
+                            </div>
+                        </div>
+                    @else
+                        @forelse ($material->accounts as $account)
+                            <div class="card-body">
+                                <h4> {{ __('locale.Account type') }} {{ $account->type }}</h4>
+                                <table class="table table-sm table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>{{ __('locale.Expense') }}</th>
+                                            <th>{{ __('locale.Cost') }}</th>
+                                            <th>{{ __('locale.Note') }}</th>
+                                            <th>{{ __('locale.Created at') }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-hover">
+                                        @forelse ($account->expenses as $expense)
+                                            <tr>
+                                                <td>{{ $expense->id }}</td>
+                                                <td>{{ $expense->name }}</td>
+                                                <td>{{ $expense->pivot->cost }}</td>
+                                                <td>{{ $expense->pivot->note }}</td>
+                                                <td>{{ $expense->pivot->created_at->format('Y-m-d') }}</td>
+                                            </tr>
+                                        @empty
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        @empty
+                            <small>no accounts wired</small>
+                        @endforelse
+                    @endif
+                </div>
+            </div>
             <div class="col-12">
                 <div class="table-responsive h-100" style="min-height: 15rem">
-                    <h5>{{__('locale.Inventories')}}</h5>
+                    <h3>{{ __('locale.Inventories') }}</h3>
                     <div class="card">
-                        <div class="card-body">
-                            <table class="table table-sm table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>Id</th>
-                                        <th>{{__('locale.Inventory')}}</th>
-                                        <th>{{__('locale.Quantity')}}</th>
-                                        <th>{{__('locale.Status')}}</th>
-                                        <th>{{__('locale.Options')}}</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="table-hover">
-                                    @forelse ($material->inventories as $inventory)
+                        @if($material->inventories()->count() == 0)
+                            <div class="card-header">
+                                <div class="card-text">
+                                    <h3 class="text-danger">
+                                        Material is not in any inventory.
+                                    </h3>
+                                </div>
+                            </div>
+                        @else
+                            <div class="card-body">
+                                <table class="table table-sm table-bordered">
+                                    <thead>
                                         <tr>
-                                            <td>{{ $inventory->id }}</td>
-                                            <td>{{ $inventory->name }}</td>
-                                            <td>{{ $inventory->pivot->quantity }}</td>
-                                            <td>
-                                                <span class="badge rounded-pill badge-light-success me-1">
-                                                    {{ $inventory->pivot->status == 1 ? 'active' : 'inactive' }}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <div class="dropdown">
-                                                    <button type="button"
-                                                        class="btn btn-sm dropdown-toggle hide-arrow py-0"
-                                                        data-bs-toggle="dropdown">
-                                                        <i data-feather="more-vertical"></i>
-                                                    </button>
-                                                    <div class="dropdown-menu dropdown-menu-end">
-                                                        <a class="dropdown-item" href="#">
-                                                            <i data-feather="edit-2" class="me-50"></i>
-                                                            <span>Edit</span>
-                                                        </a>
-                                                        <a class="dropdown-item" href="#">
-                                                            <i data-feather="trash" class="me-50"></i>
-                                                            <span>Delete</span>
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </td>
+                                            <th>Id</th>
+                                            <th>{{ __('locale.Inventory') }}</th>
+                                            <th>{{ __('locale.Quantity') }}</th>
+                                            <th>{{ __('locale.Status') }}</th>
+                                            <th>{{ __('locale.Options') }}</th>
                                         </tr>
-                                    @empty
-                                    @endforelse
+                                    </thead>
+                                    <tbody class="table-hover">
+                                        @forelse ($material->inventories as $inventory)
+                                            <tr>
+                                                <td>{{ $inventory->id }}</td>
+                                                <td>{{ $inventory->name }}</td>
+                                                <td>{{ $inventory->pivot->quantity }}</td>
+                                                <td>
+                                                    <span class="badge rounded-pill badge-light-success me-1">
+                                                        {{ $inventory->pivot->status == 1 ? 'active' : 'inactive' }}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <div class="dropdown">
+                                                        <button type="button"
+                                                            class="btn btn-sm dropdown-toggle hide-arrow py-0"
+                                                            data-bs-toggle="dropdown">
+                                                            <i data-feather="more-vertical"></i>
+                                                        </button>
+                                                        <div class="dropdown-menu dropdown-menu-end">
+                                                            <a class="dropdown-item" href="#">
+                                                                <i data-feather="edit-2" class="me-50"></i>
+                                                                <span>Edit</span>
+                                                            </a>
+                                                            <a class="dropdown-item" href="#">
+                                                                <i data-feather="trash" class="me-50"></i>
+                                                                <span>Delete</span>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @empty
+                                        @endforelse
 
-                                </tbody>
-                            </table>
-                        </div>
+                                    </tbody>
+                                </table>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>

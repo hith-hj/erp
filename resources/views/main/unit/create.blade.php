@@ -62,7 +62,7 @@
                         </div>
                         <div class="col-6">
                             <div class="p-1 pt-0">
-                                <button typex="submit" class="btn btn-primary btn-sm w-50">
+                                <button type="submit" class="btn btn-primary btn-sm w-50">
                                     {{ __('locale.Store') }}
                                 </button>
                                 <button type="reset" class="btn btn-outline-primary btn-sm">

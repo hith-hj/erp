@@ -29,7 +29,7 @@ class InventoryDataTable extends DataTable
                 return $inventroy->status();
             })
             ->addColumn('materials', function($inventroy){
-                return !is_null($inventroy->materials)? $inventroy->materials->count():0;
+                return !is_null($inventroy->materials)? $inventroy->materials()->count():0;
             })
             ;
     }
@@ -42,7 +42,7 @@ class InventoryDataTable extends DataTable
      */
     public function query(Inventory $model)
     {
-        return $model->newQuery();
+        return $model->newQuery()->with('materials');
     }
 
     /**

@@ -40,7 +40,7 @@ class Material extends Model
             ->first()?->name ?? __('locale.None');
     }
 
-    public function type()
+    public function getType()
     {
         return match($this->type){
             1=>__('locale.Base'),
@@ -55,5 +55,20 @@ class Material extends Model
         {
             return $this->find($this->main_material);
         }
+    }
+
+    public function hasManufactureModel()
+    {
+        return $this->manufactureModel()->count() > 0;
+    }
+
+    public function manufactureModel()
+    {
+        return $this->hasMany(ManufactureModel::class,'manufactured_id');
+    }
+
+    public function accounts()
+    {
+        return $this->hasMany(Account::class,'accountable_id')->where('accountable_type',get_class($this));
     }
 }

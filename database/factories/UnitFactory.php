@@ -21,7 +21,7 @@ class UnitFactory extends Factory
 
   public function kilo()
   {
-    return $this->state(fn(array $attr) => [
+    return $this->state([
       'name' => 'kilogram',
       'code' => 'kg',
     ]);
@@ -29,7 +29,7 @@ class UnitFactory extends Factory
 
   public function gram()
   {
-    return $this->state(fn(array $attr) => [
+    return $this->state([
       'name' => 'gram',
       'code' => 'g',
     ]);
@@ -37,7 +37,7 @@ class UnitFactory extends Factory
 
   public function ton()
   {
-    return $this->state(fn(array $attr) => [
+    return $this->state([
       'name' => 'ton',
       'code' => 'tn',
     ]);

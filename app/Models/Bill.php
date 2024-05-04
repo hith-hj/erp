@@ -15,8 +15,8 @@ class Bill extends Model
     public function items()
     {
         return match($this->type){
-            1=>$this->hasMany(Purchase::class),
-            2=>$this->hasMany(Sale::class),
+            1 => $this->hasMany(Purchase::class),
+            2 => $this->hasMany(Sale::class),
             default=>$this->hasMany(Purchase::class),
         };
     }

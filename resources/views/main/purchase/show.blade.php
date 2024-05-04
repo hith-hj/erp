@@ -32,7 +32,7 @@
                                 <tr>
                                     <td>{{ $purchase->id }}</td>
                                     <td>{{ $purchase->bill_id }}</td>
-                                    <td>{{ $purchase->vendor }}</td>
+                                    <td>{{ $purchase->vendor->full_name }}</td>
                                     <td>{{ $purchase->inventory->name }}</td>
                                     <td>{{ $purchase->material->name }}</td>
                                     <td>{{ $purchase->quantity }}</td>

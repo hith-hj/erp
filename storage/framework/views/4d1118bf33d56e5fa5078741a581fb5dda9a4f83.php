@@ -33,7 +33,7 @@
                                 <tr>
                                     <td><?php echo e($purchase->id); ?></td>
                                     <td><?php echo e($purchase->bill_id); ?></td>
-                                    <td><?php echo e($purchase->vendor); ?></td>
+                                    <td><?php echo e($purchase->vendor->full_name); ?></td>
                                     <td><?php echo e($purchase->inventory->name); ?></td>
                                     <td><?php echo e($purchase->material->name); ?></td>
                                     <td><?php echo e($purchase->quantity); ?></td>

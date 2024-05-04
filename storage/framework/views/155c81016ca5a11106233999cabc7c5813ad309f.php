@@ -61,7 +61,7 @@ unset($__errorArgs, $__bag); ?>" name="code"
                             </div>
                         </div>
                         <div class="col-12">
-                            <button typex="submit"
+                            <button type="submit"
                                 class="btn btn-primary btn-sm w-25"><?php echo e(__('locale.Store')); ?></button>
                             <button type="reset"
                                 class="btn btn-outline-primary btn-sm"><?php echo e(__('locale.Reset')); ?></button>

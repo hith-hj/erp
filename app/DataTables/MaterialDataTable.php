@@ -31,16 +31,14 @@ class MaterialDataTable extends DataTable
                     return 'row-' . $material->id;
                 },
                 'class'=>function ($material){
-                    return $material->type == 'base' ? 'border border-info':'border border-warning';
+                    if($material->type ==2 && !$material->hasManufactureModel())
+                    {
+                        return 'alert alert-danger';
+                    }
                 }
             ])
             ->addColumn('quantity',function($material){
-                $quantity = 0;
-                foreach($material->inventories as $invo)
-                {
-                    $quantity += $invo->pivot->quantity;
-                }
-                return $quantity;
+                return $material->inventories()->sum('quantity');
             })
             ->addColumn('unit',function($material){
                 return $material->defaultUnit();
@@ -49,7 +47,7 @@ class MaterialDataTable extends DataTable
                 return $material->units()->count();
             })
             ->addColumn('type',function($material){
-                return $material->type();
+                return $material->getType();
             })
             ->addColumn('created_at',function($material){
                 return $material->created_at;

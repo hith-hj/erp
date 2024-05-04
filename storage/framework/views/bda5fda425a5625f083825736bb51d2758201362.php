@@ -35,7 +35,7 @@
                                 <div class="col-6">
                                     <div class="mb-1">
                                         <label class="form-label" for="fullname"><?php echo e(__('locale.Name')); ?></label>
-                                        <input type="text" id="name"
+                                        <input type="text" id="name" name="name" required
                                             class="form-control <?php $__errorArgs = ['name'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -43,15 +43,15 @@ if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?> border-danger <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
-unset($__errorArgs, $__bag); ?>" name="name"
-                                            placeholder="<?php echo e(__('locale.Name')); ?>" value="<?php echo e(old('name')); ?>" required
-                                            tabindex="1" />
+unset($__errorArgs, $__bag); ?>" 
+                                            placeholder="<?php echo e(__('locale.Name')); ?>" value="<?php echo e(old('name')); ?>" 
+                                         />
                                     </div>
                                 </div>
                                 <div class="col-6">
                                     <div class="mb-1">
                                         <label class="form-label" for="type"><?php echo e(__('locale.Type')); ?></label>
-                                        <select name="type" tabindex="2" id="type"required
+                                        <select name="type" id="type"required
                                             class="form-select <?php $__errorArgs = ['type'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -73,7 +73,7 @@ unset($__errorArgs, $__bag); ?>">
                                             <?php echo e(__('locale.Main material')); ?>
 
                                         </label>
-                                        <select name="main_material" tabindex="3" id="main"
+                                        <select name="main_material" id="main"
                                             class="form-select <?php $__errorArgs = ['main'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -97,7 +97,7 @@ unset($__errorArgs, $__bag); ?>">
                                             <?php echo e(__('locale.Main unit')); ?>
 
                                         </label>
-                                        <select name="main_unit" tabindex="2" id="main_unit"required
+                                        <select name="main_unit" id="main_unit" required
                                             class="form-select <?php $__errorArgs = ['main_unit'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -123,7 +123,7 @@ unset($__errorArgs, $__bag); ?>">
                                             <div class="mb-1">
                                                 <label class="form-label"
                                                     for="phone_number"><?php echo e(__('locale.Units')); ?></label>
-                                                <select name="unit" tabindex="4"required
+                                                <select name="unit" required
                                                     class="form-select <?php $__errorArgs = ['units'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -156,7 +156,7 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>"
                                                     name="rate" placeholder="<?php echo e(__('locale.Rate')); ?>"
-                                                    value="<?php echo e(old('rate')); ?>" required tabindex="1" />
+                                                    value="<?php echo e(old('rate')); ?>" required />
                                             </div>
                                         </div>
                                         <div class="col-2" data-repeater-delete>
@@ -182,7 +182,7 @@ unset($__errorArgs, $__bag); ?>"
                         </div>
                     </div>
                     <div class="p-1 pt-0">
-                        <button typex="submit" class="btn btn-primary btn-sm w-25">
+                        <button type="submit" class="btn btn-primary btn-sm w-25">
                             <?php echo e(__('locale.Store')); ?>
 
                         </button>
