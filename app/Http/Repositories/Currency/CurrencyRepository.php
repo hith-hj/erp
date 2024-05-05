@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Http\Repositories\Currency;
 
@@ -14,9 +14,9 @@ class CurrencyRepository extends BaseRepository
         parent::__construct(Currency::class);
     }
 
-    public function delete($id):bool
+    public function delete($id): bool
     {
-        $currency = $this->findWith($id,'rates');
+        $currency = $this->findWith($id, 'rates');
         $currency->rates()->detach();
         return $currency->delete();
     }

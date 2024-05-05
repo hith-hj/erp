@@ -36,18 +36,18 @@ class MaterialValidator
   public static function validateManufactureModel($request)
   {
     return $request->validate([
-      'material_id'=>['required','exists:materials,id'],
-      'inventory_to_store_id'=>['required','exists:inventories,id'],
-      'materials'=>['required','array','min:1'],
-      'materials.*.material_id'=>['required','exists:materials,id'],
-      'materials.*.inventory_id'=>['required','exists:inventories,id'],
-      'materials.*.unit_id'=>['required','exists:units,id'],
-      'materials.*.currency_id'=>['required','exists:currencies,id'],
-      'materials.*.quantity'=>['required','numeric'],
-      'materials.*.cost'=>['required','numeric'],
-      'expenses'=>['required','array','min:1'],
-      'expenses.*.expense_id'=>['required',],
-      'expenses.*.cost'=>['required','numeric'],
+      'material_id' => ['required', 'exists:materials,id'],
+      'inventory_to_store_id' => ['required', 'exists:inventories,id'],
+      'materials' => ['required', 'array', 'min:1'],
+      'materials.*.material_id' => ['required', 'exists:materials,id'],
+      'materials.*.inventory_id' => ['required', 'exists:inventories,id'],
+      'materials.*.unit_id' => ['required', 'exists:units,id'],
+      'materials.*.currency_id' => ['required', 'exists:currencies,id'],
+      'materials.*.quantity' => ['required', 'numeric'],
+      'materials.*.cost' => ['required', 'numeric'],
+      'expenses' => ['required', 'array', 'min:1'],
+      'expenses.*.expense_id' => ['required',],
+      'expenses.*.cost' => ['required', 'numeric'],
     ]);
   }
 }

@@ -17,25 +17,28 @@ class ManufactureModel extends Model
         'cost',
     ];
 
-    protected $with = ['material','inventory','unit','currency'];
+    protected $with = ['material', 'inventory', 'unit', 'currency'];
 
     public function manufactured()
     {
-        return $this->belongsTo(Material::class,'manufactured_id');
+        return $this->belongsTo(Material::class, 'manufactured_id');
     }
 
     public function material()
     {
         return $this->belongsTo(Material::class);
     }
+
     public function inventory()
     {
         return $this->belongsTo(Inventory::class);
     }
+
     public function unit()
     {
         return $this->belongsTo(Unit::class);
     }
+
     public function currency()
     {
         return $this->belongsTo(Currency::class);

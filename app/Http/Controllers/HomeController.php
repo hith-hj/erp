@@ -32,41 +32,38 @@ class HomeController extends Controller
 
     public function changePasswordForm(User $user)
     {
-        return view('auth.passwords.reset',['user'=>$user]);
+        return view('auth.passwords.reset', ['user' => $user]);
     }
 
-    public function changePassword(Request $request,User $user)
+    public function changePassword(Request $request, User $user)
     {
         $request->validate([
-            'old_password'=>['required','string','min:8'],
-            'new_password'=>['required','string','confirmed'],
+            'old_password' => ['required', 'string', 'min:8'],
+            'new_password' => ['required', 'string', 'confirmed'],
         ]);
-        if(Hash::check($request->old_password,$user->password)){
-            $user->update(['password'=>Hash::make($request->new_password)]);;
-            return redirect('/')->with('success','password Changed');           
-        }else{
-            return redirect('/')->with('error','old password dont match our records');
+        if (Hash::check($request->old_password, $user->password)) {
+            $user->update(['password' => Hash::make($request->new_password)]);;
+            return redirect('/')->with('success', 'password Changed');
+        } else {
+            return redirect('/')->with('error', 'old password dont match our records');
         }
     }
 
     public function themeCustomizer(Request $request)
     {
         $data = [
-            'theme'=>$request->skinColor,
-            'navbarColor'=>$request->navColor,
-            'verticalMenuNavbarType'=>$request->navType,
+            'theme' => $request->skinColor,
+            'navbarColor' => $request->navColor,
+            'verticalMenuNavbarType' => $request->navType,
         ];
-        foreach($data as $key=>$value)
-        {
-            if(!is_null($value))
-            {
-                UserSetting::updateOrCreate(['key'=>$key],[
-                    'user_id'=>auth()->user()->id,
-                    'value'=>$value,
+        foreach ($data as $key => $value) {
+            if (!is_null($value)) {
+                UserSetting::updateOrCreate(['key' => $key], [
+                    'user_id' => auth()->user()->id,
+                    'value' => $value,
                 ]);
             }
         }
-        return redirect('/')->with('success','theme stored');
+        return redirect('/')->with('success', 'theme stored');
     }
-    
 }

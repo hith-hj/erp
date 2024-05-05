@@ -31,7 +31,7 @@ class MaterialController extends BaseController
     public function create()
     {
         return view('main.material.create', [
-            'units' => $this->repo->getWithWhere('unit',column:['id','name','code']),
+            'units' => $this->repo->getWithWhere('unit', columns: ['id', 'name', 'code']),
             'materials' => $this->repo->all(['id', 'name']),
         ]);
     }
@@ -83,25 +83,25 @@ class MaterialController extends BaseController
         return view('main.material.create_manufactured_material', [
             'material' => $this->repo->find($id),
             'materials' => $this->repo->getWithWhere(
-                model:'Material',
+                model: 'Material',
                 with: ['units', 'inventories'],
                 where: [['type', 1]]
             ),
             'currencies' => $this->repo->getWithWhere(
-                model:'Currency',
-                column: ['id', 'name']
+                model: 'Currency',
+                columns: ['id', 'name']
             ),
             'inventories' => $this->repo->getWithWhere(
-                model:'Inventory',
-                column: ['id', 'name']
+                model: 'Inventory',
+                columns: ['id', 'name']
             ),
             'expenses' => $this->repo->getWithWhere(
-                model:'Expense',
-                column: ['id', 'name']
+                model: 'Expense',
+                columns: ['id', 'name']
             ),
             'accountTypes' => $this->repo->getWithWhere(
                 model: 'accountType',
-                column: ['id','name'],
+                columns: ['id', 'name'],
             ),
         ]);
     }

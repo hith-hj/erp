@@ -12,11 +12,11 @@ use Illuminate\Http\Request;
 class VendorController extends Controller
 {
     private $repo;
-    
+
     public function __construct()
     {
         $this->repo = new VendorRepository();
-    }    
+    }
 
     public function index()
     {
@@ -25,7 +25,7 @@ class VendorController extends Controller
 
     public function show(Vendor $vendor)
     {
-        return view('main.vendors.show',['vendor'=>$vendor]);
+        return view('main.vendors.show', ['vendor' => $vendor]);
     }
 
     public function create()
@@ -36,16 +36,15 @@ class VendorController extends Controller
     public function store(Request $request)
     {
         VendorValidator::validate($request);
-        foreach($request->vendors as $vendor)
-        {
+        foreach ($request->vendors as $vendor) {
             $this->repo->add($vendor);
         }
-        return redirect()->route('vendor.all')->with('success','Vendors Created');
+        return redirect()->route('vendor.all')->with('success', 'Vendors Created');
     }
-    
+
     public function delete($id)
     {
         $this->repo->delete($id);
-        return redirect()->route('vendor.all')->with('success','Vendors Deleted');
+        return redirect()->route('vendor.all')->with('success', 'Vendors Deleted');
     }
 }

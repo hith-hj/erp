@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Purchase extends Model
 {
-    use HasFactory ,SoftDeletes;
+    use HasFactory, SoftDeletes;
     protected $fillable = [
         'inventory_id',
         'material_id',
@@ -24,8 +24,8 @@ class Purchase extends Model
         'cost',
         'note',
         'mark',
-        ];
-    
+    ];
+
     public function unit()
     {
         return $this->belongsTo(Unit::class);
@@ -50,15 +50,14 @@ class Purchase extends Model
     {
         return $this->belongsTo(bill::class);
     }
-    
+
     public function user()
     {
-        return $this->belongsTo(User::class,'created_by');
+        return $this->belongsTo(User::class, 'created_by');
     }
 
     public function vendor()
     {
         return $this->belongsTo(Vendor::class);
     }
-
 }

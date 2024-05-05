@@ -75,35 +75,19 @@ class InventoryController extends BaseController
         return redirect()->route('inventory.show', ['id' => $inventory->id]);
     }
 
-
-    public function destroy($id)
-    {
-        //
-    }
-
     public function material_store(Request $request, $inventory_id)
     {
         InventoryValidator::validateInventorylDetails($request);
         $inventory = $this->repo->find($inventory_id);
         $materials = $this->repo->checkForMaterialDuplication($request->only('materials'));
-        foreach ($materials as $material) {
-            $item = $inventory->materials()->where('material_id', $material['material_id']);
-            if ($item->exists()) {
-                $inventory->materials()
-                    ->updateExistingPivot($material['material_id'], [
-                        'quantity' => $material['quantity'] + $item->first()->pivot->quantity
-                    ]);
-            } else {
-                $inventory->materials()->attach($material['material_id'], ['quantity' => $material['quantity']]);
-            }
-        }
+        $inventory = $this->repo->updateInventory($inventory, $materials);
         return redirect()->route('inventory.show', ['id' => $inventory->id]);
     }
 
-    public function material_delete(Request $request, $inventory_id, $material_id)
+    public function material_delete($inventory_id, $material_id)
     {
         $inventory = $this->repo->find($inventory_id);
-        $material = $inventory->materials()->detach($material_id);
+        $inventory->materials()->detach($material_id);
         return redirect()->route('inventory.show', ['id' => $inventory->id]);
     }
 

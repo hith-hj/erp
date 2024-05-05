@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
 
 class BillController extends BaseController
 {
-    private $repo ;
+    private $repo;
 
     public function __construct()
     {
@@ -28,10 +28,10 @@ class BillController extends BaseController
 
     public function show($id)
     {
-        $bill = $this->repo->findWith($id,relation:['items']);
+        $bill = $this->repo->findWith($id, relation: ['items']);
         $table = new BillItemsDataTable($bill);
         $data = $this->setDataArray($bill);
-        return $table->render('main.bill.show',$data);
+        return $table->render('main.bill.show', $data);
     }
 
     public function create()
@@ -42,57 +42,57 @@ class BillController extends BaseController
     public function store(Request $request)
     {
         $bill = $this->repo->add($request->only('type'));
-        return redirect()->route('bill.show',['id'=>$bill->id])->with('success','Bill Created');
+        return redirect()->route('bill.show', ['id' => $bill->id])->with('success', 'Bill Created');
     }
 
     public function delete($id)
     {
         $this->repo->delete($id);
-        return redirect()->route('bill.all')->with('success','Bill Deleted');
+        return redirect()->route('bill.all')->with('success', 'Bill Deleted');
     }
 
     public function setDataArray($bill)
     {
-        $fromToIndex = $bill->type ==1 ?'vendors':'clients';
+        $fromToIndex = $bill->type == 1 ? 'vendors' : 'clients';
         $fromToArray = $this->repo->getWithWhere(
             model: Str::singular($fromToIndex),
-            columns:['id','first_name','last_name'],
+            columns: ['id', 'first_name', 'last_name'],
         );
-        
+
         return [
-            'bill'=>$bill,
+            'bill' => $bill,
             'inventories' => $this->repo->getWithWhere(
                 model: 'Inventory',
-                columns: ['id','name',]
-                ) ?? [],
+                columns: ['id', 'name',]
+            ) ?? [],
             'currencies' => $this->repo->getWithWhere(
                 model: 'currency',
                 with: ['rates:id,name'],
-                columns:['id','name','code']
+                columns: ['id', 'name', 'code']
             ) ?? [],
             'materials' => $this->repo->getWithWhere(
                 model: 'material',
-                with: ['units','inventories'],
-                columns: ['id','name']
+                with: ['units', 'inventories'],
+                columns: ['id', 'name']
             ) ?? [],
             $fromToIndex => $fromToArray,
         ];
     }
-   
-    public function bill_delete_purchase($bill_id,$purchase_id)
+
+    public function bill_delete_purchase($bill_id, $purchase_id)
     {
         $this->repo->deletePurchases($purchase_id);
         return redirect()
-            ->route('bill.show',['id'=>$this->repo->find($bill_id)])
-            ->with('success','Purchase Deleted');
+            ->route('bill.show', ['id' => $this->repo->find($bill_id)])
+            ->with('success', 'Purchase Deleted');
     }
 
-    public function bill_delete_sale($bill_id,$sale_id)
+    public function bill_delete_sale($bill_id, $sale_id)
     {
         $this->repo->deleteSale($sale_id);
         return redirect()
-            ->route('bill.show',['id'=>$this->repo->find($bill_id)])
-            ->with('success','Deleted Succefuly');
+            ->route('bill.show', ['id' => $this->repo->find($bill_id)])
+            ->with('success', 'Deleted Succefuly');
     }
 
     public function save($bill_id)
@@ -100,9 +100,9 @@ class BillController extends BaseController
         try {
             $this->repo->save($bill_id);
         } catch (\Throwable $th) {
-            return back()->with('error',$th->getMessage());
+            return back()->with('error', $th->getMessage());
         }
         return redirect()
-            ->route('bill.show',['id'=>$this->repo->find($bill_id)]);
+            ->route('bill.show', ['id' => $this->repo->find($bill_id)]);
     }
 }

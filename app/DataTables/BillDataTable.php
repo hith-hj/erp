@@ -22,24 +22,22 @@ class BillDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->addColumn('action', function($bill){
+            ->addColumn('action', function ($bill) {
                 $lang = __('locale.View');
                 return "<a href='/bill/show/$bill->id'>$lang</a>";
             })
-            ->addColumn('type', function($bill){
+            ->addColumn('type', function ($bill) {
                 return $bill->get_type;
             })
-            ->addColumn('status', function($bill){
+            ->addColumn('status', function ($bill) {
                 return $bill->get_status;
             })
-            ->addColumn('items', function($bill){
+            ->addColumn('items', function ($bill) {
                 return $bill->items()->count();
             })
-            ->addColumn('total', function($bill){
+            ->addColumn('total', function ($bill) {
                 return $bill->items()->sum('cost');
-            })
-            
-            ;
+            });
     }
 
     /**
@@ -61,18 +59,24 @@ class BillDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-                    ->setTableId('bill-table')
-                    ->addTableClass('table-sm')
-                    ->columns($this->getColumns())
-                    ->minifiedAjax()
-                    ->dom('Bfrtip')
-                    ->orderBy(1)
-                    ->buttons(
-                        Button::make('pdf')->addClass('btn btn-outline-primary'),
-                        Button::make('print')->addClass('btn btn-outline-primary'),
-                        Button::make('excel')->addClass('btn btn-outline-primary'),
-                        Button::make('copy')->addClass('btn btn-outline-primary'),
-                    );
+            ->setTableId('bill-table')
+            ->addTableClass('table-sm')
+            ->columns($this->getColumns())
+            ->minifiedAjax()
+            ->dom('Bfrtip')
+            ->orderBy(1)
+            ->buttons($this->getBtns());
+    }
+
+    public function getBtns()
+    {
+        $btn_class = 'btn btn-outline-primary btn-sm';
+        return [
+            Button::make('pdf')->addClass($btn_class),
+            Button::make('print')->addClass($btn_class),
+            Button::make('excel')->addClass($btn_class),
+            Button::make('copy')->addClass($btn_class),
+        ];
     }
 
     /**
@@ -94,10 +98,10 @@ class BillDataTable extends DataTable
             Column::make('total')->title(__('locale.Total')),
             Column::make('created_at')->title(__('locale.Created at')),
             Column::computed('action')
-                  ->title(__('locale.Action'))
-                  ->exportable(false)
-                  ->printable(false)
-                  ->addClass('text-center'),
+                ->title(__('locale.Action'))
+                ->exportable(false)
+                ->printable(false)
+                ->addClass('text-center'),
         ];
     }
 

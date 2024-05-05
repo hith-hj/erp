@@ -22,37 +22,35 @@ class MaterialDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->addColumn('action', function($material){
+            ->addColumn('action', function ($material) {
                 $lang = __('locale.View');
                 return "<a href='show/$material->id'>$lang</a>";
             })
             ->setRowAttr([
-                'id'=>function($material) {
+                'id' => function ($material) {
                     return 'row-' . $material->id;
                 },
-                'class'=>function ($material){
-                    if($material->type ==2 && !$material->hasManufactureModel())
-                    {
+                'class' => function ($material) {
+                    if ($material->type == 2 && !$material->hasManufactureModel()) {
                         return 'alert alert-danger';
                     }
                 }
             ])
-            ->addColumn('quantity',function($material){
+            ->addColumn('quantity', function ($material) {
                 return $material->inventories()->sum('quantity');
             })
-            ->addColumn('unit',function($material){
+            ->addColumn('unit', function ($material) {
                 return $material->defaultUnit();
             })
-            ->addColumn('units',function($material){
+            ->addColumn('units', function ($material) {
                 return $material->units()->count();
             })
-            ->addColumn('type',function($material){
+            ->addColumn('type', function ($material) {
                 return $material->getType();
             })
-            ->addColumn('created_at',function($material){
+            ->addColumn('created_at', function ($material) {
                 return $material->created_at;
-            })
-            ;
+            });
     }
 
     /**
@@ -74,18 +72,23 @@ class MaterialDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-                    ->addTableClass('table-sm')
-                    ->setTableId('materials-table')
-                    ->columns($this->getColumns())
-                    ->minifiedAjax()
-                    ->dom('Bfrtip')
-                    ->buttons(
-                        Button::make('pdf')->addClass('btn btn-outline-primary'),
-                        Button::make('print')->addClass('btn btn-outline-primary'),
-                        Button::make('excel')->addClass('btn btn-outline-primary'),
-                        Button::make('copy')->addClass('btn btn-outline-primary'),
-                    )
-                    ;
+            ->addTableClass('table-sm')
+            ->setTableId('materials-table')
+            ->columns($this->getColumns())
+            ->minifiedAjax()
+            ->dom('Bfrtip')
+            ->buttons($this->getBtns());
+    }
+
+    public function getBtns()
+    {
+        $btn_class = 'btn btn-outline-primary btn-sm';
+        return [
+            Button::make('pdf')->addClass($btn_class),
+            Button::make('print')->addClass($btn_class),
+            Button::make('excel')->addClass($btn_class),
+            Button::make('copy')->addClass($btn_class),
+        ];
     }
 
     /**
@@ -104,11 +107,11 @@ class MaterialDataTable extends DataTable
             Column::make('units')->title(__('locale.Units')),
             Column::make('created_at')->title(__('locale.Created at')),
             Column::computed('action')
-                  ->title(__('locale.Action'))
-                  ->exportable(false)
-                  ->printable(false)
-                  ->orderable(false)
-                  ->addClass('text-center'),
+                ->title(__('locale.Action'))
+                ->exportable(false)
+                ->printable(false)
+                ->orderable(false)
+                ->addClass('text-center'),
         ];
     }
 
@@ -121,5 +124,4 @@ class MaterialDataTable extends DataTable
     {
         return 'Material_' . date('YmdHis');
     }
-
 }

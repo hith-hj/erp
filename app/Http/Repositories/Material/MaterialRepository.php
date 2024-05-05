@@ -1,7 +1,7 @@
 <?php
 
-namespace App\Http\Repositories\Material;
-;
+namespace App\Http\Repositories\Material;;
+
 use App\Http\Repositories\BaseRepository;
 use App\Models\Material;
 

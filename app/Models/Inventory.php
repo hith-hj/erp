@@ -11,24 +11,24 @@ class Inventory extends Model
     use HasFactory, SoftDeletes;
     protected $fillable = ['name'];
 
-    protected $casts = ['status'=>'integer'];
+    protected $casts = ['status' => 'integer'];
 
     public function materials()
     {
         return $this
-        ->belongsToMany(Material::class)
-        ->using(InventoryMaterial::class)
-        ->withPivot(['quantity','status'])
-        ->withTimestamps();
+            ->belongsToMany(Material::class)
+            ->using(InventoryMaterial::class)
+            ->withPivot(['quantity', 'status'])
+            ->withTimestamps();
     }
 
     public function status()
     {
-        return match($this->status){
-            1=>__('locale.Active'),
-            0=>__('locale.Suspended'),
-            -1=>__('locale.Deleted'),
-            default=>__('locale.None'),
+        return match ($this->status) {
+            1 => __('locale.Active'),
+            0 => __('locale.Suspended'),
+            -1 => __('locale.Deleted'),
+            default => __('locale.None'),
         };
     }
 }

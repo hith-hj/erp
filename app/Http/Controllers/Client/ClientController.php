@@ -15,7 +15,7 @@ class ClientController extends BaseController
     public function __construct()
     {
         $this->repo = new ClientRepository();
-    } 
+    }
 
     public function index()
     {
@@ -24,7 +24,7 @@ class ClientController extends BaseController
 
     public function show(Client $client)
     {
-        return view('main.client.show',['client'=>$client]);
+        return view('main.client.show', ['client' => $client]);
     }
 
     public function create()
@@ -35,16 +35,15 @@ class ClientController extends BaseController
     public function store(Request $request)
     {
         ClientValidator::validate($request);
-        foreach($request->clients as $client)
-        {
+        foreach ($request->clients as $client) {
             $this->repo->add($client);
         }
-        return redirect()->route('client.all')->with('success','Client Created');
+        return redirect()->route('client.all')->with('success', 'Client Created');
     }
 
     public function delete($id)
     {
         $this->repo->delete($id);
-        return redirect()->route('client.all')->with('success','Client Deleted');
+        return redirect()->route('client.all')->with('success', 'Client Deleted');
     }
 }

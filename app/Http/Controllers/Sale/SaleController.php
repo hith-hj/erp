@@ -87,7 +87,7 @@ class SaleController extends BaseController
         SaleValidator::validate($request);
         try {
             $this->repo->updateInventoryMaterial($request);
-            $sale = $this->repo->add($request);
+            $sale = $this->repo->add($request->all());
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }

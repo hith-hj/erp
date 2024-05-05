@@ -23,15 +23,12 @@ class UserDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->setRowId('id')
-            ->addColumn('Phone',function($user){
-              return $user->getSetting('phone_number');
+            ->addColumn('Phone', function ($user) {
+                return $user->getSetting('phone_number');
             })
-            // ->addColumn('Settings',function($user){
-            //   return !is_null($user->settings)?count($user->settings):0;
-            // })
-            ->addColumn('action',function ($user){
-              $lang = __('locale.View');
-              return "<a href='show/$user->id'>$lang</a>";
+            ->addColumn('action', function ($user) {
+                $lang = __('locale.View');
+                return "<a href='show/$user->id'>$lang</a>";
             });
     }
 
@@ -54,18 +51,24 @@ class UserDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-                    ->setTableId('users_table')
-                    ->setTableAttribute('class','table datatables-basic')
-                    ->addTableClass('table-sm')
-                    ->columns($this->getColumns())
-                    ->minifiedAjax()
-                    ->dom('Bfrtip')
-                    ->buttons(
-                        Button::make('pdf')->addClass('btn btn-outline-primary'),
-                        Button::make('print')->addClass('btn btn-outline-primary'),
-                        Button::make('excel')->addClass('btn btn-outline-primary'),
-                        Button::make('copy')->addClass('btn btn-outline-primary'),
-                    );
+            ->setTableId('users_table')
+            ->setTableAttribute('class', 'table datatables-basic')
+            ->addTableClass('table-sm')
+            ->columns($this->getColumns())
+            ->minifiedAjax()
+            ->dom('Bfrtip')
+            ->buttons($this->getBtns());
+    }
+
+    public function getBtns()
+    {
+        $btn_class = 'btn btn-outline-primary btn-sm';
+        return [
+            Button::make('pdf')->addClass($btn_class),
+            Button::make('print')->addClass($btn_class),
+            Button::make('excel')->addClass($btn_class),
+            Button::make('copy')->addClass($btn_class),
+        ];
     }
 
 
@@ -82,14 +85,13 @@ class UserDataTable extends DataTable
             Column::make('full_name')->title(__('locale.Full Name')),
             Column::make('Phone')->title(__('locale.Phone')),
             Column::make('email')->title(__('locale.Email')),
-            // Column::make('Settings'),
-            // Column::make('created_at'),
+            Column::make('created_at')->title(__('locale.Created at')),
             Column::computed('action')
-                  ->exportable(false)
-                  ->printable(false)
-                  ->width(50)
-                  ->addClass('text-center')
-                  ->title(__('locale.Action')),
+                ->exportable(false)
+                ->printable(false)
+                ->width(50)
+                ->addClass('text-center')
+                ->title(__('locale.Action')),
         ];
     }
 

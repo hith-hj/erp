@@ -21,23 +21,22 @@ class SaleDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->addColumn('action', function($sale){
+            ->addColumn('action', function ($sale) {
                 $lang = __('locale.View');
                 return "<a href='/sale/show/$sale->id'>$lang</a>";
             })
-            ->addColumn('material',function($sale){
-                return $sale->material->name;
+            ->addColumn('material', function ($sale) {
+                return $sale->material?->name;
             })
-            ->addColumn('unit',function($sale){
-                return $sale->unit->name;
+            ->addColumn('unit', function ($sale) {
+                return $sale->unit?->name;
             })
-            ->addColumn('bill',function($sale){
-                return $sale->bill->serial ?? '';
+            ->addColumn('bill', function ($sale) {
+                return $sale->bill?->serial ?? '';
             })
-            ->addColumn('currency',function($sale){
-                return $sale->currency->name;
-            })
-            ;
+            ->addColumn('currency', function ($sale) {
+                return $sale->currency?->name ?? __('locale.None');
+            });
     }
 
     /**
@@ -59,18 +58,24 @@ class SaleDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-                    ->setTableId('sale-table')
-                    ->addTableClass('table-sm')
-                    ->columns($this->getColumns())
-                    ->minifiedAjax()
-                    ->dom('Bfrtip')
-                    ->orderBy(1)
-                    ->buttons(
-                        Button::make('pdf')->addClass('btn btn-outline-primary'),
-                        Button::make('print')->addClass('btn btn-outline-primary'),
-                        Button::make('excel')->addClass('btn btn-outline-primary'),
-                        Button::make('copy')->addClass('btn btn-outline-primary'),
-                    );
+            ->setTableId('sale-table')
+            ->addTableClass('table-sm')
+            ->columns($this->getColumns())
+            ->minifiedAjax()
+            ->dom('Bfrtip')
+            ->orderBy(1)
+            ->buttons($this->getBtns());
+    }
+
+    public function getBtns()
+    {
+        $btn_class = 'btn btn-outline-primary btn-sm';
+        return [
+            Button::make('pdf')->addClass($btn_class),
+            Button::make('print')->addClass($btn_class),
+            Button::make('excel')->addClass($btn_class),
+            Button::make('copy')->addClass($btn_class),
+        ];
     }
 
     /**
@@ -90,10 +95,10 @@ class SaleDataTable extends DataTable
             Column::make('bill')->title(__('locale.Bill')),
             Column::make('created_at')->title(__('locale.Created at')),
             Column::computed('action')
-                  ->exportable(false)
-                  ->printable(false)
-                  ->width(60)
-                  ->addClass('text-center'),
+                ->exportable(false)
+                ->printable(false)
+                ->width(60)
+                ->addClass('text-center'),
         ];
     }
 

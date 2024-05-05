@@ -21,17 +21,16 @@ class InventoryDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->addColumn('action', function($inventroy){
+            ->addColumn('action', function ($inventroy) {
                 $lang = __('locale.View');
                 return "<a href='show/$inventroy->id'>$lang</a>";
             })
-            ->addColumn('status', function($inventroy){
+            ->addColumn('status', function ($inventroy) {
                 return $inventroy->status();
             })
-            ->addColumn('materials', function($inventroy){
-                return !is_null($inventroy->materials)? $inventroy->materials()->count():0;
-            })
-            ;
+            ->addColumn('materials', function ($inventroy) {
+                return !is_null($inventroy->materials) ? $inventroy->materials()->count() : 0;
+            });
     }
 
     /**
@@ -53,17 +52,23 @@ class InventoryDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-                    ->setTableId('inventory-table')
-                    ->addTableClass('table-sm')
-                    ->columns($this->getColumns())
-                    ->minifiedAjax()
-                    ->dom('Bfrtip')
-                    ->buttons(
-                        Button::make('pdf')->addClass('btn btn-outline-primary'),
-                        Button::make('print')->addClass('btn btn-outline-primary'),
-                        Button::make('excel')->addClass('btn btn-outline-primary'),
-                        Button::make('copy')->addClass('btn btn-outline-primary'),
-                    );
+            ->setTableId('inventory-table')
+            ->addTableClass('table-sm')
+            ->columns($this->getColumns())
+            ->minifiedAjax()
+            ->dom('Bfrtip')
+            ->buttons($this->getBtns());
+    }
+
+    public function getBtns()
+    {
+        $btn_class = 'btn btn-outline-primary btn-sm';
+        return [
+            Button::make('pdf')->addClass($btn_class),
+            Button::make('print')->addClass($btn_class),
+            Button::make('excel')->addClass($btn_class),
+            Button::make('copy')->addClass($btn_class),
+        ];
     }
 
     /**
@@ -80,11 +85,11 @@ class InventoryDataTable extends DataTable
             Column::make('materials')->title(__('locale.Materials')),
             Column::make('created_at')->title(__('locale.Created at')),
             Column::computed('action')
-                  ->title(__('locale.Action'))
-                  ->exportable(false)
-                  ->printable(false)
-                  ->width(60)
-                  ->addClass('text-center'),
+                ->title(__('locale.Action'))
+                ->exportable(false)
+                ->printable(false)
+                ->width(60)
+                ->addClass('text-center'),
         ];
     }
 

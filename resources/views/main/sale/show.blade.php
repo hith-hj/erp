@@ -32,15 +32,15 @@
                             <tbody>
                                 <tr>
                                     <td>{{ $sale->id }}</td>
-                                    <td>{{ $sale->client->full_name}}</td>
+                                    <td>{{ $sale->client?->full_name}}</td>
                                     <td>{{ $sale->discount ?? 0 }}</td>
-                                    <td>{{ $sale->inventory->name }}</td>
-                                    <td>{{ $sale->material->name }}</td>
+                                    <td>{{ $sale->inventory?->name }}</td>
+                                    <td>{{ $sale->material?->name }}</td>
                                     <td>{{ $sale->quantity }}</td>
-                                    <td>{{ $sale->unit->name }}</td>
+                                    <td>{{ $sale->unit?->name }}</td>
                                     <td>{{ $sale->cost }}</td>
-                                    <td>{{ $sale->currency->name }}</td>
-                                    <td>{{ $sale->user->username }}</td>
+                                    <td>{{ $sale->currency?->name }}</td>
+                                    <td>{{ $sale->user?->username }}</td>
                                     <td>{{ $sale->created_at->format('Y-m-d') }}</td>
                                     <td>{{ $sale->note }}</td>
                                     <td><span class="badge rounded-pill badge-light-success me-1">Active</span></td>

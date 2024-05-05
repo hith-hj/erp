@@ -128,12 +128,12 @@
                                         @forelse ($material->manufactureModel as $model)
                                             <tr>
                                                 <td>{{ $model->id }}</td>
-                                                <td>{{ $model->material->name }}</td>
-                                                <td>{{ $model->inventory->name }}</td>
+                                                <td>{{ $model->material?->name }}</td>
+                                                <td>{{ $model->inventory?->name }}</td>
                                                 <td>{{ $model->quantity }}</td>
-                                                <td>{{ $model->unit->name }}</td>
+                                                <td>{{ $model->unit?->name }}</td>
                                                 <td>{{ $model->cost }}</td>
-                                                <td>{{ $model->currency->name }}</td>
+                                                <td>{{ $model->currency?->name }}</td>
                                                 <td>{{ $model->created_at->format('Y-m-d') }}</td>
                                             </tr>
                                         @empty

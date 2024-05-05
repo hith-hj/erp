@@ -18,7 +18,7 @@ class UserController extends BaseController
     {
         $this->repo = new UserRepository();
     }
-    
+
 
     public function index()
     {
@@ -26,42 +26,42 @@ class UserController extends BaseController
         return $table->render('main.user.index');
     }
 
-    
+
     public function create()
     {
         return view('main.user.create');
     }
 
-    
+
     public function store(Request $request)
     {
         UserValidator::validateUserDetails($request);
         $user = $this->repo->add($request);
-        $this->repo->addUserExtraInfo($request,$user);
+        $this->repo->addUserExtraInfo($request, $user);
         return redirect()->route('user.all');
     }
 
     public function show($id)
     {
-        return view('main.user.profile',[
-            'user'=>$this->repo->findWith($id,['settings']),
+        return view('main.user.profile', [
+            'user' => $this->repo->findWith($id, ['settings']),
         ]);
     }
 
-    
+
     public function update(Request $request, $id)
     {
         UserValidator::validateUserDetails($request);
         $user = $this->repo->find($id);
-        $this->repo->update($request->only(['full_name']),$id);
-        $this->repo->updateUserExtraInfo($request,$user);
-        return redirect()->route('user.show',['id'=>$user->id])->with('success','user account is updated');
+        $this->repo->update($id, $request->only(['full_name']));
+        $this->repo->updateUserExtraInfo($request, $user);
+        return redirect()->route('user.show', ['id' => $user->id])->with('success', 'user account is updated');
     }
 
 
     public function delete($id)
     {
         $this->repo->delete($id);
-        return redirect()->route('user.all')->with('success','user account is deleted');
+        return redirect()->route('user.all')->with('success', 'user account is deleted');
     }
 }

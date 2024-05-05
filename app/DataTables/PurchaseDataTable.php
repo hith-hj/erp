@@ -21,23 +21,22 @@ class PurchaseDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->addColumn('action', function($purchase){
+            ->addColumn('action', function ($purchase) {
                 $lang = __('locale.View');
                 return "<a href='/purchase/show/$purchase->id'>$lang</a>";
             })
-            ->addColumn('name',function($purchase){
+            ->addColumn('name', function ($purchase) {
                 return $purchase->material->name;
             })
-            ->addColumn('unit',function($purchase){
+            ->addColumn('unit', function ($purchase) {
                 return $purchase->unit->name;
             })
-            ->addColumn('bill',function($purchase){
+            ->addColumn('bill', function ($purchase) {
                 return $purchase->bill->serial ?? '';
             })
-            ->addColumn('currency',function($purchase){
+            ->addColumn('currency', function ($purchase) {
                 return $purchase->currency->name;
-            })
-            ;
+            });
     }
 
     /**
@@ -59,18 +58,24 @@ class PurchaseDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-                    ->setTableId('purchase-table')
-                    ->addTableClass('table-sm')
-                    ->columns($this->getColumns())
-                    ->minifiedAjax()
-                    ->dom('Bfrtip')
-                    ->orderBy(1)
-                    ->buttons(
-                        Button::make('pdf')->addClass('btn btn-outline-primary'),
-                        Button::make('print')->addClass('btn btn-outline-primary'),
-                        Button::make('excel')->addClass('btn btn-outline-primary'),
-                        Button::make('copy')->addClass('btn btn-outline-primary'),
-                    );
+            ->setTableId('purchase-table')
+            ->addTableClass('table-sm')
+            ->columns($this->getColumns())
+            ->minifiedAjax()
+            ->dom('Bfrtip')
+            ->orderBy(1)
+            ->buttons($this->getBtns());
+    }
+
+    public function getBtns()
+    {
+        $btn_class = 'btn btn-outline-primary btn-sm';
+        return [
+            Button::make('pdf')->addClass($btn_class),
+            Button::make('print')->addClass($btn_class),
+            Button::make('excel')->addClass($btn_class),
+            Button::make('copy')->addClass($btn_class),
+        ];
     }
 
     /**
@@ -90,11 +95,11 @@ class PurchaseDataTable extends DataTable
             Column::make('bill')->title(__('locale.Bill')),
             Column::make('created_at')->title(__('locale.Created at')),
             Column::computed('action')
-                  ->title(__('locale.Action'))
-                  ->exportable(false)
-                  ->printable(false)
-                  ->width(60)
-                  ->addClass('text-center'),
+                ->title(__('locale.Action'))
+                ->exportable(false)
+                ->printable(false)
+                ->width(60)
+                ->addClass('text-center'),
         ];
     }
 

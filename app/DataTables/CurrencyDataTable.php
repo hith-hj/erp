@@ -21,14 +21,13 @@ class CurrencyDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->addColumn('action', function($currency){
+            ->addColumn('action', function ($currency) {
                 $view = __('locale.View');
                 return "<a href='/currency/show/$currency->id'>$view</a>";
             })
-            ->addColumn('rates',function($currency){
+            ->addColumn('rates', function ($currency) {
                 return $currency->rates()->count();
-            })
-            ;
+            });
     }
 
     /**
@@ -50,18 +49,24 @@ class CurrencyDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-                    ->setTableId('currency-table')
-                    ->addTableClass('table-sm')
-                    ->columns($this->getColumns())
-                    ->minifiedAjax()
-                    ->dom('Bfrtip')
-                    ->orderBy(1)
-                    ->buttons(                        
-                        Button::make('pdf')->addClass('btn btn-outline-primary'),
-                        Button::make('print')->addClass('btn btn-outline-primary'),
-                        Button::make('excel')->addClass('btn btn-outline-primary'),
-                        Button::make('copy')->addClass('btn btn-outline-primary'),
-                    );;
+            ->setTableId('currency-table')
+            ->addTableClass('table-sm')
+            ->columns($this->getColumns())
+            ->minifiedAjax()
+            ->dom('Bfrtip')
+            ->orderBy(1)
+            ->buttons($this->getBtns());
+    }
+
+    public function getBtns()
+    {
+        $btn_class = 'btn btn-outline-primary btn-sm';
+        return [
+            Button::make('pdf')->addClass($btn_class),
+            Button::make('print')->addClass($btn_class),
+            Button::make('excel')->addClass($btn_class),
+            Button::make('copy')->addClass($btn_class),
+        ];
     }
 
     /**
@@ -78,11 +83,11 @@ class CurrencyDataTable extends DataTable
             Column::computed('rates')->title(__('locale.Rates')),
             Column::make('created_at')->title(__('locale.Created at')),
             Column::computed('action')
-                  ->title(__('locale.Action'))
-                  ->exportable(false)
-                  ->printable(false)
-                  ->width(60)
-                  ->addClass('text-center'),
+                ->title(__('locale.Action'))
+                ->exportable(false)
+                ->printable(false)
+                ->width(60)
+                ->addClass('text-center'),
         ];
     }
 

@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="card p-1">
-                    <div class="card-body px-0">
+                    <div class="card-body p-0">
                         {{ $dataTable->table() }}
                     </div>
                 </div>

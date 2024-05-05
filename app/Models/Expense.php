@@ -13,7 +13,7 @@ class Expense extends Model
     public function accounts()
     {
         return $this->belongsToMany(Account::class)
-        ->withPivot(['cost','note'])
-        ->withTimestamps();
+            ->withPivot(['cost', 'note'])
+            ->withTimestamps();
     }
 }

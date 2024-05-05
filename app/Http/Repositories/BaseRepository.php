@@ -23,12 +23,12 @@ class BaseRepository implements Repository
         return $this->model::findOrFail($id, $columns);
     }
 
-    public function add($data): Model
+    public function add(array $data): Model
     {
         return $this->model::create($data);
     }
 
-    public function update($data, int $id): bool
+    public function update(int $id, array $data): bool
     {
         return $this->model::findOrFail($id)->update($data);
     }
@@ -55,17 +55,17 @@ class BaseRepository implements Repository
 
     public function findWith(
         int $id,
-        array|string $relation,
+        array|string $relation = [],
         string|array $columns = ['*']
     ): Model {
         return $this->model::with($relation)->find($id, $columns);
     }
 
     public function getWithWhere(
-        $model,
-        $with = [],
-        $where = [],
-        $columns = ['*']
+        string $model,
+        string|array $with = [],
+        array $where = [],
+        array $columns = ['*']
     ) : Collection {
         $model = '\App\Models\\' . ucfirst(trim($model));
         return $model::with($with)->where($where)->get($columns);

@@ -29,12 +29,12 @@ class BillItemsDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->addColumn('action', function($item){                
+            ->addColumn('action', function ($item) {
                 $view = __('locale.View');
                 $options = __('locale.Options');
                 $delete = __('locale.Delete');
-                if($item->bill->status ==0){
-                    $type = $item->bill->type == 1 ? 'purchase':'sale';
+                if ($item->bill->status == 0) {
+                    $type = $item->bill->type == 1 ? 'purchase' : 'sale';
                     // return "<a href='/bill/$item->bill_id/$type/$item->id/delete'>delete</a>";
                     return "
                     <div class='dropdown'>
@@ -54,24 +54,23 @@ class BillItemsDataTable extends DataTable
                     </div>";
                 }
             })
-            ->addColumn('material',function($item){
+            ->addColumn('material', function ($item) {
                 return $item->material->name;
             })
-            ->addColumn('inventory',function($item){
+            ->addColumn('inventory', function ($item) {
                 return $item->inventory->name;
             })
-            ->addColumn('unit',function($item){
+            ->addColumn('unit', function ($item) {
                 return $item->unit->name;
             })
-            ->addColumn('currency',function($item){
+            ->addColumn('currency', function ($item) {
                 return $item->currency->name;
             })
-            ->addColumn($this->bill->type == 1?'vendor':'client',function($item){
+            ->addColumn($this->bill->type == 1 ? 'vendor' : 'client', function ($item) {
                 return $this->bill->type == 1 ?
                     $item->vendor->full_name :
-                    $item->client->full_name ;
-            })
-            ;
+                    $item->client->full_name;
+            });
     }
 
     /**
@@ -83,15 +82,15 @@ class BillItemsDataTable extends DataTable
     public function query()
     {
         $model = $this->getModelType();
-        return $model->newQuery()->where('bill_id',$this->bill->id);
+        return $model->newQuery()->where('bill_id', $this->bill->id);
     }
 
     private function getModelType()
     {
-        return match($this->bill->type){
-            1=>new Purchase(),
-            2=>new Sale(),
-            default=>new Purchase(),
+        return match ($this->bill->type) {
+            1 => new Purchase(),
+            2 => new Sale(),
+            default => new Purchase(),
         };
     }
 
@@ -103,18 +102,24 @@ class BillItemsDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-                    ->setTableId('billitems-table')
-                    ->addTableClass('table-sm')
-                    ->columns($this->getColumns())
-                    ->minifiedAjax()
-                    ->dom('Bfrtip')
-                    ->orderBy(1)
-                    ->buttons(                        
-                        Button::make('pdf')->addClass('btn btn-outline-primary'),
-                        Button::make('print')->addClass('btn btn-outline-primary'),
-                        Button::make('excel')->addClass('btn btn-outline-primary'),
-                        Button::make('copy')->addClass('btn btn-outline-primary'),
-                    );
+            ->setTableId('billitems-table')
+            ->addTableClass('table-sm')
+            ->columns($this->getColumns())
+            ->minifiedAjax()
+            ->dom('Bfrtip')
+            ->orderBy(1)
+            ->buttons($this->getBtns());
+    }
+
+    public function getBtns()
+    {
+        $btn_class = 'btn btn-outline-primary btn-sm';
+        return [
+            Button::make('pdf')->addClass($btn_class),
+            Button::make('print')->addClass($btn_class),
+            Button::make('excel')->addClass($btn_class),
+            Button::make('copy')->addClass($btn_class),
+        ];
     }
 
     /**
@@ -134,14 +139,14 @@ class BillItemsDataTable extends DataTable
             Column::make('currency')->title(__('locale.Currency')),
             Column::make('discount')->title(__('locale.Discount')),
             $this->bill->type == 1 ?
-            Column::make('vendor')->title(__('locale.Vendor')):
-            Column::make('client')->title(__('locale.Client')),
+                Column::make('vendor')->title(__('locale.Vendor')) :
+                Column::make('client')->title(__('locale.Client')),
             Column::computed('action')
-                  ->title(__('locale.Action'))
-                  ->exportable(false)
-                  ->printable(false)
-                  ->width(20)
-                  ->addClass('text-center'),
+                ->title(__('locale.Action'))
+                ->exportable(false)
+                ->printable(false)
+                ->width(20)
+                ->addClass('text-center'),
         ];
     }
 

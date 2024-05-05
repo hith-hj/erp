@@ -27,7 +27,7 @@ class InventoryMaterialDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->addColumn('action', function($material){
+            ->addColumn('action', function ($material) {
                 $view = __('locale.View');
                 $delete = __('locale.Delete');
                 $options = __('locale.Options');
@@ -47,18 +47,17 @@ class InventoryMaterialDataTable extends DataTable
                     </a>
                   </div>
                 </div>
-                ";      
+                ";
             })
-            ->addColumn('name', function($material){
+            ->addColumn('name', function ($material) {
                 return $material->material->name ?? __('locale.Deleted');
             })
-            ->addColumn('status', function($material){
+            ->addColumn('status', function ($material) {
                 return $material->status();
             })
-            ->addColumn('created_at', function($material){
+            ->addColumn('created_at', function ($material) {
                 return $material->created_at->diffForHumans();
-            })
-            ;
+            });
     }
 
     /**
@@ -69,7 +68,7 @@ class InventoryMaterialDataTable extends DataTable
      */
     public function query(InventoryMaterial $model)
     {
-        return $model->newQuery()->where('inventory_id',$this->inventory_id);
+        return $model->newQuery()->where('inventory_id', $this->inventory_id);
     }
 
     /**
@@ -80,18 +79,23 @@ class InventoryMaterialDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-                    ->setTableId('inventorymaterial-table')
-                    ->addTableClass('table-sm')
-                    ->columns($this->getColumns())
-                    ->minifiedAjax()
-                    ->dom('Bfrtip')
-                    ->buttons(                        
-                        Button::make('pdf')->addClass('btn btn-outline-primary'),
-                        Button::make('print')->addClass('btn btn-outline-primary'),
-                        Button::make('excel')->addClass('btn btn-outline-primary'),
-                        Button::make('copy')->addClass('btn btn-outline-primary'),
-                    );                   
-                    ;
+            ->setTableId('inventorymaterial-table')
+            ->addTableClass('table-sm')
+            ->columns($this->getColumns())
+            ->minifiedAjax()
+            ->dom('Bfrtip')
+            ->buttons($this->getBtns());
+    }
+
+    public function getBtns()
+    {
+        $btn_class = 'btn btn-outline-primary btn-sm';
+        return [
+            Button::make('pdf')->addClass($btn_class),
+            Button::make('print')->addClass($btn_class),
+            Button::make('excel')->addClass($btn_class),
+            Button::make('copy')->addClass($btn_class),
+        ];
     }
 
     /**
@@ -108,11 +112,11 @@ class InventoryMaterialDataTable extends DataTable
             Column::make('status')->title(__('locale.Status')),
             Column::make('created_at')->title(__('locale.Created at')),
             Column::computed('action')
-                  ->title(__('locale.Action'))
-                  ->exportable(false)
-                  ->printable(false)
-                  ->width(60)
-                  ->addClass('text-center'),
+                ->title(__('locale.Action'))
+                ->exportable(false)
+                ->printable(false)
+                ->width(60)
+                ->addClass('text-center'),
         ];
     }
 

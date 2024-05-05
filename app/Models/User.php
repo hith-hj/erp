@@ -12,7 +12,7 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasFactory, Notifiable ,SoftDeletes;
+    use HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -40,7 +40,7 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     protected $casts = [
-        'settings'=>'array',
+        'settings' => 'array',
     ];
 
     public function settings()
@@ -48,29 +48,18 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(UserSetting::class) ?? 0;
     }
 
-    public function cards()
-    {
-        return $this->hasMany(Card::class);
-    }
-
-    public function section()
-    {
-        return $this->belongsTo(Section::class);
-    }
-
     public function getSetting($key)
     {
-        return $this->settings()->where('key',$key)->first()?->value ?? __('locale.None');
+        return $this->settings()->where('key', $key)->first()?->value ?? __('locale.None');
     }
 
     public function sale()
     {
         return $this->hasMany(Sale::class);
     }
-    
+
     public function purchase()
     {
         return $this->hasMany(Purchase::class);
     }
-
 }

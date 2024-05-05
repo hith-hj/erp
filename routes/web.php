@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\AccountType\AccountTypeController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Bill\BillController;
 use App\Http\Controllers\Client\ClientController;
 use App\Http\Controllers\Currency\CurrencyController;
+use App\Http\Controllers\Expense\ExpenseController;
 use App\Http\Controllers\Inventory\InventoryController;
 use App\Http\Controllers\Material\MaterialController;
 use App\Http\Controllers\Purchase\PurchaseController;
@@ -142,6 +144,28 @@ Route::group(['middleware' => 'auth',], function () {
         Route::get('create', 'create')->name('client.create');
         Route::post('store', 'store')->name('client.store');
         Route::delete('delete/{client}', 'delete')->name('client.delete');
+    });
+
+    Route::group([
+        'prefix' => 'expense',
+        'controller' => ExpenseController::class
+    ], function () {
+        Route::get('all', 'index')->name('expense.all');
+        Route::get('show/{expense}', 'show')->name('expense.show');
+        Route::get('create', 'create')->name('expense.create');
+        Route::post('store', 'store')->name('expense.store');
+        Route::delete('delete/{expense}', 'delete')->name('expense.delete');
+    });
+
+    Route::group([
+        'prefix' => 'accountType',
+        'controller' => AccountTypeController::class
+    ], function () {
+        Route::get('all', 'index')->name('accountType.all');
+        Route::get('show/{accountType}', 'show')->name('accountType.show');
+        Route::get('create', 'create')->name('accountType.create');
+        Route::post('store', 'store')->name('accountType.store');
+        Route::delete('delete/{accountType}', 'delete')->name('accountType.delete');
     });
 
     Route::group(['controller' => HomeController::class,], function () {

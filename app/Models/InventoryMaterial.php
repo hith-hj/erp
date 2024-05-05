@@ -9,9 +9,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class InventoryMaterial extends Pivot
 {
     use HasFactory, SoftDeletes;
-    
+
     public $incrementing = true;
-    protected $casts = ['status'=>'integer'];
+    protected $casts = ['status' => 'integer'];
     protected $fillable = [
         'inventory_id',
         'material_id',
@@ -25,11 +25,11 @@ class InventoryMaterial extends Pivot
 
     public function status()
     {
-        return match($this->status){
-            1=>__('locale.In stock'),
-            0=>__('locale.Requested'),
-            -1=>__('locale.Out of stock'),
-            default=>__('locale.None')
+        return match ($this->status) {
+            1 => __('locale.In stock'),
+            0 => __('locale.Requested'),
+            -1 => __('locale.Out of stock'),
+            default => __('locale.None')
         };
     }
 }

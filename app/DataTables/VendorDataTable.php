@@ -11,20 +11,20 @@ use Yajra\DataTables\Html\Editor\Editor;
 
 class VendorDataTable extends DataTable
 {
-    /**
-     * Build DataTable class.
-     *
-     * @param mixed $query Results from query() method.
-     * @return \Yajra\DataTables\DataTableAbstract
-     */
-    public function dataTable($query)
-    {
-        return datatables()
-            ->eloquent($query)
-            ->addColumn('action', function($vendor){
-                $view = __('locale.View');
-                $options = __('locale.Options');
-                return "
+  /**
+   * Build DataTable class.
+   *
+   * @param mixed $query Results from query() method.
+   * @return \Yajra\DataTables\DataTableAbstract
+   */
+  public function dataTable($query)
+  {
+    return datatables()
+      ->eloquent($query)
+      ->addColumn('action', function ($vendor) {
+        $view = __('locale.View');
+        $options = __('locale.Options');
+        return "
                 <div class='dropdown'>
                   <button type='button' class='btn btn-sm dropdown-toggle hide-arrow py-0' data-bs-toggle='dropdown'>
                     $options
@@ -36,71 +36,77 @@ class VendorDataTable extends DataTable
                     </a>
                   </div>
                 </div>";
-            });
-    }
+      });
+  }
 
-    /**
-     * Get query source of dataTable.
-     *
-     * @param \App\Models\Vendor $model
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function query(Vendor $model)
-    {
-        return $model->newQuery();
-    }
+  /**
+   * Get query source of dataTable.
+   *
+   * @param \App\Models\Vendor $model
+   * @return \Illuminate\Database\Eloquent\Builder
+   */
+  public function query(Vendor $model)
+  {
+    return $model->newQuery();
+  }
 
-    /**
-     * Optional method if you want to use html builder.
-     *
-     * @return \Yajra\DataTables\Html\Builder
-     */
-    public function html()
-    {
-        return $this->builder()
-                    ->setTableId('vendor-table')
-                    ->addTableClass('table-sm')
-                    ->columns($this->getColumns())
-                    ->minifiedAjax()
-                    ->dom('Bfrtip')
-                    ->orderBy(1)
-                    ->buttons(
-                        Button::make('pdf')->addClass('btn btn-outline-primary'),
-                        Button::make('print')->addClass('btn btn-outline-primary'),
-                        Button::make('excel')->addClass('btn btn-outline-primary'),
-                        Button::make('copy')->addClass('btn btn-outline-primary'),
-                    );
-    }
+  /**
+   * Optional method if you want to use html builder.
+   *
+   * @return \Yajra\DataTables\Html\Builder
+   */
+  public function html()
+  {
+    return $this->builder()
+      ->setTableId('vendor-table')
+      ->addTableClass('table-sm')
+      ->columns($this->getColumns())
+      ->minifiedAjax()
+      ->dom('Bfrtip')
+      ->orderBy(1)
+      ->buttons($this->getBtns());
+  }
 
-    /**
-     * Get columns.
-     *
-     * @return array
-     */
-    protected function getColumns()
-    {
-        return [
-            Column::make('id'),
-            Column::make('first_name')->title(__('locale.First name')),
-            Column::make('last_name')->title(__('locale.Last name')),
-            Column::make('email')->title(__('locale.Email')),
-            Column::make('phone')->title(__('locale.Phone')),
-            Column::make('created_at')->title(__('locale.Created at')),
-            Column::computed('action')
-                  ->exportable(false)
-                  ->printable(false)
-                  ->width(60)
-                  ->addClass('text-center'),
-        ];
-    }
+  public function getBtns()
+  {
+    $btn_class = 'btn btn-outline-primary btn-sm';
+    return [
+      Button::make('pdf')->addClass($btn_class),
+      Button::make('print')->addClass($btn_class),
+      Button::make('excel')->addClass($btn_class),
+      Button::make('copy')->addClass($btn_class),
+    ];
+  }
 
-    /**
-     * Get filename for export.
-     *
-     * @return string
-     */
-    protected function filename()
-    {
-        return 'Vendor_' . date('YmdHis');
-    }
+  /**
+   * Get columns.
+   *
+   * @return array
+   */
+  protected function getColumns()
+  {
+    return [
+      Column::make('id'),
+      Column::make('first_name')->title(__('locale.First name')),
+      Column::make('last_name')->title(__('locale.Last name')),
+      Column::make('email')->title(__('locale.Email')),
+      Column::make('phone')->title(__('locale.Phone')),
+      Column::make('created_at')->title(__('locale.Created at')),
+      Column::computed('action')
+        ->exportable(false)
+        ->printable(false)
+        ->width(60)
+        ->addClass('text-center'),
+    ];
+  }
+
+  /**
+   * Get filename for export.
+   *
+   * @return string
+   */
+  protected function filename()
+  {
+    return 'Vendor_' . date('YmdHis');
+  }
 }

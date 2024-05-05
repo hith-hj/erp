@@ -21,7 +21,7 @@ class UnitDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->addColumn('action', function($unit){
+            ->addColumn('action', function ($unit) {
                 $view = __('locale.View');
                 $options = __('locale.Options');
                 return "
@@ -37,10 +37,9 @@ class UnitDataTable extends DataTable
                   </div>
                 </div>";
             })
-            ->addColumn('materials',function($unit){
+            ->addColumn('materials', function ($unit) {
                 return $unit->materials()->count();
-            })
-            ;
+            });
     }
 
     /**
@@ -62,18 +61,24 @@ class UnitDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-                    ->setTableId('unit-table')
-                    ->addTableClass('table-sm')
-                    ->columns($this->getColumns())
-                    ->minifiedAjax()
-                    ->dom('Bfrtip')
-                    ->orderBy(1)
-                    ->buttons(
-                        Button::make('pdf')->addClass('btn btn-outline-primary'),
-                        Button::make('print')->addClass('btn btn-outline-primary'),
-                        Button::make('excel')->addClass('btn btn-outline-primary'),
-                        Button::make('copy')->addClass('btn btn-outline-primary'),
-                    );
+            ->setTableId('unit-table')
+            ->addTableClass('table-sm')
+            ->columns($this->getColumns())
+            ->minifiedAjax()
+            ->dom('Bfrtip')
+            ->orderBy(1)
+            ->buttons($this->getBtns());
+    }
+
+    public function getBtns()
+    {
+        $btn_class = 'btn btn-outline-primary btn-sm';
+        return [
+            Button::make('pdf')->addClass($btn_class),
+            Button::make('print')->addClass($btn_class),
+            Button::make('excel')->addClass($btn_class),
+            Button::make('copy')->addClass($btn_class),
+        ];
     }
 
     /**
@@ -90,10 +95,10 @@ class UnitDataTable extends DataTable
             Column::make('materials'),
             Column::make('created_at'),
             Column::computed('action')
-                  ->exportable(false)
-                  ->printable(false)
-                  ->width(60)
-                  ->addClass('text-center'),
+                ->exportable(false)
+                ->printable(false)
+                ->width(60)
+                ->addClass('text-center'),
         ];
     }
 

@@ -137,12 +137,12 @@
                                         <?php $__empty_1 = true; $__currentLoopData = $material->manufactureModel; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $model): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                                             <tr>
                                                 <td><?php echo e($model->id); ?></td>
-                                                <td><?php echo e($model->material->name); ?></td>
-                                                <td><?php echo e($model->inventory->name); ?></td>
+                                                <td><?php echo e($model->material?->name); ?></td>
+                                                <td><?php echo e($model->inventory?->name); ?></td>
                                                 <td><?php echo e($model->quantity); ?></td>
-                                                <td><?php echo e($model->unit->name); ?></td>
+                                                <td><?php echo e($model->unit?->name); ?></td>
                                                 <td><?php echo e($model->cost); ?></td>
-                                                <td><?php echo e($model->currency->name); ?></td>
+                                                <td><?php echo e($model->currency?->name); ?></td>
                                                 <td><?php echo e($model->created_at->format('Y-m-d')); ?></td>
                                             </tr>
                                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>

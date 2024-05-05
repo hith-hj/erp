@@ -15,17 +15,17 @@ class Account extends Model
         'accountable_type',
     ];
 
-    protected $with=['expenses'];
+    protected $with = ['expenses'];
 
     public function setTypeAttribute($value)
     {
-        return $this->attributes['type'] = DB::table('account_types')->where('id',$value)->first()?->name;
+        return $this->attributes['type'] = DB::table('account_types')->where('id', $value)->first()?->name;
     }
 
     public function expenses()
     {
         return $this->belongsToMany(Expense::class)
-        ->withPivot(['cost','note'])
-        ->withTimestamps();
+            ->withPivot(['cost', 'note'])
+            ->withTimestamps();
     }
 }

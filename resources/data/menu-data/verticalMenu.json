@@ -40,7 +40,7 @@
 
     {
       "name": "Cards",
-      "badge": "4",
+      "badge": "6",
       "badgeClass": "badge badge-light-warning rounded-pill ms-auto me-1",
       "icon": "credit-card",
       "slug": "Cards",
@@ -68,6 +68,18 @@
           "name": "Currencies",
           "icon": "dollar-sign",
           "slug": "List-currency"
+        },
+        {
+          "url": "expense/all",
+          "name": "Expenses",
+          "icon": "dollar-sign",
+          "slug": "List-Expenses"
+        },
+        {
+          "url": "accountType/all",
+          "name": "AccountTypes",
+          "icon": "dollar-sign",
+          "slug": "List-Account types"
         }
       ]
     },
