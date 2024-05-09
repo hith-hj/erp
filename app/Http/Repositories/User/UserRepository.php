@@ -13,16 +13,6 @@ class UserRepository extends BaseRepository
     {
         parent::__construct(User::class);
     }
-    public function add($request): User
-    {
-        return User::create([
-            'username' => $request->username,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'device_token' => 'pindding',
-            'full_name' => $request->full_name
-        ]);
-    }
 
     public function addUserExtraInfo(Request $request, $user)
     {

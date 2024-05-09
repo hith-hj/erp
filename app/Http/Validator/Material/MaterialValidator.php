@@ -37,7 +37,7 @@ class MaterialValidator
   {
     return $request->validate([
       'material_id' => ['required', 'exists:materials,id'],
-      'inventory_to_store_id' => ['required', 'exists:inventories,id'],
+      // 'inventory_to_store_id' => ['required', 'exists:inventories,id'],
       'materials' => ['required', 'array', 'min:1'],
       'materials.*.material_id' => ['required', 'exists:materials,id'],
       'materials.*.inventory_id' => ['required', 'exists:inventories,id'],

@@ -7,12 +7,14 @@ use App\Http\Controllers\Client\ClientController;
 use App\Http\Controllers\Currency\CurrencyController;
 use App\Http\Controllers\Expense\ExpenseController;
 use App\Http\Controllers\Inventory\InventoryController;
+use App\Http\Controllers\Manufacturing\ManufacturingController;
 use App\Http\Controllers\Material\MaterialController;
 use App\Http\Controllers\Purchase\PurchaseController;
 use App\Http\Controllers\Vendors\VendorController;
 use App\Http\Controllers\Sale\SaleController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Unit\UnitController;
+use App\Models\Manufacturing;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -166,6 +168,17 @@ Route::group(['middleware' => 'auth',], function () {
         Route::get('create', 'create')->name('accountType.create');
         Route::post('store', 'store')->name('accountType.store');
         Route::delete('delete/{accountType}', 'delete')->name('accountType.delete');
+    });
+    
+    Route::group([
+        'prefix' => 'manufacturing',
+        'controller' => ManufacturingController::class
+    ], function () {
+        Route::get('all', 'index')->name('manufacturing.all');
+        Route::get('show/{manufacturing}', 'show')->name('manufacturing.show');
+        Route::get('create', 'create')->name('manufacturing.create');
+        Route::post('store', 'store')->name('manufacturing.store');
+        Route::delete('delete/{manufacturing}', 'delete')->name('manufacturing.delete');
     });
 
     Route::group(['controller' => HomeController::class,], function () {

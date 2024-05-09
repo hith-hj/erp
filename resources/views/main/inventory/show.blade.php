@@ -44,7 +44,7 @@
                                             placeholder="{{ __('locale.Quantity') }}" required />
                                     </div>
                                 </div>
-                                <div class="col-2" data-repeater-delete>
+                                <div class="col-2 p-0" data-repeater-delete>
                                     <div class="mb-1">
                                         <label class="form-label" for="rate">{{ __('locale.Delete') }}</label>
                                         <button type="button" class="btn btn-icon btn-danger w-100">
@@ -54,10 +54,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-2" data-repeater-create>
+                        <div class="col-2 p-0" data-repeater-create>
                             <div class="mb-1">
                                 <label class="form-label" for="rate">{{ __('locale.Add') }}</label>
-                                <button type="button" class="btn btn-icon btn-primary w-100">
+                                <button type="button" class="btn btn-icon btn-outline-primary w-100">
                                     <span>{{ __('locale.Add') }}</span>
                                 </button>
                             </div>
@@ -65,7 +65,7 @@
                     </div>
                     <div class="">
                         <button  type="submit"
-                            class="btn btn-outline-primary w-100">{{ __('locale.Store') }}</button>
+                            class="btn btn-primary w-100">{{ __('locale.Store') }}</button>
                     </div>
                 </form>
             </div>

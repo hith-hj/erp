@@ -146,7 +146,7 @@ unset($__errorArgs, $__bag); ?>">
                                             <div class="mb-1">
                                                 <label class="form-label"
                                                     for="rate"><?php echo e(__('locale.Rate')); ?></label>
-                                                <input type="number" id="rate"
+                                                <input type="number" id="rate" step="0.001" min="0.001" max="1000"
                                                     class="form-control <?php $__errorArgs = ['rate'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :

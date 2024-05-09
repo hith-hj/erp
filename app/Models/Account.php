@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 
 class Account extends Model
 {
@@ -19,8 +18,13 @@ class Account extends Model
 
     public function setTypeAttribute($value)
     {
-        return $this->attributes['type'] = DB::table('account_types')->where('id', $value)->first()?->name;
+        return $this->attributes['type'] = AccountType::find($value)?->name ?? $value;
     }
+
+    // public function getTypeAttribute()
+    // {
+    //     return AccountType::find($this->type)?->name ?? $this->type;
+    // }
 
     public function expenses()
     {

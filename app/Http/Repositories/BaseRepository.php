@@ -2,6 +2,7 @@
 
 namespace App\Http\Repositories;
 
+use Closure;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
@@ -69,5 +70,15 @@ class BaseRepository implements Repository
     ) : Collection {
         $model = '\App\Models\\' . ucfirst(trim($model));
         return $model::with($with)->where($where)->get($columns);
+    }
+    
+    public function firstWithWhere(
+        string $model,
+        string|array $with = [],
+        array $where = [],
+        array $columns = ['*'],
+    ) : Model {
+        $model = '\App\Models\\' . ucfirst(trim($model));
+        return $model::with($with)->where($where)->first($columns);
     }
 }

@@ -106,7 +106,7 @@
                                             <div class="mb-1">
                                                 <label class="form-label"
                                                     for="rate">{{ __('locale.Rate') }}</label>
-                                                <input type="number" id="rate"
+                                                <input type="number" id="rate" step="0.001" min="0.001" max="1000"
                                                     class="form-control @error('rate') border-danger @enderror"
                                                     name="rate" placeholder="{{ __('locale.Rate') }}"
                                                     value="{{ old('rate') }}" required />

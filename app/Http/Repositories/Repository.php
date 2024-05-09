@@ -30,4 +30,18 @@ interface Repository
         array|string $relation = [],
         array|string $columns = ['*'],
     ): Collection;
+
+    public function getWithWhere(
+        string $model,
+        string|array $with = [],
+        array $where = [],
+        array $columns = ['*']
+    ) : Collection ;
+
+    public function firstWithWhere(
+        string $model,
+        string|array $with = [],
+        array $where = [],
+        array $columns = ['*']
+    ) : Model ;
 }

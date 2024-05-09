@@ -37,7 +37,7 @@
                         materials: {{ $materials->keyBy('id')->toJson() }}
                     }">
                         <div class="row my-1">
-                            <div class="col-12">
+                            {{-- <div class="col-12">
                                 <div class="mb-1">
                                     <label class="form-label" for="type">{{ __('locale.Inventory') }} To store new
                                         material</label>
@@ -53,7 +53,7 @@
                                         @endforelse
                                     </select>
                                 </div>
-                            </div>
+                            </div> --}}
                             <ul class="nav nav-tabs px-2 m-0" role="tablist">
                                 <li class="nav-item">
                                     <a class="nav-link active" id="material-tab" data-bs-toggle="tab" href="#material"

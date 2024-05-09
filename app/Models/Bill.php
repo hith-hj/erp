@@ -17,6 +17,7 @@ class Bill extends Model
         return match ($this->type) {
             1 => $this->hasMany(Purchase::class),
             2 => $this->hasMany(Sale::class),
+            3 => $this->hasMany(Manufacturing::class),
             default => $this->hasMany(Purchase::class),
         };
     }
@@ -26,6 +27,7 @@ class Bill extends Model
         return match ($this->type) {
             1 => __('locale.Purchase'),
             2 => __('locale.Sale'),
+            3 => __('locale.Manufacturing'),
             default => __('locale.None'),
         };
     }

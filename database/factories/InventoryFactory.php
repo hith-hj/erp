@@ -26,7 +26,7 @@ class InventoryFactory extends Factory
             foreach(Material::where('type',1)->pluck('id')->random(2) as $id)
             {
                 $inventory->materials()->attach($id,[
-                    'quantity'=>rand(1,9),
+                    'quantity'=>2000,
                 ]);
             }
         });

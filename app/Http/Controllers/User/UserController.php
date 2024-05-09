@@ -8,6 +8,7 @@ use App\Http\Repositories\User\UserRepository;
 use App\Http\Validator\User\UserValidator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends BaseController
 {
@@ -36,9 +37,10 @@ class UserController extends BaseController
     public function store(Request $request)
     {
         UserValidator::validateUserDetails($request);
-        $user = $this->repo->add($request);
+        $request['password'] = Hash::make($request->password);
+        $user = $this->repo->add($request->only(['full_name','username','email','password']));
         $this->repo->addUserExtraInfo($request, $user);
-        return redirect()->route('user.all');
+        return redirect()->route('user.all')->with('success','user created');
     }
 
     public function show($id)

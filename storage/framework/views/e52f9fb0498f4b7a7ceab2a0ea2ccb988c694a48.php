@@ -53,7 +53,7 @@ unset($__errorArgs, $__bag); ?>"
                                             placeholder="<?php echo e(__('locale.Quantity')); ?>" required />
                                     </div>
                                 </div>
-                                <div class="col-2" data-repeater-delete>
+                                <div class="col-2 p-0" data-repeater-delete>
                                     <div class="mb-1">
                                         <label class="form-label" for="rate"><?php echo e(__('locale.Delete')); ?></label>
                                         <button type="button" class="btn btn-icon btn-danger w-100">
@@ -63,10 +63,10 @@ unset($__errorArgs, $__bag); ?>"
                                 </div>
                             </div>
                         </div>
-                        <div class="col-2" data-repeater-create>
+                        <div class="col-2 p-0" data-repeater-create>
                             <div class="mb-1">
                                 <label class="form-label" for="rate"><?php echo e(__('locale.Add')); ?></label>
-                                <button type="button" class="btn btn-icon btn-primary w-100">
+                                <button type="button" class="btn btn-icon btn-outline-primary w-100">
                                     <span><?php echo e(__('locale.Add')); ?></span>
                                 </button>
                             </div>
@@ -74,7 +74,7 @@ unset($__errorArgs, $__bag); ?>"
                     </div>
                     <div class="">
                         <button  type="submit"
-                            class="btn btn-outline-primary w-100"><?php echo e(__('locale.Store')); ?></button>
+                            class="btn btn-primary w-100"><?php echo e(__('locale.Store')); ?></button>
                     </div>
                 </form>
             </div>

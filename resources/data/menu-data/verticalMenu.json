@@ -37,6 +37,12 @@
       "icon": "shopping-cart",
       "slug": "List-sales"
     },
+    {
+      "url": "manufacturing/all",
+      "name": "Manufacturing",
+      "icon": "triangle",
+      "slug": "List-Manufacturing"
+    },
 
     {
       "name": "Cards",

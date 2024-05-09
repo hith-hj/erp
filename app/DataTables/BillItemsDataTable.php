@@ -3,6 +3,7 @@
 namespace App\DataTables;
 
 use App\Models\BillItem;
+use App\Models\Manufacturing;
 use App\Models\Purchase;
 use App\Models\Sale;
 use Yajra\DataTables\Html\Button;
@@ -55,21 +56,21 @@ class BillItemsDataTable extends DataTable
                 }
             })
             ->addColumn('material', function ($item) {
-                return $item->material->name;
+                return $item->material?->name ?? __('locale.None');
             })
             ->addColumn('inventory', function ($item) {
-                return $item->inventory->name;
+                return $item->inventory?->name ?? __('locale.None');
             })
             ->addColumn('unit', function ($item) {
-                return $item->unit->name;
+                return $item->unit?->name ?? __('locale.None');
             })
             ->addColumn('currency', function ($item) {
-                return $item->currency->name;
+                return $item->currency?->name ?? __('locale.None');
             })
             ->addColumn($this->bill->type == 1 ? 'vendor' : 'client', function ($item) {
                 return $this->bill->type == 1 ?
-                    $item->vendor->full_name :
-                    $item->client->full_name;
+                    $item->vendor?->full_name :
+                    $item->client?->full_name;
             });
     }
 
@@ -90,6 +91,7 @@ class BillItemsDataTable extends DataTable
         return match ($this->bill->type) {
             1 => new Purchase(),
             2 => new Sale(),
+            3 => new Manufacturing(),
             default => new Purchase(),
         };
     }

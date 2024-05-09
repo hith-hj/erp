@@ -2,15 +2,14 @@
 
 namespace App\DataTables;
 
-use App\Models\Bill;
-use SebastianBergmann\CodeCoverage\Report\Xml\Totals;
+use App\Models\Manufacturing;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Html\Editor\Editor;
 
-class BillDataTable extends DataTable
+class ManufacturingDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -22,34 +21,42 @@ class BillDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->addColumn('action', function ($bill) {
-                $lang = __('locale.View');
-                $type = $bill->type == 3 ? 'manufacturing' : 'bill';
-                return "<a href='/$type/show/$bill->id'>$lang</a>";
+            ->addColumn('action', function($manufacturing){
+                $view = __('locale.View');
+                $options = __('locale.Options');
+                return "
+                <div class='dropdown'>
+                  <button type='button' class='btn btn-sm dropdown-toggle hide-arrow py-0' data-bs-toggle='dropdown'>
+                    $options
+                  </button>
+                  <div class='dropdown-menu dropdown-menu-end'>
+                    <a class='dropdown-item' href='/manufacturing/show/$manufacturing->id'>
+                      <i data-feather='edit-2' class='me-50'></i>
+                      <span>$view</span>
+                    </a>
+                  </div>
+                </div>";
             })
-            ->addColumn('type', function ($bill) {
-                return $bill->get_type;
+            ->addColumn('material',function($manufacturing){
+                return $manufacturing->material?->name ?? __('locale.None'); 
             })
-            ->addColumn('status', function ($bill) {
-                return $bill->get_status;
+            ->addColumn('inventory',function($manufacturing){
+                return $manufacturing->inventory?->name ?? __('locale.None'); 
             })
-            ->addColumn('items', function ($bill) {
-                return $bill->items()->count();
-            })
-            ->addColumn('total', function ($bill) {
-                return $bill->items()->sum('cost');
+            ->addColumn('bill',function($manufacturing){
+                return $manufacturing->bill?->serial ?? __('locale.None'); 
             });
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\Bill $model
+     * @param \App\Models\Manufacturing $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(Bill $model)
+    public function query(Manufacturing $model)
     {
-        return $model->newQuery()->with('items');
+        return $model->newQuery();
     }
 
     /**
@@ -60,7 +67,7 @@ class BillDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-            ->setTableId('bill-table')
+            ->setTableId('manufacturing-table')
             ->addTableClass('table-sm')
             ->columns($this->getColumns())
             ->minifiedAjax()
@@ -89,19 +96,16 @@ class BillDataTable extends DataTable
     {
         return [
             Column::make('id'),
-            Column::make('serial')->title(__('locale.Serial')),
-            Column::make('type')->title(__('locale.Type')),
-            Column::make('status')
-                ->searchable()
-                ->orderable()
-                ->title(__('locale.Status')),
-            Column::make('items')->title(__('locale.Items')),
-            Column::make('total')->title(__('locale.Total')),
-            Column::make('created_at')->title(__('locale.Created at')),
+            Column::make('material'),
+            Column::make('inventory'),
+            Column::make('bill'),
+            Column::make('quantity'),
+            Column::make('cost'),
+            Column::make('created_at'),
             Column::computed('action')
-                ->title(__('locale.Action'))
                 ->exportable(false)
                 ->printable(false)
+                ->width(60)
                 ->addClass('text-center'),
         ];
     }
@@ -113,6 +117,6 @@ class BillDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'Bill_' . date('YmdHis');
+        return 'Manufacturing_' . date('YmdHis');
     }
 }
