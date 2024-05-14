@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Sale;
 
 use App\DataTables\SaleDataTable;
 use App\Http\Controllers\BaseController;
-use App\Http\Repositories\Bill\BillRepository;
 use App\Http\Repositories\Sale\SaleRepository;
 use App\Http\Validator\Sale\SaleValidator;
 use App\Models\Sale;
@@ -22,57 +21,30 @@ class SaleController extends BaseController
 
     public function index()
     {
-        $table = new SaleDataTable();
-        return $table->render('main.sale.index');
+        return (new SaleDataTable())->render('main.sale.index');
     }
 
     public function show($id)
     {
-        return view('main.sale.show', [
-            'sale' => $this->repo->findWith($id, ['inventory', 'material', 'currency'])
-        ]);
+        return view('main.sale.show', $this->repo->getShowPayload($id));
     }
 
     public function create()
     {
-        return view('main.sale.create', [
-            'inventories' => $this->repo->getWithWhere(
-                model: 'Inventory',
-                columns: ['id', 'name']
-            ) ?? [],
-
-            'currencies' => $this->repo->getWithWhere(
-                model: 'Currency',
-                with: ['rates:id,name'],
-                columns: ['id', 'name', 'code']
-            ) ?? [],
-
-            'materials' => $this->repo->getWithWhere(
-                model: 'Material',
-                with: ['inventories', 'units'],
-                columns: ['id', 'name']
-            ) ?? [],
-
-            'clients' => $this->repo->getWithWhere(model: 'Client') ?? [],
-
-            'bill' => (new BillRepository())->add(['type' => 2]),
-        ]);
+        return view('main.sale.create', $this->repo->getCreatePayload());
     }
 
     public function store(Request $request)
     {
         SaleValidator::validate($request);
-        foreach ($request->sales as $sale) {
-            $sale['bill_id'] = $request->bill_id;
-            $sale['created_by'] = auth()->user()->id;
-            try {
-                $this->repo->updateInventoryMaterial($sale);
-                $sale = $this->repo->add($sale);
-            } catch (\Throwable $th) {
-                return back()->with('error', $th->getMessage());
-            }
+        try {
+            $this->repo->storeSale($request);
+        } catch (\Throwable $th) {
+            return back()->with('error', $th->getMessage());
         }
-        return redirect()->route('bill.show', ['id' => $request->bill_id]);
+        return redirect()
+            ->route('bill.show', ['id' => $request->bill_id])
+            ->with('success', 'Sale Created');
     }
 
     public function delete(Sale $sale)

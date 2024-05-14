@@ -18,6 +18,7 @@ class CreateInventoriesTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('status')->default(1);
+            $table->boolean('is_default')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });

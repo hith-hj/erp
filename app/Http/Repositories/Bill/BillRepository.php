@@ -12,10 +12,55 @@ use Exception;
 class BillRepository extends BaseRepository
 {
     const bill_stat = ['unsaved' => 0, 'saved' => 1, 'audited' => 2, 'checked' => 3];
+    const types = ['purchase' => 1, 'sale' => 2];
 
     public function __construct()
     {
         parent::__construct(Bill::class);
+    }
+
+    public function getShowPayload($bill)
+    {
+        $billable = $bill->type == self::types['purchase'] ? 'vendors' : 'clients';
+        $billableArray = $this->getter(
+            model: Str::singular($billable),
+            columns: ['id', 'first_name', 'last_name'],
+        );
+        $callable = match ($bill->type) {
+            self::types['purchase'] => [
+                'select' => ['id', 'name'],
+                'with' => ['units', 'inventories'],
+            ],
+            self::types['sale'] => [
+                'select' => ['id', 'name'],
+                'with' => ['units', 'inventories'],
+                'has' => ['inventories', '>', 0]
+            ],
+            default => [
+                'select' => ['id', 'name'],
+                'with' => ['units', 'inventories'],
+            ],
+        };
+
+        return [
+            'bill' => $bill,
+            'inventories' => $this->getter(
+                model: 'Inventory',
+                columns: ['id', 'name', 'is_default']
+            ) ?? [],
+            'currencies' => $this->getter(
+                model: 'currency',
+                callable: [
+                    'select' => ['id', 'name', 'code'],
+                    'with' => ['rates:id,name'],
+                ],
+            ) ?? [],
+            'materials' => $this->getter(
+                model: 'material',
+                callable: $callable,
+            ) ?? [],
+            $billable => $billableArray,
+        ];
     }
 
     public function add($data): Bill

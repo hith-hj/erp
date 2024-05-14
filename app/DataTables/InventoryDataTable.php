@@ -30,7 +30,11 @@ class InventoryDataTable extends DataTable
             })
             ->addColumn('materials', function ($inventroy) {
                 return !is_null($inventroy->materials) ? $inventroy->materials()->count() : 0;
-            });
+            })
+            ->addColumn('default', function ($inventroy) {
+                return $inventroy->is_default ? __('locale.Default') : '-';
+            })
+            ;
     }
 
     /**
@@ -83,6 +87,7 @@ class InventoryDataTable extends DataTable
             Column::make('name')->title(__('locale.Name')),
             Column::make('status')->title(__('locale.Status')),
             Column::make('materials')->title(__('locale.Materials')),
+            Column::make('default')->title(__('locale.Default')),
             Column::make('created_at')->title(__('locale.Created at')),
             Column::computed('action')
                 ->title(__('locale.Action'))

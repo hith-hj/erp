@@ -67,18 +67,43 @@ class BaseRepository implements Repository
         string|array $with = [],
         array $where = [],
         array $columns = ['*']
-    ) : Collection {
+    ): Collection {
         $model = '\App\Models\\' . ucfirst(trim($model));
         return $model::with($with)->where($where)->get($columns);
     }
-    
+
     public function firstWithWhere(
         string $model,
         string|array $with = [],
         array $where = [],
         array $columns = ['*'],
-    ) : Model {
+    ): Model {
+        return $this->getWithWhere($model, $with, $where, $columns)?->first();
+    }
+
+    /**
+     *
+     * @param string $model Model to call
+     * @param array $callable array of methods to call on the model
+     * @param string $getter type of getter get(), first(), ...
+     * @param array $columns array of columns to get
+     * @return Collection|Model the returned value deppend on the getter
+     **/
+    public function getter(
+        string $model,
+        array $callable = [],
+        string $getter = 'get',
+        array $columns = ['*']
+    ): Collection|Model {
         $model = '\App\Models\\' . ucfirst(trim($model));
-        return $model::with($with)->where($where)->first($columns);
+        $query = $model::query();
+        foreach ($callable as $key => $value) {
+            if (in_array($key, ['has', 'whereHas',])) {
+                $query->$key(...$value);
+            } else {
+                $query->$key($value);
+            }
+        }
+        return $query->$getter($columns);
     }
 }

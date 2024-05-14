@@ -1,6 +1,6 @@
 @extends('layouts/contentLayoutMaster')
 
-@section('title', 'Create card')
+@section('title', 'New User')
 
 @section('content')
 
@@ -81,7 +81,7 @@
                       id="phone_number"
                       class="form-control @error('phone_number') border-danger @enderror"
                       name="phone_number"
-                      placeholder="{{__('locale.Phone Number')}}"
+                      placeholder="{{__('locale.Phone')}}"
                       value="{{old('phone_number')}}"
                       required
                       tabindex="4"/>

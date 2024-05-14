@@ -112,7 +112,7 @@
     },
 
     {
-      "navheader": "Apps & Pages",
+      "navheader": " ",
       "slug": ""
     },
     {
@@ -120,10 +120,6 @@
       "name": "Modal Examples",
       "icon": "square",
       "slug": "modal-examples"
-    },
-    {
-      "navheader": "User Interface",
-      "slug": ""
     },
     {
       "url": "ui/typography",
@@ -161,34 +157,6 @@
           "slug": "datatable-advance"
         }
       ]
-    },
-    {
-      "navheader": "Charts & Maps",
-      "slug": ""
-    },
-    {
-      "url": "maps/leaflet",
-      "name": "Leaflet Maps",
-      "icon": "map",
-      "slug": "map-leaflet"
-    },
-    {
-      "navheader": "Misc",
-      "slug": ""
-    },
-    {
-      "url": "https://pixinvent.com/demo/vuexy-html-bootstrap-admin-template/documentation/documentation-laravel-folder-structure.html",
-      "name": "Documentation",
-      "icon": "folder",
-      "slug": "documentation",
-      "newTab": true
-    },
-    {
-      "url": "https://pixinvent.ticksy.com/",
-      "name": "Raise Support",
-      "icon": "life-buoy",
-      "slug": "raise-support",
-      "newTab": true
     }
   ]
 }

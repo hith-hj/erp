@@ -3,6 +3,7 @@
 namespace App\Http\Repositories\Sale;
 
 use App\Http\Repositories\BaseRepository;
+use App\Http\Repositories\Bill\BillRepository;
 use App\Http\Repositories\Inventory\InventoryRepository;
 use App\Models\Sale;
 use Exception;
@@ -15,13 +16,76 @@ class SaleRepository extends BaseRepository
         parent::__construct(Sale::class);
     }
 
+    public function getShowPayload($id)
+    {
+        return [
+            'sale' => $this->findWith($id, ['inventory', 'material', 'currency'])
+        ];
+    }
+
+    public function getCreatePayload()
+    {
+        return [
+            'inventories' => $this->getter(
+                model: 'Inventory',
+                columns: ['id', 'name']
+            ) ?? [],
+
+            'currencies' => $this->getter(
+                model: 'Currency',
+                callable:[
+                    'select'=> ['id', 'name', 'code'],
+                    'with' => ['rates:id,name'],
+                ]
+            ) ?? [],
+
+            'materials' => $this->getter(
+                model: 'Material',
+                callable:[
+                    'select'=> ['id', 'name'],
+                    'with' => ['inventories', 'units'],
+                    'has' => ['inventories','>',0]
+                ]
+            ) ?? [],
+
+            'clients' => $this->getter(model: 'Client') ?? [],
+
+            'bill' => (new BillRepository())->add(['type' => 2]),
+        ];
+    }
+
+    public function storeSale($request)
+    {
+        foreach ($request->sales as $sale) {
+            $sale['bill_id'] = $request->bill_id;
+            $sale['created_by'] = auth()->user()->id;
+            if (is_null($sale['inventory_id'])) {
+                $sale['inventory_id'] =
+                    $this->firstWithWhere('inventory', where: [['is_default', 1]])?->id ?? 1;
+            }
+            if (is_null($sale['unit_id'])) {
+                $material = $this->firstWithWhere(
+                    model: 'material',
+                    with: ['units']
+                );
+                $unit = $material->units->first(function ($item) {
+                    return $item->pivot->is_default == 1;
+                });
+                $sale['unit_id'] = $unit->id;
+            }
+            $this->updateInventoryMaterial($sale);
+            $this->add($sale);
+        }
+        return;
+    }
+
     public function updateInventoryMaterial($request)
     {
         $data = (object)$request;
         $inventoryRepo = new InventoryRepository();
         $inventory = $inventoryRepo->find($data->inventory_id);
         $material = $inventory->materials()
-            ->where('material_id', $data->material_id)
+            ->wherePivot('material_id', $data->material_id)
             ->first();
         if (!$material) {
             throw new Exception("$material->name material is not found in $inventory->name inventory");
@@ -29,6 +93,10 @@ class SaleRepository extends BaseRepository
 
         if ($material->pivot->quantity < $this->getBaseUnitQuantity($material->units, $data)) {
             throw new Exception("$material->name material in $inventory->name inventory is not suffecint to fullfil this sale");
+        }
+
+        if ($material->type == 2 && !$material->hasManufactureModel()) {
+            throw new Exception("$material->name material is not manufacturd yet");
         }
 
         return $inventory->materials()

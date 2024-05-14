@@ -1,6 +1,6 @@
 @extends('layouts/contentLayoutMaster')
 
-@section('title', 'Manufacturing')
+@section('title', __('locale.Manufacturing'))
 
 @section('content')
     <section id="card-content-types">
@@ -8,12 +8,34 @@
             <div class="col-12">
                 <div class="card mb-4">
                     <div class="card-body">
-                        <div class="card-subtitle text-muted mb-1">{{ $manufacturing->material?->name }}</div>
-                        <p >inventory : {{ $manufacturing->inventory?->name }}</p>
-                        <p >bill : {{ $manufacturing->bill?->serial }}</p>
-                        <p >quantity : {{ $manufacturing->quantity }}</p>
-                        <p >cost : {{ $manufacturing->cost }}</p>
-                        <p > manufactured at {{ $manufacturing->created_at->diffForHumans() }}</p>
+                        <table class="table table-sm table-borderd">
+                            <thead>
+                                <tr>
+                                    <th>{{ __('locale.Material') }}</th>
+                                    <td>{{ $manufacturing->material?->name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>{{ __('locale.Inventory') }}</th>
+                                    <td> {{ $manufacturing->inventory?->name }} </td>
+                                </tr>
+                                <tr>
+                                    <th>{{ __('locale.Bill') }}</th>
+                                    <td> {{ $manufacturing->bill?->serial }} </td>
+                                </tr>
+                                <tr>
+                                    <th>{{ __('locale.Quantity') }}</th>
+                                    <td> {{ $manufacturing->quantity }} </td>
+                                </tr>
+                                <tr>
+                                    <th>{{ __('locale.Cost') }}</th>
+                                    <td> {{ $manufacturing->cost }} </td>
+                                </tr>
+                                <tr>
+                                    <th>{{ __('locale.Created at') }}</th>
+                                    <td> {{ $manufacturing->created_at->diffForHumans() }} </td>
+                                </tr>
+                            </thead>
+                        </table>
                     </div>
                 </div>
             </div>

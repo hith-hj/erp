@@ -363,4 +363,26 @@ return [
     "Out of stock" => "Out of stock",
     "New Unit" => "New Unit",
 
+    
+    "Accounts" => 'Accounts',    
+    "Account" => 'Account',
+    "Account type" => 'Account type',
+    "Manufacture model" => 'Manufacture model',
+    "Manufactured material" => 'Manufactured material',
+    "New manufactured material" => 'New manufactured material',
+    "Manufacturing" => 'Manufacturing bill',
+    "Manufacturings" => 'Manufacturings bill',
+    "New manufacturing" => 'New manufacturing bill',
+    "Nothing found" => 'Nothing found',    
+    "Expenses" => 'Expenses',
+    "Expense" => 'Expense',
+    "Amount" => 'Amount',
+    "Create_manufacture_model" => 'Create Manufacture Model',
+    "Set as default" => "Set as defaullt",
+    "Is default" => "Is default",
+    "Not default" => "Not default",
+
+
+
+
 ];

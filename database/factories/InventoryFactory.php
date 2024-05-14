@@ -31,4 +31,12 @@ class InventoryFactory extends Factory
             }
         });
     }
+
+    public function isDefault()
+    {
+        return $this->state([
+            'name'=>$this->faker->firstNameFemale(),
+            'is_default'=>1,
+        ]);
+    }
 }

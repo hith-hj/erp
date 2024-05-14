@@ -24,7 +24,7 @@ class BillDataTable extends DataTable
             ->eloquent($query)
             ->addColumn('action', function ($bill) {
                 $lang = __('locale.View');
-                $type = $bill->type == 3 ? 'manufacturing' : 'bill';
+                $type = $bill->type == 3 ? 'manufacturing/bill' : 'bill';
                 return "<a href='/$type/show/$bill->id'>$lang</a>";
             })
             ->addColumn('type', function ($bill) {

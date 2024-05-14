@@ -25,6 +25,7 @@
                         setMaterialUnits(id){
                             this.materialUnits = this.materials[id].units;
                             this.materialInventories = this.materials[id].inventories;
+                            console.log(this.materialInventories,this.materials);
                         },
                         setInventoryLimit(id){
                             Object.keys(this.materialInventories).forEach(inventory => {
@@ -102,7 +103,7 @@
                             <div class="col-6">
                                 <div class="mb-1">
                                     <label class="form-label" for="inventory_list">{{ __('locale.Inventory') }}</label>
-                                    <select id="inventory_list" name="inventory_id" required x-model="inventory_id" 
+                                    <select id="inventory_list" name="inventory_id" x-model="inventory_id" 
                                         class="form-select @error('inventory_id') border-danger @enderror "
                                         x-init="$watch('inventory_id', value => setInventoryLimit(value))">
                                         <option value="">{{ __('locale.Chose') }}</option>
@@ -133,11 +134,13 @@
                             <div class="col-6">
                                 <div class="mb-1">
                                     <label class="form-label" for="units_list">{{ __('locale.Units') }}</label>
-                                    <select id="units_list" name="unit_id" required
+                                    <select id="units_list" name="unit_id" 
                                         class="form-select @error('unit_id') border-danger @enderror ">
                                         <option value="">{{ __('locale.Chose') }}</option>
                                         <template x-for="unit in materialUnits" :key="unit.id">
-                                            <option x-bind:value="unit.id" x-text="unit.name+' '+unit.pivot.is_default+' '+unit.pivot.rate_to_main_unit"></option>
+                                            <option x-bind:value="unit.id" x-text="unit.name+' '+unit.pivot.is_default+' '+unit.pivot.rate_to_main_unit"
+                                            :selected="unit.pivot.is_default == 1">
+                                            </option>
                                         </template>
                                     </select>
                                 </div>

@@ -14,6 +14,19 @@ class CurrencyRepository extends BaseRepository
         parent::__construct(Currency::class);
     }
 
+    public function getShowPayload($id)
+    {
+        return [
+            'currencies' => $this->getter(
+                model: 'Currency',
+                callable: [
+                    'where' => [['id', '!=', $id]]
+                ],
+            ),
+            'currency' => $this->findWith($id, 'rates'),
+        ];
+    }
+
     public function delete($id): bool
     {
         $currency = $this->findWith($id, 'rates');

@@ -96,13 +96,14 @@ class ManufacturingDataTable extends DataTable
     {
         return [
             Column::make('id'),
-            Column::make('material'),
-            Column::make('inventory'),
-            Column::make('bill'),
-            Column::make('quantity'),
-            Column::make('cost'),
-            Column::make('created_at'),
+            Column::make('material')->title(__('locale.Material')),
+            Column::make('inventory')->title(__('locale.Inventory')),
+            Column::make('bill')->title(__('locale.Bill')),
+            Column::make('quantity')->title(__('locale.Quantity')),
+            Column::make('cost')->title(__('locale.Cost')),
+            Column::make('created_at')->title(__('locale.Created at')),
             Column::computed('action')
+                ->title(__('locale.Action'))
                 ->exportable(false)
                 ->printable(false)
                 ->width(60)

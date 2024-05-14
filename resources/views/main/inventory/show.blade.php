@@ -15,19 +15,42 @@
                 </ul>
             </div>
         @endif
+        <div class="card-header pb-0 d-flex">
+            <div class="div">
+                <h3>{{$inventory->name}}</h3>
+            </div>
+            <div class="div">
+                @if($inventory->is_default == true)
+                    <span class="badge  badge-light-success">
+                        {{__('locale.Default')}}
+                    </span>
+                @else
+                    <button class="btn btn-outline-info" form="setDefaultInventroyForm">
+                        {{__('locale.Default')}}
+                    </button>
+                    <form action="{{route('inventory.setDefault',['id'=>$inventory->id])}}" 
+                        id="setDefaultInventroyForm" method="post">
+                        @csrf
+                    </form>
+                @endif
+            </div>
+        </div>
         <div class="card-body">
+            <h4>{{ __('locale.Add') }} {{ __('locale.Material') }}</h4>
             <div class="row">
-                <h4>{{ __('locale.Add') }} {{ __('locale.Material') }}</h4>
                 <form method="POST" action="{{ route('inventory.material.store', ['inventory_id' => $inventory->id]) }}">
                     @csrf
-                    <div class="col-12 row inventory-materials-repeater">
-                        <div data-repeater-list="materials" class="col-10">
+                    <div class="row px-1 inventory-materials-repeater">
+                        <div data-repeater-list="materials" class="col-10 p-0">
                             <div data-repeater-item class="row">
                                 <div class="col-5">
                                     <div class="mb-1">
-                                        <label class="form-label" for="phone_number">{{ __('locale.Materials') }}</label>
-                                        <select id="material_list" name="material_id" class="form-select" required>
-                                            <option value="">Chose Material</option>
+                                        <label class="form-label" for="">
+                                            {{ __('locale.Materials') }}
+                                        </label>
+                                        <select id="material_list" name="material_id" 
+                                            class="form-select" required>
+                                            <option value="">{{__('locale.Chose')}}</option>
                                             @foreach ($materials as $material)
                                                 <option value="{{ $material->id }}">
                                                     {{ $material->name }}
@@ -38,8 +61,10 @@
                                 </div>
                                 <div class="col-5">
                                     <div class="mb-1">
-                                        <label class="form-label" for="phone_number">{{ __('locale.Quantity') }}</label>
-                                        <input type="number" name="quantity" id="material_quantity"
+                                        <label class="form-label" for="">
+                                            {{ __('locale.Quantity') }}
+                                        </label>
+                                        <input type="number" min="1" name="quantity" id="material_quantity"
                                             class="form-control @error('quantity') border-danger @enderror"
                                             placeholder="{{ __('locale.Quantity') }}" required />
                                     </div>
@@ -75,9 +100,6 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
-                        <h4>{{ __('locale.Materials') }}</h4>
-                    </div>
                     <div class="card-body">
                         {{ $dataTable->table() }}
                     </div>

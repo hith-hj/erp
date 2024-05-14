@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Purchase;
 
 use App\DataTables\PurchaseDataTable;
 use App\Http\Controllers\BaseController;
-use App\Http\Repositories\Bill\BillRepository;
 use App\Http\Repositories\Purchase\PurchaseRepository;
 use App\Http\Validator\Purchase\PurchaseValidator;
 use App\Models\Purchase;
@@ -27,49 +26,18 @@ class PurchaseController extends BaseController
 
     public function show($id)
     {
-        return view('main.purchase.show', [
-            'purchase' => $this->repo->findWith($id, ['inventory', 'material', 'currency'])
-        ]);
+        return view('main.purchase.show',$this->repo->getShowPayload($id));
     }
 
     public function create()
     {
-        return view('main.purchase.create', [
-            'inventories' => $this->repo->getWithWhere(
-                model: 'Inventory',
-                columns: ['id', 'name']
-            ) ?? [],
-
-            'currencies' => $this->repo->getWithWhere(
-                model: 'Currency',
-                with: ['rates:id,name'],
-                columns: ['id', 'name', 'code']
-            ) ?? [],
-
-            'materials' => $this->repo->getWithWhere(
-                model: 'Material',
-                with: 'units',
-                columns: ['id', 'name']
-            ) ?? [],
-
-            'vendors' => $this->repo->getWithWhere(
-                model: 'Vendor',
-                columns: ['id', 'first_name', 'last_name']
-            ) ?? [],
-
-            'bill' => (new BillRepository())->add(['type' => 1]),
-        ]);
+        return view('main.purchase.create', $this->repo->getCreatePayload());
     }
 
     public function store(Request $request)
     {
         PurchaseValidator::validate($request);
-        foreach ($request->purchases as $purchase) {
-            $purchase['bill_id'] = $request->bill_id;
-            $purchase['created_by'] = auth()->user()->id;
-            $purchase = $this->repo->add($purchase);
-            $this->repo->updateInventoryMaterial($purchase);
-        }
+        $this->repo->storePurchase($request);
         return redirect()
             ->route('bill.show', ['id' => $request->bill_id])
             ->with('success', 'Purchase created');

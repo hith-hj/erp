@@ -79,8 +79,8 @@
                                         <td><?php echo e($unit->name); ?></td>
                                         <td><?php echo e($unit->code); ?></td>
                                         <td>
-                                            <span class="badge rounded-pill badge-light-success me-1">
-                                                <?php echo e($unit->pivot->is_default ? 'default' : ''); ?>
+                                            <span class="badgex rounded-pill badge-light-success me-1">
+                                                <?php echo e($unit->pivot->is_default ? 'default' : '-'); ?>
 
                                             </span>
                                         </td>
@@ -102,19 +102,21 @@
             </div>
             <?php if($material->type === 2): ?>
                 <div class="col-12">
-                    <h3>Manufacture Model</h3>
+                    <h3><?php echo e(__('locale.Manufacture model')); ?></h3>
                     <div class="card">
                         <?php if(!$material->hasManufactureModel()): ?>
                             <div class="card-header">
                                 <div class="card-text">
                                     <h3 class="text-danger">
-                                        No manufacture model Found Create it now.
+                                        <?php echo e(__('locale.Nothing found')); ?>
+
                                     </h3>
                                 </div>
                                 <div class="card-text">
                                     <a class="btn btn-primary"
-                                        href="<?php echo e(route('material.create_manufactured_material', ['id' => $material->id])); ?>">
-                                        Create manufactured Model
+                                        href="<?php echo e(route('material.create_manufacture_model', ['id' => $material->id])); ?>">
+                                        <?php echo e(__('locale.Create New')); ?>
+
                                     </a>
                                 </div>
                             </div>
@@ -155,13 +157,14 @@
                 </div>
             <?php endif; ?>
             <div class="col-12">
-                <h3>Accounts</h3>
+                <h3><?php echo e(__('locale.Accounts')); ?></h3>
                 <div class="card">
                     <?php if($material->accounts()->count() == 0): ?>
                         <div class="card-header">
                             <div class="card-text">
                                 <h3 class="text-danger">
-                                    No Accounts Found.
+                                    <?php echo e(__('locale.Nothing found')); ?>
+
                                 </h3>
                             </div>
                         </div>
@@ -194,7 +197,7 @@
                                 </table>
                             </div>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
-                            <small>no accounts wired</small>
+                            <small> No accounts wired !!! </small>
                         <?php endif; ?>
                     <?php endif; ?>
                 </div>
@@ -207,7 +210,8 @@
                             <div class="card-header">
                                 <div class="card-text">
                                     <h3 class="text-danger">
-                                        Material is not in any inventory.
+                                        <?php echo e(__('locale.Nothing found')); ?>
+
                                     </h3>
                                 </div>
                             </div>
@@ -245,11 +249,11 @@
                                                         <div class="dropdown-menu dropdown-menu-end">
                                                             <a class="dropdown-item" href="#">
                                                                 <i data-feather="edit-2" class="me-50"></i>
-                                                                <span>Edit</span>
+                                                                <span><?php echo e(__('locale.Edit')); ?></span>
                                                             </a>
                                                             <a class="dropdown-item" href="#">
                                                                 <i data-feather="trash" class="me-50"></i>
-                                                                <span>Delete</span>
+                                                                <span><?php echo e(__('locale.Delete')); ?></span>
                                                             </a>
                                                         </div>
                                                     </div>

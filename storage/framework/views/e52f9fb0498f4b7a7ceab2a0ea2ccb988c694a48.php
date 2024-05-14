@@ -16,19 +16,45 @@
                 </ul>
             </div>
         <?php endif; ?>
+        <div class="card-header pb-0 d-flex">
+            <div class="div">
+                <h3><?php echo e($inventory->name); ?></h3>
+            </div>
+            <div class="div">
+                <?php if($inventory->is_default == true): ?>
+                    <span class="badge  badge-light-success">
+                        <?php echo e(__('locale.Default')); ?>
+
+                    </span>
+                <?php else: ?>
+                    <button class="btn btn-outline-info" form="setDefaultInventroyForm">
+                        <?php echo e(__('locale.Default')); ?>
+
+                    </button>
+                    <form action="<?php echo e(route('inventory.setDefault',['id'=>$inventory->id])); ?>" 
+                        id="setDefaultInventroyForm" method="post">
+                        <?php echo csrf_field(); ?>
+                    </form>
+                <?php endif; ?>
+            </div>
+        </div>
         <div class="card-body">
+            <h4><?php echo e(__('locale.Add')); ?> <?php echo e(__('locale.Material')); ?></h4>
             <div class="row">
-                <h4><?php echo e(__('locale.Add')); ?> <?php echo e(__('locale.Material')); ?></h4>
                 <form method="POST" action="<?php echo e(route('inventory.material.store', ['inventory_id' => $inventory->id])); ?>">
                     <?php echo csrf_field(); ?>
-                    <div class="col-12 row inventory-materials-repeater">
-                        <div data-repeater-list="materials" class="col-10">
+                    <div class="row px-1 inventory-materials-repeater">
+                        <div data-repeater-list="materials" class="col-10 p-0">
                             <div data-repeater-item class="row">
                                 <div class="col-5">
                                     <div class="mb-1">
-                                        <label class="form-label" for="phone_number"><?php echo e(__('locale.Materials')); ?></label>
-                                        <select id="material_list" name="material_id" class="form-select" required>
-                                            <option value="">Chose Material</option>
+                                        <label class="form-label" for="">
+                                            <?php echo e(__('locale.Materials')); ?>
+
+                                        </label>
+                                        <select id="material_list" name="material_id" 
+                                            class="form-select" required>
+                                            <option value=""><?php echo e(__('locale.Chose')); ?></option>
                                             <?php $__currentLoopData = $materials; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $material): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                 <option value="<?php echo e($material->id); ?>">
                                                     <?php echo e($material->name); ?>
@@ -40,8 +66,11 @@
                                 </div>
                                 <div class="col-5">
                                     <div class="mb-1">
-                                        <label class="form-label" for="phone_number"><?php echo e(__('locale.Quantity')); ?></label>
-                                        <input type="number" name="quantity" id="material_quantity"
+                                        <label class="form-label" for="">
+                                            <?php echo e(__('locale.Quantity')); ?>
+
+                                        </label>
+                                        <input type="number" min="1" name="quantity" id="material_quantity"
                                             class="form-control <?php $__errorArgs = ['quantity'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -84,9 +113,6 @@ unset($__errorArgs, $__bag); ?>"
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
-                        <h4><?php echo e(__('locale.Materials')); ?></h4>
-                    </div>
                     <div class="card-body">
                         <?php echo e($dataTable->table()); ?>
 

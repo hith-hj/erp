@@ -20,22 +20,15 @@ class MaterialController extends BaseController
         $this->repo = new MaterialRepository();
     }
 
-
     public function index()
     {
-        $table = new MaterialDataTable();
-        return $table->render('main.material.index');
+        return (new MaterialDataTable())->render('main.material.index');
     }
-
 
     public function create()
     {
-        return view('main.material.create', [
-            'units' => $this->repo->getWithWhere('unit', columns: ['id', 'name', 'code']),
-            'materials' => $this->repo->all(['id', 'name']),
-        ]);
+        return view('main.material.create', $this->repo->getCreatePayload());
     }
-
 
     public function store(Request $request)
     {
@@ -52,80 +45,31 @@ class MaterialController extends BaseController
 
     public function show($id)
     {
-        return view('main.material.show', [
-            'material' => $this->repo->findWith($id, ['inventories', 'units',]),
-        ]);
+        return view('main.material.show', $this->repo->getShowPayload($id));
     }
-
-
-    public function edit($id)
-    {
-        //
-    }
-
-
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
 
     public function delete(Material $material)
     {
         $material->inventories()->detach();
         $material->units()->detach();
         $material->delete();
-        return redirect()->route('material.all')->with('success', 'Deleted Successfuly');
+        return redirect()
+            ->route('material.all')
+            ->with('success', 'Deleted Successfuly');
     }
 
-    public function createManufacturedMaterial($id)
+    public function createManufactureModel($id)
     {
-        return view('main.material.create_manufactured_material', [
-            'material' => $this->repo->find($id),
-            'materials' => $this->repo->getWithWhere(
-                model: 'Material',
-                with: ['units', 'inventories'],
-                where: [['type', 1]]
-            ),
-            'currencies' => $this->repo->getWithWhere(
-                model: 'Currency',
-                columns: ['id', 'name']
-            ),
-            'inventories' => $this->repo->getWithWhere(
-                model: 'Inventory',
-                columns: ['id', 'name']
-            ),
-            'expenses' => $this->repo->getWithWhere(
-                model: 'Expense',
-                columns: ['id', 'name']
-            ),
-            'accountTypes' => $this->repo->getWithWhere(
-                model: 'accountType',
-                columns: ['id', 'name'],
-            ),
-        ]);
+        return view(
+            'main.material.create_manufactured_material',
+            $this->repo->getCreateManufactureModelPayload($id)
+        );
     }
 
     public function storeMaterialManufactureModel(Request $request)
     {
         MaterialValidator::validateManufactureModel($request);
-        $material = $this->repo->find($request->material_id);
-        foreach ($request->materials as $item) {
-            $material->manufactureModel()->create($item);
-        }
-        $account = Account::create([
-            'type' => $request->account_id,
-            'accountable_id' => $material->id,
-            'accountable_type' => get_class($material),
-        ]);
-        foreach ($request->expenses as $expense) {
-            $expense = (object)$expense;
-            $account->expenses()->attach($expense->expense_id, [
-                'cost' => $expense->cost,
-                'note' => $expense->note,
-            ]);
-        }
-
+        $material = $this->repo->storeMaterialManufactureModel($request);
         return redirect()->route('material.show', ['id' => $material->id]);
     }
 }

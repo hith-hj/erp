@@ -73,12 +73,13 @@
                             <div class="col-6">
                                 <div class="mb-1">
                                     <label class="form-label" for="inventory_list">{{ __('locale.Inventory') }}</label>
-                                    <select id="inventory_list" name="inventory_id" required class="form-select"
+                                    <select id="inventory_list" name="inventory_id" class="form-select"
                                         @error('inventory_id') border-danger @enderror>
                                         <option value="">{{ __('locale.Chose') }}</option>
                                         @foreach ($inventories as $inventory)
                                             <option value="{{ $inventory->id }}"
-                                                @if (old('inventory_id') == $inventory->id) selected @endif>
+                                                @if (old('inventory_id') == $inventory->id) selected @endif
+                                                @if ($inventory->is_default == true) selected  @endif>
                                                 {{ $inventory->name }}
                                             </option>
                                         @endforeach
@@ -114,14 +115,16 @@
                             <div class="col-6">
                                 <div class="mb-1">
                                     <label class="form-label" for="units_list">{{ __('locale.Units') }}</label>
-                                    <select id="units_list" name="unit_id" required
+                                    <select id="units_list" name="unit_id" 
                                         class="form-select @error('unit_id') border-danger @enderror ">
                                         <option value="">{{ __('locale.Chose') }}</option>
                                         <template x-for="unit in materialUnits" :key="unit.id">
-                                            <option x-bind:value="unit.id" 
+                                            <option :value="unit.id" 
                                             x-text="
                                              unit.name+'-'+unit.pivot.rate_to_main_unit+'-'+
-                                             unit.pivot.is_default "></option>
+                                             unit.pivot.is_default " 
+                                            :selected="unit.pivot.is_default == 1">
+                                            </option>
                                         </template>
                                     </select>
                                 </div>

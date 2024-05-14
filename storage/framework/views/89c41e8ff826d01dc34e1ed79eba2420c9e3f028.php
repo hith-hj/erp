@@ -50,12 +50,12 @@
                     <div class="col-4">
                         <?php if($bill->type == 1): ?>
                             <span class="badge  badge-light-success ">
-                                <?php echo e(__('locale.'.$bill->get_type)); ?>
+                                <?php echo e($bill->get_type); ?>
 
                             </span>
                         <?php else: ?>
                             <span class="badge  badge-light-primary">
-                                <?php echo e(__('locale.'.$bill->get_type)); ?>
+                                <?php echo e($bill->get_type); ?>
 
                             </span>
                         <?php endif; ?>
@@ -70,7 +70,7 @@
                             };
                         ?>
                         <span class="badge badge-light-<?php echo e($color); ?>">
-                            <?php echo e(__('locale.'.$bill->get_status)); ?>
+                            <?php echo e($bill->get_status); ?>
 
                         </span>
                     </div>

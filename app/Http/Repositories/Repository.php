@@ -31,17 +31,10 @@ interface Repository
         array|string $columns = ['*'],
     ): Collection;
 
-    public function getWithWhere(
+    public function getter(
         string $model,
-        string|array $with = [],
-        array $where = [],
+        array $callable = [],
+        string $getter = 'get',
         array $columns = ['*']
-    ) : Collection ;
-
-    public function firstWithWhere(
-        string $model,
-        string|array $with = [],
-        array $where = [],
-        array $columns = ['*']
-    ) : Model ;
+    ) : Collection|Model;
 }

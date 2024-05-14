@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Expense;
+
 return [
     "Apps & Pages" => "  التطبيق و الصفحة ",
     "User Interface" =>"واجهة المستخدم",
@@ -164,6 +166,25 @@ return [
     "Requested" => "تم الطلب",
     "Out of stock" => "غير موجود",
     "New Unit" => "أضافة وحدة",
+
+    "Details" => 'تفاصيل',
+    "Accounts" => 'حسابات',
+    "Account" => 'حساب',
+    "Account type" => 'نوع الحساب',
+    "Manufacture model" => 'نموذج تصنيع',
+    "Manufactured material" => 'مادة مصنعة',
+    "New manufactured material" => 'اضافة مادة مصنعة',
+    "Manufacturing" => 'فاتورة تصنيع',
+    "Manufacturings" => 'فواتير  تصنيع',
+    "New manufacturing" => 'فاتورة تصنيع جديدة',
+    "Nothing found" => 'لم يتم العثور على شيئ',
+    "Expenses" => 'النفقات',
+    "Expense" => 'النفقات',
+    "Amount" => 'القيمة',
+    "Create_manufacture_model" => 'انشاء نموذج تصنيع',
+    "Set as default" => "التعيين كأفتراضي",
+    "Is default" => "أفتراضي",
+    "Not default" => "غير افتراضي",
 
     
 ];

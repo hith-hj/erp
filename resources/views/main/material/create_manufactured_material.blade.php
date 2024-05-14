@@ -11,7 +11,7 @@
 @endsection
 
 <section id="multiple-column-form">
-    <form method="POST" action="{{ route('material.store_material_manufactur') }}" class="form form-vertical">
+    <form method="POST" action="{{ route('material.store_manufacture_model') }}" class="form form-vertical">
         @csrf
         <input type="hidden" name="material_id" value="{{$material->id}}">
         <div class="row">
@@ -28,7 +28,7 @@
                     @endif
                     <div class="card-header p-1 pb-0">
                         <h4 class="card-title">
-                            {{ __('locale.New manufactured material') }} -
+                            {{ __('locale.Manufacture model') }} -
                             {{ $material->name }}
                         </h4>
                     </div>
@@ -216,8 +216,8 @@
                                         <table class="table table-sm table-borderless expenses-repeater">
                                             <thead>
                                                 <tr class="">
-                                                    <th class="py-1">{{ __('locale.Expens type') }}</th>
-                                                    <th class="py-1">{{ __('locale.Amount') }}</th>
+                                                    <th class="py-1">{{ __('locale.Expense') }}</th>
+                                                    <th class="py-1">{{ __('locale.Cost') }}</th>
                                                     <th class="py-1">{{ __('locale.Note') }}</th>
                                                     <th data-repeater-create>
                                                         <button type="button" class="btn btn-primary w-100">
@@ -240,11 +240,12 @@
                                                     </th>
                                                     <th class="">
                                                         <input type="number" name="cost" id=""
-                                                            class="form-control" placeholder="cost" required>
+                                                            class="form-control"  required
+                                                            placeholder="{{__('locale.Cost')}}">
                                                     </th>
                                                     <th class="px-0">
                                                         <input type="text" name="note" class="form-control"
-                                                            placeholder="Note">
+                                                            placeholder="{{__('locale.Note')}}">
                                                     </th>
                                                     <th class="" data-repeater-delete>
                                                         <button type="button" class="btn btn-danger w-100">

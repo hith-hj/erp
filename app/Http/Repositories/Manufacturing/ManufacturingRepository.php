@@ -16,6 +16,32 @@ class ManufacturingRepository extends BaseRepository
         parent::__construct(Manufacturing::class);
     }
 
+    public function getShowPayload($id)
+    {
+        return [
+            'manufacturing' => $this->findWith($id, ['bill', 'material', 'inventory',]),
+        ];
+    }
+
+    public function getCreatePayload()
+    {
+        return [
+            'materials' => $this->getter(
+                model: 'material',
+                callable: [
+                    'select' => ['id', 'name'],
+                    'with' => ['units:id,name,code'],
+                    'has' => ['manufactureModel'],
+                    'where' => [['type', 2]],
+                ],
+            ) ?? [],
+            'inventories' => $this->getter(
+                model: 'Inventory',
+                columns: ['id', 'name', 'is_default']
+            ) ?? [],
+        ];
+    }
+
     public function storeManufacturig($request)
     {
         $material = $this->firstWithWhere('material', where: [['id', $request->material_id]]);
@@ -40,7 +66,7 @@ class ManufacturingRepository extends BaseRepository
             ]);
         }
         $invnetoryToStore = $this->firstWithWhere('Inventory', where: [['id', $request->inventory_id]]);
-        
+
         $invnetoryToStore->materials()->syncWithPivotValues($material->id, [
             'quantity' => $invnetoryToStore
                 ->materials()

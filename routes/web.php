@@ -42,10 +42,10 @@ Route::group(['middleware' => 'auth',], function () {
         Route::get('create', 'create')->name('material.create');
         Route::post('store', 'store')->name('material.store');
         Route::delete('delete/{material}', 'delete')->name('material.delete');
-        Route::get('create_manufactured_material/{id}', 'createManufacturedMaterial')
-            ->name('material.create_manufactured_material');
-        Route::post('store_material_manufactur', 'storeMaterialManufactureModel')
-            ->name('material.store_material_manufactur');
+        Route::get('create_manufacture_model/{id}', 'createManufactureModel')
+            ->name('material.create_manufacture_model');
+        Route::post('store_manufacture_model', 'storeMaterialManufactureModel')
+            ->name('material.store_manufacture_model');
     });
 
     Route::group([
@@ -56,6 +56,7 @@ Route::group(['middleware' => 'auth',], function () {
         Route::get('show/{id}', 'show')->name('inventory.show');
         Route::get('create', 'create')->name('inventory.create');
         Route::post('store', 'store')->name('inventory.store');
+        Route::post('setDefault/{id}','setDefault')->name('inventory.setDefault');
         Route::post('{inventory_id}/material/store', 'material_store')->name('inventory.material.store');
         Route::get('{inventory_id}/material/{material_id}/delete', 'material_delete')->name('inventory.material.delete');
     });
@@ -179,6 +180,7 @@ Route::group(['middleware' => 'auth',], function () {
         Route::get('create', 'create')->name('manufacturing.create');
         Route::post('store', 'store')->name('manufacturing.store');
         Route::delete('delete/{manufacturing}', 'delete')->name('manufacturing.delete');
+        Route::get('bill/show/{manufacturing}', 'billShow')->name('manufacturing.bill.show');
     });
 
     Route::group(['controller' => HomeController::class,], function () {

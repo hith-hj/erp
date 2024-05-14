@@ -15,7 +15,8 @@ class InventorySeeder extends Seeder
     {
         if(is_null(\App\Models\Inventory::first()))
         {
-            \App\Models\Inventory::factory(5)->create();
+            \App\Models\Inventory::factory()->isDefault()->create();
+            \App\Models\Inventory::factory(2)->create();
         }
     }
 }

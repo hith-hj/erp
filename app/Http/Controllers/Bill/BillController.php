@@ -29,9 +29,8 @@ class BillController extends BaseController
     public function show($id)
     {
         $bill = $this->repo->findWith($id, relation: ['items']);
-        $table = new BillItemsDataTable($bill);
-        $data = $this->setDataArray($bill);
-        return $table->render('main.bill.show', $data);
+        return (new BillItemsDataTable($bill))
+            ->render('main.bill.show', $this->repo->getShowPayload($bill));
     }
 
     public function create()
@@ -42,41 +41,15 @@ class BillController extends BaseController
     public function store(Request $request)
     {
         $bill = $this->repo->add($request->only('type'));
-        return redirect()->route('bill.show', ['id' => $bill->id])->with('success', 'Bill Created');
+        return redirect()
+            ->route('bill.show', ['id' => $bill->id])
+            ->with('success', 'Bill Created');
     }
 
     public function delete($id)
     {
         $this->repo->delete($id);
         return redirect()->route('bill.all')->with('success', 'Bill Deleted');
-    }
-
-    public function setDataArray($bill)
-    {
-        $fromToIndex = $bill->type == 1 ? 'vendors' : 'clients';
-        $fromToArray = $this->repo->getWithWhere(
-            model: Str::singular($fromToIndex),
-            columns: ['id', 'first_name', 'last_name'],
-        );
-
-        return [
-            'bill' => $bill,
-            'inventories' => $this->repo->getWithWhere(
-                model: 'Inventory',
-                columns: ['id', 'name',]
-            ) ?? [],
-            'currencies' => $this->repo->getWithWhere(
-                model: 'currency',
-                with: ['rates:id,name'],
-                columns: ['id', 'name', 'code']
-            ) ?? [],
-            'materials' => $this->repo->getWithWhere(
-                model: 'material',
-                with: ['units', 'inventories'],
-                columns: ['id', 'name']
-            ) ?? [],
-            $fromToIndex => $fromToArray,
-        ];
     }
 
     public function bill_delete_purchase($bill_id, $purchase_id)

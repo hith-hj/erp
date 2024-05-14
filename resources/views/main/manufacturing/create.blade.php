@@ -1,7 +1,7 @@
 @extends('layouts/contentLayoutMaster')
 
 @section('title')
-    {{ __('locale.New Manufacturing') }}
+    {{ __('locale.New manufacturing') }}
 @endsection
 @section('content')
     <section id="multiple-column-form">
@@ -28,7 +28,7 @@
                             </div>
                         @endif
                         <div class="card-header">
-                            <h4 class="card-title">{{ __('locale.New Manufacturing') }}</h4>
+                            <h4 class="card-title">{{ __('locale.New manufacturing') }}</h4>
                         </div>
                         <div class="card-body">
                             <div class="row">
@@ -41,7 +41,8 @@
                                             <option value="">{{__('locale.Chose')}}</option>
                                             @forelse ($inventories as $inventory)
                                                 <option value="{{$inventory->id}}" 
-                                                    @if(old('inventory_id') == $inventory->id) selected @endif>
+                                                    @if(old('inventory_id') == $inventory->id) selected @endif
+                                                    @if($inventory->is_default == 1) selected @endif>
                                                     {{$inventory->name}}
                                                 </option>
                                             @empty
@@ -60,12 +61,12 @@
                                             x-init="$watch('material_id', value => setMaterialUnits(value))">
                                             <option value="">{{__('locale.Chose')}}</option>
                                             @forelse ($materials as $material)
-                                                {{-- @if($material->hasManufactureModel()) --}}
+                                                @if($material->manufactureModel->count())
                                                     <option value="{{$material->id}}"
                                                         @if(old('material_id') == $inventory->id) selected @endif>
                                                         {{$material->name}}
                                                     </option>
-                                                {{-- @endif --}}
+                                                @endif
                                             @empty                                                
                                             @endforelse
                                         </select>
@@ -77,7 +78,7 @@
                                             {{__('locale.Quantity')}}
                                         </label>
                                         <input type="number" name="quantity" class="form-control" 
-                                        value="{{old('quantity')}}">
+                                        value="{{old('quantity')}}" placeholder="{{__('locale.Quantity')}}">
                                     </div>
                                 </div>
                                 <div class="col-6">
@@ -90,7 +91,9 @@
                                             <template x-for="unit in materialUnits" :key="unit.id">
                                                 <option x-bind:value="unit.id" 
                                                 x-text="unit.name+' '+unit.code"
-                                                @if(old('unit_id') == $inventory->id) selected @endif></option>
+                                                @if(old('unit_id') == $inventory->id) selected @endif
+                                                :selected="unit.pivot.is_default == 1">
+                                                </option>
                                             </template>
                                         </select>
                                     </div>

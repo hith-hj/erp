@@ -22,13 +22,7 @@ class CurrencyController extends BaseController
 
     public function show($id)
     {
-        return view('main.currency.show', [
-            'currencies' => $this->repo->getWithWhere(
-                model: 'Currency',
-                where: [['id', '!=', $id]]
-            ),
-            'currency' => $this->repo->findWith($id, 'rates'),
-        ]);
+        return view('main.currency.show', $this->repo->getShowPayload($id));
     }
 
     public function create()

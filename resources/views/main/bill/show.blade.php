@@ -44,11 +44,11 @@
                     <div class="col-4">
                         @if ($bill->type == 1)
                             <span class="badge  badge-light-success ">
-                                {{ __('locale.'.$bill->get_type) }}
+                                {{ $bill->get_type }}
                             </span>
                         @else
                             <span class="badge  badge-light-primary">
-                                {{ __('locale.'.$bill->get_type) }}
+                                {{ $bill->get_type }}
                             </span>
                         @endif
                     </div>
@@ -62,7 +62,7 @@
                             };
                         @endphp
                         <span class="badge badge-light-{{ $color }}">
-                            {{ __('locale.'.$bill->get_status) }}
+                            {{ $bill->get_status }}
                         </span>
                     </div>
                 </div>
