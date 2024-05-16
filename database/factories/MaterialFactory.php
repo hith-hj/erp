@@ -42,17 +42,14 @@ class MaterialFactory extends Factory
     public function configure()
     {
         return $this->afterCreating(function(Material $material){
-            // $material->units()->attach(Unit::pluck('id')->random(),[
             $material->units()->attach(2,[
                 'is_default'=>1,
                 'main_unit'=>null,
                 'rate_to_main_unit'=>0
             ]);
             $def = $material->units()->where('is_default',1)->first();
-            // $material->units()->attach(Unit::where('id','!=',$def->pivot->unit_id)->first()->id,[
             $material->units()->attach(1,[
                 'is_default'=>0,
-                // 'main_unit'=>$def->pivot->unit_id,
                 'main_unit'=>2,
                 'rate_to_main_unit'=>10
             ]);

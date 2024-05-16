@@ -14,7 +14,6 @@ use App\Http\Controllers\Vendors\VendorController;
 use App\Http\Controllers\Sale\SaleController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Unit\UnitController;
-use App\Models\Manufacturing;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 

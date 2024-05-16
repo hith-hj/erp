@@ -185,6 +185,7 @@ return [
     "Set as default" => "التعيين كأفتراضي",
     "Is default" => "أفتراضي",
     "Not default" => "غير افتراضي",
+    "AccountTypes" => 'انواع الحسابات',
 
     
 ];

@@ -90,15 +90,16 @@ class UnitDataTable extends DataTable
     {
         return [
             Column::make('id'),
-            Column::make('name'),
-            Column::make('code'),
-            Column::make('materials'),
-            Column::make('created_at'),
+            Column::make('name')->title(__('locale.Name')),
+            Column::make('code')->title(__('locale.Code')),
+            Column::make('materials')->title(__('locale.Materials')),
+            Column::make('created_at')->title(__('locale.Created at')),
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)
                 ->width(60)
-                ->addClass('text-center'),
+                ->addClass('text-center')
+                ->title(__('locale.Action')),
         ];
     }
 

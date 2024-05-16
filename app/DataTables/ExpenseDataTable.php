@@ -87,9 +87,10 @@ class ExpenseDataTable extends DataTable
     {
         return [
             Column::make('id'),
-            Column::make('name'),
-            Column::make('created_at'),
+            Column::make('name')->title(__('locale.Name')),
+            Column::make('created_at')->title(__('locale.Created at')),
             Column::computed('action')
+                ->title(__('locale.Action'))
                 ->exportable(false)
                 ->printable(false)
                 ->width(60)

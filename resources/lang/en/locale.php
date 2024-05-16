@@ -381,6 +381,8 @@ return [
     "Set as default" => "Set as defaullt",
     "Is default" => "Is default",
     "Not default" => "Not default",
+    "AccountTypes" => 'Account Types',
+
 
 
 
