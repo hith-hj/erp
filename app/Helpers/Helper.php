@@ -1,11 +1,9 @@
-<?php // Code within app\Helpers\Helper.php
+<?php 
 
 namespace App\Helpers;
 
-// use Config;
 
 use App\Models\UserSetting;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 

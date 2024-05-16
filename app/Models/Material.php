@@ -36,7 +36,7 @@ class Material extends Model
             'id',
             $this
                 ->units()
-                ->where('is_default', 1)
+                ->wherePivot('is_default', 1)
                 ->first()?->id
         )
             ->first()?->name ?? __('locale.None');
@@ -70,6 +70,6 @@ class Material extends Model
 
     public function accounts()
     {
-        return $this->hasMany(Account::class, 'accountable_id')->where('accountable_type', get_class($this));
+        return $this->hasMany(Account::class, 'accountable_id')->wherePivot('accountable_type', get_class($this));
     }
 }
