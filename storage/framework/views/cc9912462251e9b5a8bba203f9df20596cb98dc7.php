@@ -1,6 +1,8 @@
 
-
 <?php $__env->startSection('content'); ?>
+<?php $__env->startSection('page-style'); ?>
+    <link rel="stylesheet" href="<?php echo e(asset('css/base/pages/authentication.css')); ?>">
+<?php $__env->stopSection(); ?>
 <div class="auth-wrapper auth-basic px-2">
     <?php echo $__env->yieldContent('auth'); ?>
 </div>

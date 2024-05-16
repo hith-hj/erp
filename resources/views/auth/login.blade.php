@@ -1,8 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Login')
-@section('page-style')
-    <link rel="stylesheet" href="{{ asset(mix('css/base/pages/authentication.css')) }}">
-@endsection
+@section('title'){{__('locale.Login')}}@endsection
 @section('auth')
     <div class="auth-inner pt-3">
         <div class="card mb-0">
@@ -98,16 +95,3 @@
         </div>
     </div>
 @endsection
-{{-- <script>
-    function device_token() {
-        let form = document.getElementById('loginForm');
-        let email = document.getElementById('email').value;
-        let password = document.getElementById('password').value;
-        let token = btoa(password + navigator.userAgent);
-        let input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = 'generated_token';
-        input.value = token;
-        form.appendChild(input);
-    }
-</script> --}}

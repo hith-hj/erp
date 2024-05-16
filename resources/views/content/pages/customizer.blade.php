@@ -3,7 +3,7 @@
 
     <a class="customizer-toggle d-flex align-items-center justify-content-center"
         href="javascript:void(0);">
-        <i class="spinner" data-feather="settings"></i>
+        <i class="spinnerx" data-feather="settings"></i>
     </a>
 
     <div class="customizer-content">

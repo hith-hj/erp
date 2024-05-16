@@ -1,8 +1,5 @@
 
-<?php $__env->startSection('title', 'Login'); ?>
-<?php $__env->startSection('page-style'); ?>
-    <link rel="stylesheet" href="<?php echo e(asset(mix('css/base/pages/authentication.css'))); ?>">
-<?php $__env->stopSection(); ?>
+<?php $__env->startSection('title'); ?><?php echo e(__('locale.Login')); ?><?php $__env->stopSection(); ?>
 <?php $__env->startSection('auth'); ?>
     <div class="auth-inner pt-3">
         <div class="card mb-0">
@@ -127,6 +124,5 @@ unset($__errorArgs, $__bag); ?>
         </div>
     </div>
 <?php $__env->stopSection(); ?>
-
 
 <?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\Users\96393\Desktop\y1s\erp_v1\resources\views/auth/login.blade.php ENDPATH**/ ?>

@@ -1,6 +1,6 @@
 @extends('layouts/contentLayoutMaster')
 
-@section('title', 'New User')
+@section('title') {{__('locale.New User')}} @endsection
 
 @section('content')
 
