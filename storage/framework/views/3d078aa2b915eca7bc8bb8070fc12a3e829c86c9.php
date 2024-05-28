@@ -1,7 +1,7 @@
 <div class="content-header row">
   <?php if (isset($component)) { $__componentOriginal852b5fefbb0d2a45750f1cd335c4e83390b91360 = $component; } ?>
 <?php $component = $__env->getContainer()->make(App\View\Components\Trails::class, ['titles' => $titles ?? []]); ?>
-<?php $component->withName('trails'); ?>
+<?php $component->withName('Trails'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php $component->withAttributes([]); ?>

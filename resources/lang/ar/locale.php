@@ -186,6 +186,8 @@ return [
     "Is default" => "أفتراضي",
     "Not default" => "غير افتراضي",
     "AccountTypes" => 'انواع الحسابات',
+    "AccountType" => "نوع حساب",
+    "New AccountType" => "نوع حساب جديد",
 
     
 ];

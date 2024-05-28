@@ -382,7 +382,8 @@ return [
     "Is default" => "Is default",
     "Not default" => "Not default",
     "AccountTypes" => 'Account Types',
-
+    "AccountType" => "Account Type",
+    "New AccountType" => "New Account Type",
 
 
 
