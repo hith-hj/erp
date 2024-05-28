@@ -48,7 +48,7 @@ class Purchase extends Model
 
     public function bill()
     {
-        return $this->belongsTo(bill::class);
+        return $this->belongsTo(Bill::class);
     }
 
     public function user()

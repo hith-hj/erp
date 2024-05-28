@@ -36,7 +36,7 @@
                                 <label class="form-label" for="accountLastName">
                                     {{ __('locale.Username') }}
                                 </label>
-                                <input type="text" class="form-control" id="accountLastName"
+                                <input type="text" class="form-control" id="accountLastName" 
                                     placeholder="{{ __('locale.Username') }}" value="{{ $user->username }}" readonly />
                             </div>
                             <div class="col-12 col-sm-6 mb-1">
@@ -50,26 +50,26 @@
                                 <label class="form-label" for="accountPhoneNumber">
                                     {{ __('locale.Phone') }}
                                 </label>
-                                <input type="text" class="form-control" id="accountPhoneNumber" name="phone_number"
-                                    placeholder="{{ __('locale.Phone') }}"
-                                    value="{{ $user->getSetting('phone_number') }}" />
+                                <input type="tel" class="form-control" id="accountPhoneNumber" name="phone_number"
+                                    placeholder="{{ $user->getSetting('phone_number') }}"
+                                    value="{{ old('phone_number') }}" />
                             </div>
                             <div class="col-12 col-sm-6 mb-1">
                                 <label class="form-label" for="accountPhoneNumber">
                                     {{ __('locale.Phone') }} No2
                                 </label>
-                                <input type="text" class="form-control" 
+                                <input type="tel" class="form-control" 
                                     id="accountPhoneNumber" name="phone_number_n2"
-                                    placeholder="{{ __('locale.Phone') }} No2"
-                                    value="{{ $user->getSetting('phone_number_n2') }}" />
+                                    placeholder="{{$user->getSetting('phone_number_n2') }}"
+                                    value="{{ old('phone_number_n2') }}" />
                             </div>
                             <div class="col-12 col-sm-6 mb-1">
                                 <label class="form-label" for="accountAddress">
                                     {{ __('locale.Address') }}
                                 </label>
                                 <input type="text" class="form-control" id="accountAddress" name="address"
-                                    placeholder="{{ __('locale.Address') }}"
-                                    value="{{ $user->getSetting('address') }}" />
+                                    placeholder="{{ $user->getSetting('address') }}"
+                                    value="{{ old('address') }}" />
                             </div>
                             <div class="col-12">
                                 <button type="submit"

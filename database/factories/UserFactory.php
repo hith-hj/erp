@@ -33,4 +33,11 @@ class UserFactory extends Factory
 
         ];
     }
+
+    public function configure()
+    {
+        return $this->afterCreating(function(User $user){
+            $user->settings()->create(['key' => 'phone_number', 'value' => $this->faker->phoneNumber()]);
+        });
+    }
 }

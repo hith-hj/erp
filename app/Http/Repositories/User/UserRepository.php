@@ -5,7 +5,6 @@ namespace App\Http\Repositories\User;
 use App\Models\User;
 use App\Http\Repositories\BaseRepository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 
 class UserRepository extends BaseRepository
 {
@@ -26,10 +25,12 @@ class UserRepository extends BaseRepository
     {
         $array = ['phone_number', 'phone_number_n2', 'address'];
         foreach ($array as $setting) {
-            if ($user->settings()->where('key', $setting)->exists()) {
-                $user->settings()->where('key', $setting)->update(['value' => $request->$setting]);
-            } else {
-                $user->settings()->create(['key' => $setting, 'value' => $request->$setting]);
+            if($request->filled($setting)){
+                if ($user->settings()->where('key', $setting)->exists()) {
+                    $user->settings()->where('key', $setting)->update(['value' => $request->$setting]);
+                } else {
+                    $user->settings()->create(['key' => $setting, 'value' => $request->$setting]);
+                }
             }
         }
         return $user->settings();

@@ -53,7 +53,7 @@ class UserController extends BaseController
 
     public function update(Request $request, $id)
     {
-        UserValidator::validateUserDetails($request);
+        UserValidator::validateUpdates($request);
         $user = $this->repo->find($id);
         $this->repo->update($id, $request->only(['full_name']));
         $this->repo->updateUserExtraInfo($request, $user);

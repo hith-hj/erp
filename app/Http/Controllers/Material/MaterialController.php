@@ -38,7 +38,7 @@ class MaterialController extends BaseController
         $this->repo->addUnits($request, $material);
         return match ((int)$material->type) {
             1 => redirect()->route('material.show', ['id' => $material->id]),
-            2 => redirect()->route('material.create_manufactured_material', ['id' => $material->id]),
+            2 => redirect()->route('material.create_manufacture_model', ['id' => $material->id]),
             default => redirect()->route('material.show', ['id' => $material->id]),
         };
     }

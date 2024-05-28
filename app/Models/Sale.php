@@ -29,7 +29,7 @@ class Sale extends Model
 
     public function bill()
     {
-        return $this->belongsTo(bill::class);
+        return $this->belongsTo(Bill::class);
     }
 
     public function unit()

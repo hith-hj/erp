@@ -70,6 +70,6 @@ class Material extends Model
 
     public function accounts()
     {
-        return $this->hasMany(Account::class, 'accountable_id')->wherePivot('accountable_type', get_class($this));
+        return $this->hasMany(Account::class, 'accountable_id')->where('accountable_type', get_class($this));
     }
 }
