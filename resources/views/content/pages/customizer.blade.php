@@ -24,13 +24,8 @@
             <div class="d-flex">
                 <div class="form-check me-1">
                     <input type="radio" id="skinlight" name="skinradio" class="form-check-input layout-name"
-                        checked="" data-layout="">
+                        data-layout="light">
                     <label class="form-check-label" for="skinlight">Light</label>
-                </div>
-                <div class="form-check me-1">
-                    <input type="radio" id="skinbordered" name="skinradio" class="form-check-input layout-name"
-                        data-layout="bordered-layout">
-                    <label class="form-check-label" for="skinbordered">Bordered</label>
                 </div>
                 <div class="form-check me-1">
                     <input type="radio" id="skindark" name="skinradio" class="form-check-input layout-name"
@@ -51,7 +46,7 @@
             <div id="customizer-navbar-colors">
                 <p class="fw-bold">Navbar Color</p>
                 <ul class="list-inline unstyled-list">
-                    <li class="color-box bg-white border selected" data-navbar-default=""></li>
+                    <li class="color-box bg-white border" data-navbar-default=""></li>
                     <li class="color-box bg-primary" data-navbar-color="bg-primary"></li>
                     <li class="color-box bg-secondary" data-navbar-color="bg-secondary"></li>
                     <li class="color-box bg-success" data-navbar-color="bg-success"></li>
@@ -65,7 +60,7 @@
             <p class="navbar-type-text fw-bold">Navbar Type</p>
             <div class="d-flex">
                 <div class="form-check me-1">
-                    <input type="radio" id="nav-type-floating" name="navType" class="form-check-input" checked="">
+                    <input type="radio" id="nav-type-floating" name="navType" class="form-check-input">
                     <label class="form-check-label" for="nav-type-floating">Floating</label>
                 </div>
                 <div class="form-check me-1">

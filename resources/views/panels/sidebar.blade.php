@@ -3,11 +3,11 @@
 @endphp --}}
 <div class="main-menu menu-fixed {{ $configData['theme'] === 'dark' || $configData['theme'] === 'semi-dark' ? 'menu-dark' : 'menu-light' }} menu-accordion menu-shadow"
     data-scroll-to-active="true">
-    <div class="navbar-header">
+    <div class="navbar-header mb-1">
         <ul class="nav navbar-nav flex-row">
             <li class="nav-item me-auto">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    <span class="brand-logo">
+                    {{-- <span class="brand-logo">
                         <svg viewbox="0 0 139 95" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="24">
                             <defs>
                                 <lineargradient id="linearGradient-1" x1="100%" y1="10.5120544%" x2="50%" y2="89.4879456%">
@@ -32,6 +32,10 @@
                             </g>
                         </svg>
                     </span>
+                    <h2 class="brand-text">ERP</h2> --}}
+                    <img src="{{$configData['theme'] === 'dark' || $configData['theme'] === 'semi-dark' ?
+                        asset('images/logo/white-sm.png') : 
+                        asset('images/logo/black-sm.png')}}" width="30px">
                     <h2 class="brand-text">ERP</h2>
                 </a>
             </li>

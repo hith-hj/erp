@@ -25,7 +25,8 @@
     <meta name="author" content="Darbi">
     <title>{{ env('APP_NAME', 'APP') }} | @yield('title')</title>
     <link rel="apple-touch-icon" href="{{ asset('images/ico/apple-icon-120.png') }}">
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/logo/favicon.ico') }}">
+    {{-- <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/logo/favicon.ico') }}"> --}}
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/logo/white-sm.png') }}">
 
     {{-- Include core + vendor Styles --}}
     @include('panels/styles')

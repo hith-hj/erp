@@ -12,7 +12,9 @@ data-textdirection="ltr">
   <meta name="author" content="Darbi">
   <title><?php echo e(env('APP_NAME','APP')); ?> | <?php echo $__env->yieldContent('title'); ?></title>
   <link rel="apple-touch-icon" href="<?php echo e(asset('images/ico/apple-icon-120.png')); ?>">
-  <link rel="shortcut icon" type="image/x-icon" href="<?php echo e(asset('images/logo/favicon.ico')); ?>">
+  
+  <link rel="shortcut icon" type="image/x-icon" href="<?php echo e(asset('images/logo/white-sm.png')); ?>">
+
 
   
   <?php echo $__env->make('panels/styles', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
