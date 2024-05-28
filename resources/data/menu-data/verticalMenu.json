@@ -109,54 +109,8 @@
           "slug": "dashboard-ecommerce"
         }
       ]
-    },
-
-    {
-      "navheader": " ",
-      "slug": ""
-    },
-    {
-      "url": "/modal-examples",
-      "name": "Modal Examples",
-      "icon": "square",
-      "slug": "modal-examples"
-    },
-    {
-      "url": "ui/typography",
-      "name": "Typography",
-      "icon": "type",
-      "slug": "ui-typography"
-    },
-    {
-      "url": "icons/feather",
-      "name": "Feather",
-      "icon": "eye",
-      "slug": "icons-feather"
-    },
-    {
-      "url": "table",
-      "name": "Table",
-      "icon": "server",
-      "slug": "table"
-    },
-    {
-      "name": "Datatable",
-      "icon": "grid",
-      "slug": "",
-      "submenu": [
-        {
-          "url": "table/datatable/basic",
-          "name": "Basic",
-          "icon": "circle",
-          "slug": "datatable-basic"
-        },
-        {
-          "url": "table/datatable/advance",
-          "name": "Advanced",
-          "icon": "circle",
-          "slug": "datatable-advance"
-        }
-      ]
     }
+   
   ]
 }
+ 

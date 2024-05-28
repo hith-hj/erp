@@ -12,8 +12,8 @@
                         </div>
                     </div>
                 @endif
-                <a href="#" class="brand-logo mb-1">
-                    <svg viewBox="0 0 139 95" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                <a href="#" class="brand-logo mb-0">
+                    {{-- <svg viewBox="0 0 139 95" version="1.1" xmlns="http://www.w3.org/2000/svg"
                         xmlns:xlink="http://www.w3.org/1999/xlink" height="28">
                         <defs>
                             <linearGradient id="linearGradient-1" x1="100%" y1="10.5120544%" x2="50%"
@@ -47,12 +47,13 @@
                                 </g>
                             </g>
                         </g>
-                    </svg>
-                    <h2 class="brand-text text-primary ms-1">ERP</h2>
+                    </svg> --}}
+                    {{-- <h2 class="brand-text text-primary ms-1">ERP</h2> --}}
+                    <img src="{{asset('images/logo/black.png')}}" width="200px">
                 </a>
 
-                <h4 class="card-title mb-1">Welcome</h4>
-                <p class="card-text mb-1">Please sign-in to your account</p>
+                {{-- <h4 class="card-title mb-1">Welcome</h4> --}}
+                <p class="card-text pb-1">Please sign-in to your account</p>
             </div>
             <div class="card-body pt-0">
                 <form class="auth-login-form" id="loginForm" action="{{ route('login') }} " method="POST">
