@@ -4,9 +4,8 @@ namespace App\View\Components;
 
 use Illuminate\View\Component;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\View;
 
-class trails extends Component
+class Trails extends Component
 {
     public $breadcrumbs;
     public $titles;
@@ -33,7 +32,6 @@ class trails extends Component
             ['link' => $link, 'name' => $name],
             ['name' => count($titles)>0?implode('-',$titles):$tail]
         ];
-        // return View::share('breadcrumbs',$breadcrumbs);
     }
 
     /**

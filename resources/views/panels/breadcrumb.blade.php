@@ -1,5 +1,5 @@
 <div class="content-header row">
-  <x-trails :titles="$titles ?? []"/>
+  <x-Trails :titles="$titles ?? []"/>
   @if (!request()->is('/') && !request()->is('*/create'))
     <div class="content-header-right col-md-3 col-12 mb-2">
       <div class="row ">
