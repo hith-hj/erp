@@ -18,7 +18,7 @@
                 <div class="col-6 px-auto">
                     <button type="button"
                         class="btn btn-sm btn-success
-                        {{ $bill->status == 0 && $bill->items()->count()>0 ?: 'disabled' }}"
+                        {{ $bill->status == 0 && $bill->item->materials()->count()>0 ?: 'disabled' }}"
                         onclick="document.getElementById('saveBillForm').submit();">
                         {{ __('locale.Save') }}
                     </button>                    
@@ -66,16 +66,17 @@
                         </span>
                     </div>
                 </div>
+                
+                <form id="saveBillForm" method="POST" action="{{ route('bill.save', ['id' => $bill->id]) }}">
+                    @csrf
+                </form>
+                <form id="auditeBillForm" method="POST" action="{{ route('bill.audit', ['id' => $bill->id]) }}">
+                    @csrf @method('delete')
+                </form>
+                <form id="deleteBillForm" method="POST" action="{{ route('bill.delete', ['id' => $bill->id]) }}">
+                    @csrf @method('delete')
+                </form>
             </div>
-            <form id="saveBillForm" method="POST" action="{{ route('bill.save', ['id' => $bill->id]) }}">
-                @csrf
-            </form>
-            <form id="auditeBillForm" method="POST" action="{{ route('bill.audit', ['id' => $bill->id]) }}">
-                @csrf @method('delete')
-            </form>
-            <form id="deleteBillForm" method="POST" action="{{ route('bill.delete', ['id' => $bill->id]) }}">
-                @csrf @method('delete')
-            </form>
             <div class="card-body px-0">
                 {{ $dataTable->table() }}
             </div>

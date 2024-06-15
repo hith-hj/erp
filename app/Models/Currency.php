@@ -8,12 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Currency extends Model
 {
     use HasFactory;
-    protected $fillable = ['name', 'code'];
+    protected $fillable = ['name', 'code', 'is_default', 'rate_to_default'];
+    protected $casts = ['is_default' => 'boolean'];
 
-    public function rates()
-    {
-        return $this->belongsToMany(Currency::class, 'currency_rate', 'currency_id', 'rate_to_id')
-            ->withPivot(['rate'])
-            ->withTimestamps();
-    }
 }

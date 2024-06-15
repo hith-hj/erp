@@ -1,7 +1,6 @@
 @extends('layouts/contentLayoutMaster')
 
 @section('title')
-    {{-- {{ __('locale.Show') }} {{ __('locale.Material') }} --}}
     {{ $unit->name }}
 @endsection
 

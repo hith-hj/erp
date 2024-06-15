@@ -19,16 +19,9 @@ class CurrencyFactory extends Factory
         return [
             'code' => $currency,
             'name' => $currency,
+            'is_default' => false,
+            'rate_to_default' => rand(100,1000),
         ];
-    }
-
-    public function configure()
-    {
-        return $this->afterCreating(function (Currency $cur) {
-            foreach (Currency::where('id', '!=', $cur->id)->pluck('id') as $id) {
-                $cur->rates()->attach($id, ['rate' => rand(5, 10)]);
-            }
-        });
     }
 
     public function dollar()
@@ -36,6 +29,8 @@ class CurrencyFactory extends Factory
         return $this->state([
             'name' => 'dollar',
             'code' => 'USD',
+            'is_default' => false,
+            'rate_to_default' => 1000,
         ]);
     }
 
@@ -44,6 +39,8 @@ class CurrencyFactory extends Factory
         return $this->state([
             'name' => 'pound',
             'code' => 'p',
+            'is_default' => false,
+            'rate_to_default' => 1200,
         ]);
     }
 
@@ -52,6 +49,8 @@ class CurrencyFactory extends Factory
         return $this->state([
             'name' => 'syp',
             'code' => 'syp',
+            'is_default' => true,
+            'rate_to_default' => 1,            
         ]);
     }
 }

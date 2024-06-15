@@ -1,6 +1,6 @@
 <div class="content-header row">
   <x-Trails :titles="$titles ?? []"/>
-  @if (!request()->is('/') && !request()->is('*/create') && !request()->is('*/show/*'))
+  @if (!request()->is('/') && !request()->is('*/create') && !request()->is('*/show/*') && !request()->is('bill/*') )
     <div class="content-header-right col-md-3 col-12 mb-2">
       <div class="row ">
         <div class="col-12">

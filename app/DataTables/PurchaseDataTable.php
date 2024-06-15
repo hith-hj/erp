@@ -25,17 +25,20 @@ class PurchaseDataTable extends DataTable
                 $lang = __('locale.View');
                 return "<a href='/purchase/show/$purchase->id'>$lang</a>";
             })
-            ->addColumn('name', function ($purchase) {
-                return $purchase->material->name;
+            ->addColumn('materials', function ($purchase) {
+                return $purchase->materials()->count();
             })
-            ->addColumn('unit', function ($purchase) {
-                return $purchase->unit->name;
+            ->addColumn('total', function ($purchase) {
+                return $purchase->materials()->sum('cost');
+            })
+            ->addColumn('vendor', function ($purchase) {
+                return $purchase->vendor?->fullName;
+            })
+            ->addColumn('created_at', function ($purchase) {
+                return $purchase->created_at->diffForHumans();
             })
             ->addColumn('bill', function ($purchase) {
-                return $purchase->bill->serial ?? '';
-            })
-            ->addColumn('currency', function ($purchase) {
-                return $purchase->currency->name;
+                return $purchase->bill?->serial;
             });
     }
 
@@ -87,11 +90,9 @@ class PurchaseDataTable extends DataTable
     {
         return [
             Column::make('id'),
-            Column::make('name')->title(__('locale.Name')),
-            Column::make('quantity')->title(__('locale.Quantity')),
-            Column::make('unit')->title(__('locale.Unit')),
-            Column::make('cost')->title(__('locale.Cost')),
-            Column::make('currency')->title(__('locale.Currency')),
+            Column::make('vendor')->title(__('locale.Vendor')),
+            Column::make('materials')->title(__('locale.Materials')),
+            Column::make('total')->title(__('locale.Total')),
             Column::make('bill')->title(__('locale.Bill')),
             Column::make('created_at')->title(__('locale.Created at')),
             Column::computed('action')

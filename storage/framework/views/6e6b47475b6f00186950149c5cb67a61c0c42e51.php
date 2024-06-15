@@ -22,19 +22,16 @@
         <div class="content-overlay"></div>
         <div class="header-navbar-shadow"></div>
 
-
         <?php if($configData['contentLayout'] !== 'default' && isset($configData['contentLayout'])): ?>
             <div class="content-area-wrapper <?php echo e($configData['layoutWidth'] === 'boxed' ? 'container-xxl p-0' : ''); ?>">
                 <div class="<?php echo e($configData['sidebarPositionClass']); ?>">
                     <div class="sidebar">
-                        
                         <?php echo $__env->yieldContent('content-sidebar'); ?>
                     </div>
                 </div>
                 <div class="<?php echo e($configData['contentsidebarClass']); ?>">
                     <div class="content-wrapper">
                         <div class="content-body">
-                            
                             <?php echo $__env->yieldContent('content'); ?>
                         </div>
                     </div>
@@ -42,13 +39,11 @@
             </div>
         <?php else: ?>
             <div class="content-wrapper <?php echo e($configData['layoutWidth'] === 'boxed' ? 'container-xxl p-0' : ''); ?>">
-                
                 <?php if($configData['pageHeader'] === true && isset($configData['pageHeader'])): ?>
                     <?php echo $__env->make('panels.breadcrumb', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
                 <?php endif; ?>
 
                 <div class="content-body">
-                    
                     <?php echo $__env->yieldContent('content'); ?>
                 </div>
             </div>
@@ -68,7 +63,6 @@
     <?php echo $__env->make('panels/footer', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
     
-
     <?php echo $__env->make('panels/scripts', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
     <script type="text/javascript">
@@ -86,7 +80,6 @@
         <div class="alert alert-danger">
             <ul>
                 <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                    
                     <script>
                         toastr['error'](<?php echo json_encode($error); ?>, {
                             closeButton: true,

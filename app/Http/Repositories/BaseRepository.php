@@ -3,6 +3,7 @@
 namespace App\Http\Repositories;
 
 use Closure;
+use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
@@ -59,7 +60,7 @@ class BaseRepository implements Repository
         array|string $relation = [],
         string|array $columns = ['*']
     ): Model {
-        return $this->model::with($relation)->find($id, $columns);
+        return $this->model::with($relation)->findOrFail($id, $columns);
     }
 
     public function getWithWhere(
@@ -105,5 +106,10 @@ class BaseRepository implements Repository
             }
         }
         return $query->$getter($columns);
+    }
+
+    public function throw(string $message,int $code=0)
+    {
+        throw new Exception($message,$code);
     }
 }

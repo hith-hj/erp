@@ -46,7 +46,7 @@
                             </div>
                             <div class="col-12" data-repeater-delete>
                                 <div class="mb-1">
-                                    <label class="form-label" for="rate">{{ __('locale.Delete') }}</label>
+                                    <label class="form-label" for="">{{ __('locale.Delete') }}</label>
                                     <button type="button" class="btn btn-icon btn-danger w-100">
                                         <span>{{ __('locale.Delete') }}</span>
                                     </button>

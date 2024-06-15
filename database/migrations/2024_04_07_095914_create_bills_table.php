@@ -15,8 +15,9 @@ class CreateBillsTable extends Migration
     {
         Schema::create('bills', function (Blueprint $table) {
             $table->id();
-            $table->string('serial')->autoIncrement()->startingValue(10000);
-            $table->smallInteger('type')->default(1);
+            $table->foreignId('billable_id')->nullable();
+            $table->string('billable_type')->nullable();
+            $table->string('serial');
             $table->smallInteger('status')->default(0);
             $table->timestamps();
             $table->softDeletes();

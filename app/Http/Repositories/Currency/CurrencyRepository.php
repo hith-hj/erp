@@ -5,6 +5,7 @@ namespace App\Http\Repositories\Currency;
 
 use App\Http\Repositories\BaseRepository;
 use App\Models\Currency;
+use Exception;
 use Illuminate\Database\Eloquent\Collection;
 
 class CurrencyRepository extends BaseRepository
@@ -16,21 +17,16 @@ class CurrencyRepository extends BaseRepository
 
     public function getShowPayload($id)
     {
-        return [
-            'currencies' => $this->getter(
-                model: 'Currency',
-                callable: [
-                    'where' => [['id', '!=', $id]]
-                ],
-            ),
-            'currency' => $this->findWith($id, 'rates'),
-        ];
+        return ['currency' => $this->find($id),];
     }
 
     public function delete($id): bool
     {
-        $currency = $this->findWith($id, 'rates');
-        $currency->rates()->detach();
-        return $currency->delete();
+        $currency = $this->find($id);
+        if($currency->is_default ){
+            throw new Exception('Default currency can\'t be deleted');
+            return false;
+        }
+        return $currency->delete() ;
     }
 }

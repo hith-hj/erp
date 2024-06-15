@@ -35,7 +35,6 @@ class SaleRepository extends BaseRepository
                 model: 'Currency',
                 callable:[
                     'select'=> ['id', 'name', 'code'],
-                    'with' => ['rates:id,name'],
                 ]
             ) ?? [],
 

@@ -18,8 +18,9 @@ class CreateCurrenciesTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('code');
+            $table->boolean('is_default')->default(false);
+            $table->double('rate_to_default')->default(0);
             $table->timestamps();
-            
         });
     }
 

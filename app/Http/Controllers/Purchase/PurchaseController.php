@@ -6,7 +6,7 @@ use App\DataTables\PurchaseDataTable;
 use App\Http\Controllers\BaseController;
 use App\Http\Repositories\Purchase\PurchaseRepository;
 use App\Http\Validator\Purchase\PurchaseValidator;
-use App\Models\Purchase;
+use Exception;
 use Illuminate\Http\Request;
 
 class PurchaseController extends BaseController
@@ -37,31 +37,63 @@ class PurchaseController extends BaseController
     public function store(Request $request)
     {
         PurchaseValidator::validate($request);
-        $this->repo->storePurchase($request);
+        // $this->repo->checkForDuplication($request->purchases);
+        $purchase = $this->repo->storePurchase($request);
         return redirect()
-            ->route('bill.show', ['id' => $request->bill_id])
+            ->route('purchase.show', ['id' => $purchase->id])
             ->with('success', 'Purchase created');
     }
 
-    public function delete(Purchase $purchase)
+    public function delete(int $id)
     {
-        $this->repo->restorInventoryMaterial($purchase->id);
-        $this->repo->delete($purchase->id);
+        try{
+            $this->repo->delete($id);
+        }catch(Exception $e){
+            return back()->with('error',$e->getMessage());
+        }
         return redirect()
-            ->route('bill.show', ['id' => $purchase->bill_id])
+            ->route('purchase.all')
             ->with('success', 'Purchase deleted');
     }
 
-    public function storeToBill(Request $request)
+    public function save($purchase_id)
     {
-        PurchaseValidator::validate($request);
-        $this->repo->add($request->all());
-        return $this->repo->updateInventoryMaterial($request);
+        try {
+            $this->repo->save($purchase_id);
+        } catch (\Throwable $th) {
+            return back()->with('error', $th->getMessage());
+        }
+        return back()->with('success', 'Purchase Saved');
     }
 
-    public function deleteFromBill($purchase_id)
+    public function audit($purchase_id)
     {
-        $this->repo->restorInventoryMaterial($purchase_id);
-        return $this->repo->delete($purchase_id);
+        try {
+            $this->repo->audit($purchase_id);
+        } catch (\Throwable $th) {
+            return back()->with('error', $th->getMessage());
+        }
+        return back()->with('success', 'Purchase Audited');
+    }
+
+    public function check($purchase_id)
+    {
+        try {
+            $this->repo->check($purchase_id);
+        } catch (\Throwable $th) {
+            return back()->with('error', $th->getMessage());
+        }
+        return back()->with('success', 'Purchase Checked');
+    }
+
+    public function addMaterialToPurchase(Request $request, $id){
+        PurchaseValidator::purchases($request);
+        $this->repo->updatePurchase($request, $id);
+        return back()->with('success', 'Material Added');
+    }
+    
+    public function deleteMaterialFromPurchase(Request $request, $id){
+        $this->repo->editPurchase($request, $id);
+        return back()->with('success', 'Material Removed');
     }
 }

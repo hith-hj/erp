@@ -80,7 +80,13 @@ Route::group(['middleware' => 'auth',], function () {
         Route::get('show/{id}', 'show')->name('purchase.show');
         Route::get('create', 'create')->name('purchase.create');
         Route::post('store', 'store')->name('purchase.store');
-        Route::delete('delete/{purchase}', 'delete')->name('purchase.delete');
+        Route::delete('delete/{id}', 'delete')->name('purchase.delete');
+        Route::post('{id}/addMaterial','addMaterialToPurchase')->name('purchase.addMaterial');
+        Route::delete('{id}/deleteMaterial','deleteMaterialFromPurchase')->name('purchase.deleteMaterial');
+
+        Route::post('save/{id}', 'save')->name('purchase.save');
+        Route::post('audit/{id}', 'audit')->name('purchase.audit');
+        Route::post('check/{id}', 'check')->name('purchase.check');
     });
 
     Route::group([
@@ -99,20 +105,7 @@ Route::group(['middleware' => 'auth',], function () {
         'controller' => BillController::class
     ], function () {
         Route::get('all', 'index')->name('bill.all');
-        Route::get('show/{id}', 'show')->name('bill.show');
-        Route::get('create', 'create')->name('bill.create');
-        Route::post('store', 'store')->name('bill.store');
-        Route::delete('delete/{id}', 'delete')->name('bill.delete');
-
-        Route::post('bill_store_purchase/{id}', 'bill_store_purchase')->name('bill.store.purchase');
-        Route::get('{bill_id}/purchase/{purchase_id}/delete', 'bill_delete_purchase')->name('bill.delete.purchase');
-
-        Route::post('bill_store_sale/{id}', 'bill_store_sale')->name('bill.store.sale');
-        Route::get('{bill_id}/sale/{sale_id}/delete', 'bill_delete_sale')->name('bill.delete.sale');
-
-        Route::post('save/{id}', 'save')->name('bill.save');
-        Route::post('audit/{id}', 'audit')->name('bill.audit');
-
+        
     });
 
     Route::group([

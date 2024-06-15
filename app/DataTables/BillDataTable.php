@@ -14,7 +14,6 @@ class BillDataTable extends DataTable
 {
     /**
      * Build DataTable class.
-     *
      * @param mixed $query Results from query() method.
      * @return \Yajra\DataTables\DataTableAbstract
      */
@@ -23,34 +22,33 @@ class BillDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->addColumn('action', function ($bill) {
-                $lang = __('locale.View');
-                $type = $bill->type == 3 ? 'manufacturing/bill' : 'bill';
-                return "<a href='/$type/show/$bill->id'>$lang</a>";
+                $view = __('locale.View');
+                $type = lcfirst(explode('\\',$bill->billable_type)[2]);
+                return "<a href='/$type/show/$bill->billable_id'>$view</a>";
             })
-            ->addColumn('type', function ($bill) {
+            ->addColumn('billable_type', function ($bill) {
                 return $bill->get_type;
             })
             ->addColumn('status', function ($bill) {
                 return $bill->get_status;
             })
             ->addColumn('items', function ($bill) {
-                return $bill->items()->count();
+                return $bill->item?->materials()?->count();
             })
             ->addColumn('total', function ($bill) {
-                return $bill->items()->sum('cost');
+                return $bill->item?->materials()?->sum('cost');
             });
     }
 
     /**
      * Get query source of dataTable.
-     *
      * @param \App\Models\Bill $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function query(Bill $model)
     {
-        return $model->newQuery()->with('items');
-    }
+        return $model->newQuery();
+    }    
 
     /**
      * Optional method if you want to use html builder.
@@ -89,12 +87,10 @@ class BillDataTable extends DataTable
     {
         return [
             Column::make('id'),
+            Column::make('billable_type')->title(__('locale.Type')),
+            Column::make('billable_id')->title(__('ID')),
             Column::make('serial')->title(__('locale.Serial')),
-            Column::make('type')->title(__('locale.Type')),
-            Column::make('status')
-                ->searchable()
-                ->orderable()
-                ->title(__('locale.Status')),
+            Column::make('status')->title(__('locale.Status')),
             Column::make('items')->title(__('locale.Items')),
             Column::make('total')->title(__('locale.Total')),
             Column::make('created_at')->title(__('locale.Created at')),

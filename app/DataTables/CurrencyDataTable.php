@@ -25,8 +25,8 @@ class CurrencyDataTable extends DataTable
                 $view = __('locale.View');
                 return "<a href='/currency/show/$currency->id'>$view</a>";
             })
-            ->addColumn('rates', function ($currency) {
-                return $currency->rates()->count();
+            ->addColumn('is_default', function ($currency) {
+                return $currency->is_default ? __('locale.Default') : '-';
             });
     }
 
@@ -38,7 +38,7 @@ class CurrencyDataTable extends DataTable
      */
     public function query(Currency $model)
     {
-        return $model->newQuery()->with('rates');
+        return $model->newQuery();
     }
 
     /**
@@ -80,7 +80,8 @@ class CurrencyDataTable extends DataTable
             Column::make('id'),
             Column::make('name')->title(__('locale.Name')),
             Column::make('code')->title(__('locale.Code')),
-            Column::computed('rates')->title(__('locale.Rates')),
+            Column::make('rate_to_default')->title(__('locale.Rate')),
+            Column::make('is_default')->title(__('locale.Default')),
             Column::make('created_at')->title(__('locale.Created at')),
             Column::computed('action')
                 ->title(__('locale.Action'))

@@ -20,7 +20,7 @@
                 <div class="col-6 px-auto">
                     <button type="button"
                         class="btn btn-sm btn-success
-                        <?php echo e($bill->status == 0 && $bill->items()->count()>0 ?: 'disabled'); ?>"
+                        <?php echo e($bill->status == 0 && $bill->item->materials()->count()>0 ?: 'disabled'); ?>"
                         onclick="document.getElementById('saveBillForm').submit();">
                         <?php echo e(__('locale.Save')); ?>
 
@@ -75,16 +75,17 @@
                         </span>
                     </div>
                 </div>
+                
+                <form id="saveBillForm" method="POST" action="<?php echo e(route('bill.save', ['id' => $bill->id])); ?>">
+                    <?php echo csrf_field(); ?>
+                </form>
+                <form id="auditeBillForm" method="POST" action="<?php echo e(route('bill.audit', ['id' => $bill->id])); ?>">
+                    <?php echo csrf_field(); ?> <?php echo method_field('delete'); ?>
+                </form>
+                <form id="deleteBillForm" method="POST" action="<?php echo e(route('bill.delete', ['id' => $bill->id])); ?>">
+                    <?php echo csrf_field(); ?> <?php echo method_field('delete'); ?>
+                </form>
             </div>
-            <form id="saveBillForm" method="POST" action="<?php echo e(route('bill.save', ['id' => $bill->id])); ?>">
-                <?php echo csrf_field(); ?>
-            </form>
-            <form id="auditeBillForm" method="POST" action="<?php echo e(route('bill.audit', ['id' => $bill->id])); ?>">
-                <?php echo csrf_field(); ?> <?php echo method_field('delete'); ?>
-            </form>
-            <form id="deleteBillForm" method="POST" action="<?php echo e(route('bill.delete', ['id' => $bill->id])); ?>">
-                <?php echo csrf_field(); ?> <?php echo method_field('delete'); ?>
-            </form>
             <div class="card-body px-0">
                 <?php echo e($dataTable->table()); ?>
 

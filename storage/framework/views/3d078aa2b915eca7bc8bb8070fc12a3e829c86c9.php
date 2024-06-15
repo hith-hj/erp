@@ -11,7 +11,7 @@
 <?php $component = $__componentOriginal852b5fefbb0d2a45750f1cd335c4e83390b91360; ?>
 <?php unset($__componentOriginal852b5fefbb0d2a45750f1cd335c4e83390b91360); ?>
 <?php endif; ?>
-  <?php if(!request()->is('/') && !request()->is('*/create') && !request()->is('*/show/*')): ?>
+  <?php if(!request()->is('/') && !request()->is('*/create') && !request()->is('*/show/*') && !request()->is('bill/*') ): ?>
     <div class="content-header-right col-md-3 col-12 mb-2">
       <div class="row ">
         <div class="col-12">

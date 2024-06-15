@@ -10,26 +10,16 @@ class Bill extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['serial', 'type', 'status'];
-
-    public function items()
+    protected $fillable = ['billable_id', 'billable_type', 'serial', 'status'];
+    
+    public function item()
     {
-        return match ($this->type) {
-            1 => $this->hasMany(Purchase::class),
-            2 => $this->hasMany(Sale::class),
-            3 => $this->hasMany(Manufacturing::class),
-            default => $this->hasMany(Purchase::class),
-        };
+        return $this->belongsTo($this->billable_type,'billable_id');
     }
 
     public function getGetTypeAttribute()
     {
-        return match ($this->type) {
-            1 => __('locale.Purchase'),
-            2 => __('locale.Sale'),
-            3 => __('locale.Manufacturing'),
-            default => __('locale.None'),
-        };
+        return __('locale.'.explode('\\',$this->billable_type)[2]) ?? __('locale.None');
     }
 
     public function getGetStatusAttribute()
@@ -37,7 +27,8 @@ class Bill extends Model
         return match ($this->status) {
             0 => __('locale.Unsaved'),
             1 => __('locale.Saved'),
-            2 => __('locale.Audited'),
+            2 => __('locale.Checked'),
+            3 => __('locale.Audited'),
             default => __('locale.None')
         };
     }

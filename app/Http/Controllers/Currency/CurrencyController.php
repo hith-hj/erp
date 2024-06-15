@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Currency;
 use App\DataTables\CurrencyDataTable;
 use App\Http\Controllers\BaseController;
 use App\Http\Repositories\Currency\CurrencyRepository;
+use Exception;
 use Illuminate\Http\Request;
 
 class CurrencyController extends BaseController
@@ -35,14 +36,20 @@ class CurrencyController extends BaseController
         $request->validate([
             'name' => ['required', 'string', 'unique:currencies,name'],
             'code' => ['required', 'string'],
+            'rate_to_default'=>['required', 'numeric', 'min:0.01', 'max:100000']
         ]);
-        $this->repo->add($request->only(['name', 'code']));
+        $this->repo->add($request->only(['name', 'code', 'rate_to_default']));
         return redirect()->route('currency.all')->with('success', 'Currency Added');
     }
 
     public function delete($id)
     {
-        $this->repo->delete($id);
+        try{
+            $this->repo->delete($id);
+        }catch(Exception $e){
+            return back()
+                ->with('error',$e->getMessage());
+        }
         return redirect()
             ->route('currency.all')
             ->with('success', 'currency deleted');
