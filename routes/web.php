@@ -69,7 +69,7 @@ Route::group(['middleware' => 'auth',], function () {
         Route::get('create', 'create')->name('currency.create');
         Route::post('store', 'store')->name('currency.store');
         Route::delete('delete/{id}', 'delete')->name('currency.delete');
-        Route::post('rates/store', 'currency_rate_store')->name('currency.rates.store');
+        Route::post('setDefault/{id}','setDefault')->name('currency.setDefault');
     });
 
     Route::group([

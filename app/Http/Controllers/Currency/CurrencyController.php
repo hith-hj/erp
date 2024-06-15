@@ -36,7 +36,7 @@ class CurrencyController extends BaseController
         $request->validate([
             'name' => ['required', 'string', 'unique:currencies,name'],
             'code' => ['required', 'string'],
-            'rate_to_default'=>['required', 'numeric', 'min:0.01', 'max:100000']
+            'rate_to_default' => ['required', 'numeric', 'min:0.01', 'max:100000']
         ]);
         $this->repo->add($request->only(['name', 'code', 'rate_to_default']));
         return redirect()->route('currency.all')->with('success', 'Currency Added');
@@ -44,26 +44,25 @@ class CurrencyController extends BaseController
 
     public function delete($id)
     {
-        try{
+        try {
             $this->repo->delete($id);
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return back()
-                ->with('error',$e->getMessage());
+                ->with('error', $e->getMessage());
         }
         return redirect()
             ->route('currency.all')
             ->with('success', 'currency deleted');
     }
 
-    public function currency_rate_store(Request $request)
+    public function setDefault(Request $request, $id)
     {
-        $currency = $this->repo->find($request->currency_id);
-        if (!$currency->rates()->where('rate_to_id', $request->to_id)->exists()) {
-            $currency->rates()->attach($request->to_id, ['rate' => $request->rate]);
-        } else {
-            $currency->rates()
-                ->syncWithPivotValues($request->to_id, ['rate' => $request->rate], false);
+        $default = $this->repo->find($id);
+        $data = $request->except('_token');
+        foreach($data as $key=>$value){
+            $this->repo->find(explode('-',$key)[0])->update(['is_default'=>0,'rate_to_default'=>$value]);
         }
-        return redirect()->route('currency.show', ['id' => $currency->id]);
+        $default->update(['is_default'=>1,'rate_to_default'=>1]);
+        return back()->with('success', 'Default currency updated');
     }
 }

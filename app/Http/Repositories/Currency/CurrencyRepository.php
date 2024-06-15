@@ -17,7 +17,15 @@ class CurrencyRepository extends BaseRepository
 
     public function getShowPayload($id)
     {
-        return ['currency' => $this->find($id),];
+        return [
+            'currency' => $this->find($id), 
+            'currencies'=>$this->getter(
+                model:'Currency',
+                callable:[
+                    'where'=>[['id','!=',$id]]
+                ]
+            ),
+        ];
     }
 
     public function delete($id): bool
