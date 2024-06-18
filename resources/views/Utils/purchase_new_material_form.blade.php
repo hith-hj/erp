@@ -82,15 +82,10 @@
                                             <option value="">
                                                 {{ __('locale.Chose') }}
                                             </option>
-                                            <template
-                                                x-for="unit in materialUnits"
-                                                :key="unit.id">
+                                            <template x-for="unit in materialUnits":key="unit.id">
                                                 <option :value="unit.id"
-                                                    x-text="
-                                                unit.name+'-'+unit.pivot.rate_to_main_unit+'-'+
-                                                unit.pivot.is_default "
-                                                    :selected="unit.pivot.is_default ==
-                                                        1">
+                                                    x-text="unit.name+'-'+unit.pivot.is_default "
+                                                    :selected="unit.pivot.is_default == 1">
                                                 </option>
                                             </template>
                                         </select>

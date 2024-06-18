@@ -88,7 +88,7 @@
                                             <td><?php echo e($loop->index + 1); ?></td>
                                             <td><?php echo e($value->name); ?></td>
                                             <td>
-                                                <input type="number" name="<?php echo e($value->id.'-'.$value->name); ?>" 
+                                                <input type="number" name="<?php echo e($value->id); ?>" 
                                                     step="0.01" min="0.01" max="100000"
                                                     class="form-control" required>
                                             </td>

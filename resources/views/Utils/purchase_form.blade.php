@@ -1,6 +1,5 @@
 <form id="purchase_form" method="POST" action="{{ route('purchase.store') }}" class="form form-vertical">
     @csrf
-    {{-- <input type="hidden" name="bill_id" value="{{ $bill->id }}"> --}}
     <div class="card mb-1">
         <div class="card-header p-1">
             <h4>

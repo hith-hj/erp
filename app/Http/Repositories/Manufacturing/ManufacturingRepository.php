@@ -2,12 +2,10 @@
 
 namespace App\Http\Repositories\Manufacturing;
 
+
+use Illuminate\Support\Str;
 use App\Http\Repositories\BaseRepository;
-use App\Http\Repositories\Bill\BillRepository;
-use App\Models\Inventory;
-use App\Models\InventoryMaterial;
 use App\Models\Manufacturing;
-use Exception;
 
 class ManufacturingRepository extends BaseRepository
 {
@@ -42,11 +40,25 @@ class ManufacturingRepository extends BaseRepository
         ];
     }
 
+    /**
+     * this fucked up function
+     * get the manufuctered material with its manufacturing models
+     * then for each manufacturing model calculate the quantity and update inventory
+     * then store the manufactured material in inventory 
+     * then store it and create bill for it
+     *  */
     public function storeManufacturig($request)
     {
-        $material = $this->firstWithWhere('material', where: [['id', $request->material_id]]);
+        $material = $this->getter(
+            model: 'material',
+            getter: 'first',
+            callable: [
+                'with' => ['manufactureModel'],
+                'where' => [['id', $request->material_id]]
+            ]
+        );
         if (!$material->hasManufactureModel()) {
-            throw new Exception('Material does not have manufacture model');
+            $this->throw('Material does not have manufacture model');
         }
         $qty = $this->getBaseUnitQuantity($material->units, $request);
         foreach ($material->manufactureModel as $baseMaterial) {
@@ -54,30 +66,52 @@ class ManufacturingRepository extends BaseRepository
 
             $qtyTosubtract = $this->getBaseUnitQuantity($baseMaterial->material->units, $object, $qty);
 
-            $inventory = $this->firstWithWhere('Inventory', ['materials:id,name'], [['id', $baseMaterial->inventory_id]], ['id', 'name']);
-            $inventoryMaterial = $inventory->materials->first(function ($item) use ($baseMaterial) {
-                return $item->id == $baseMaterial->material_id;
-            });
+            $inventory = $this->getter(
+                model: 'Inventory',
+                getter: 'first',
+                callable: [
+                    'select' => ['id', 'name'],
+                    'with' => ['materials:id,name'],
+                    'where' => [['id', $baseMaterial->inventory_id]],
+                ]
+            );
+
+            $inventoryMaterial = $inventory->materials()->wherePivot('material_id', $baseMaterial->material_id)->first();
             if ($inventoryMaterial->pivot->quantity < $qtyTosubtract) {
-                throw new Exception("$inventoryMaterial->name is not sufficient in $inventory->name ");
+                $this->throw("$inventoryMaterial->name is not sufficient in $inventory->name ");
             }
             $inventory->materials()->updateExistingPivot($baseMaterial->material_id, [
                 'quantity' => $inventoryMaterial->pivot->quantity - $qtyTosubtract,
             ]);
         }
-        $invnetoryToStore = $this->firstWithWhere('Inventory', where: [['id', $request->inventory_id]]);
-
+        $invnetoryToStore = $this->getter(
+            model: 'Inventory',
+            getter: 'first',
+            callable: [
+                'where' => [['id', $request->inventory_id]],
+            ]
+        );
         $invnetoryToStore->materials()->syncWithPivotValues($material->id, [
             'quantity' => $invnetoryToStore
                 ->materials()
                 ->wherePivot('material_id', $material->id)
                 ->first()?->pivot?->quantity + $qty
         ], false);
-        $request['bill_id'] = (new BillRepository())->add(['type' => 3])->id;
         $request['quantity'] = $qty;
         $request['cost'] = $material->manufactureModel->sum('cost') +
-            $material->accounts()->where('type', 'Manufacturing')->first()?->expenses()->sum('cost') ?? 0;
-        return $this->add($request->all());
+            $material->accounts()
+            ->where('type', 'Manufacturing')
+            ->first()?->expenses()
+            ->sum('cost') ?? 0;
+
+        $manufacturing = $this->add($request->all());
+        $manufacturing->bill()->create([
+            'billable_id' => $manufacturing->id,
+            'billable_type' => get_class($manufacturing),
+            'serial' => Str::random(8),
+            'status' => 0,
+        ]);
+        return $manufacturing;
     }
 
     public function getBaseUnitQuantity($collection, $request, $qty = 1)

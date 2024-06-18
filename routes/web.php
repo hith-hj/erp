@@ -81,8 +81,8 @@ Route::group(['middleware' => 'auth',], function () {
         Route::get('create', 'create')->name('purchase.create');
         Route::post('store', 'store')->name('purchase.store');
         Route::delete('delete/{id}', 'delete')->name('purchase.delete');
-        Route::post('{id}/addMaterial','addMaterialToPurchase')->name('purchase.addMaterial');
-        Route::delete('{id}/deleteMaterial','deleteMaterialFromPurchase')->name('purchase.deleteMaterial');
+        Route::post('{id}/addMaterial','addMaterial')->name('purchase.addMaterial');
+        Route::delete('{id}/deleteMaterial','deleteMaterial')->name('purchase.deleteMaterial');
 
         Route::post('save/{id}', 'save')->name('purchase.save');
         Route::post('audit/{id}', 'audit')->name('purchase.audit');
@@ -97,7 +97,13 @@ Route::group(['middleware' => 'auth',], function () {
         Route::get('show/{id}', 'show')->name('sale.show');
         Route::get('create', 'create')->name('sale.create');
         Route::post('store', 'store')->name('sale.store');
-        Route::get('delete/{sale}', 'delete')->name('sale.delete');
+        Route::delete('delete/{id}', 'delete')->name('sale.delete');
+        Route::post('{id}/addMaterial','addMaterial')->name('sale.addMaterial');
+        Route::delete('{id}/deleteMaterial','deleteMaterial')->name('sale.deleteMaterial');
+
+        Route::post('save/{id}', 'save')->name('sale.save');
+        Route::post('audit/{id}', 'audit')->name('sale.audit');
+        Route::post('check/{id}', 'check')->name('sale.check');
     });
 
     Route::group([

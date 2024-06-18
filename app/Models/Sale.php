@@ -12,16 +12,9 @@ class Sale extends Model
 
     protected $fillable = [
         'inventory_id',
-        'material_id',
-        'currency_id',
         'created_by',
         'client_id',
-        'quantity',
-        'bill_id',
-        'unit_id',
-        'rate_to',
         'discount',
-        'cost',
         'level',
         'note',
         'mark',
@@ -29,12 +22,8 @@ class Sale extends Model
 
     public function bill()
     {
-        return $this->belongsTo(Bill::class);
-    }
-
-    public function unit()
-    {
-        return $this->belongsTo(Unit::class);
+        return $this->hasOne(Bill::class, 'billable_id')
+            ->where('billable_type', get_class($this));
     }
 
     public function inventory()
@@ -42,14 +31,12 @@ class Sale extends Model
         return $this->belongsTo(Inventory::class);
     }
 
-    public function material()
+    public function materials()
     {
-        return $this->belongsTo(Material::class);
-    }
-
-    public function currency()
-    {
-        return $this->belongsTo(Currency::class);
+        return $this->belongsToMany(Material::class)
+            ->using(MaterialSale::class)
+            ->withTimestamps()
+            ->withPivot(['quantity', 'unit_id', 'currency_id', 'rate_to', 'rate', 'cost']);
     }
 
     public function user()

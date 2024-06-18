@@ -100,6 +100,9 @@ class PurchaseRepository extends BaseRepository
     public function updatePurchase($request, $id)
     {
         $purchase = $this->find($id);
+        if ($purchase->bill->status != self::Purchase_stat['unsaved']) {
+            return $this->throw('Purchase Can\'t be modified');
+        }
         foreach ($request->purchases as $material) {
             $this->addMaterialToPurchase($purchase, $material);
         }
@@ -108,29 +111,33 @@ class PurchaseRepository extends BaseRepository
 
     private function addMaterialToPurchase($purchase, $material)
     {
+        $material['inventory_id'] = $purchase->inventory_id;
         if (is_null($material['unit_id'])) {
-            $material = $this->getter(model: 'material', callable: ['with' => ['units'],]);
-            $unit = $material->units->first(function ($item) {
-                return $item->pivot->is_default == 1;
-            });
-            $material['unit_id'] = $unit->id;
+            $item = $this->getter(
+                model: 'material',
+                getter: 'first',
+                callable: [
+                    'with' => ['units'],
+                    'where' => [['id', $material['material_id']]]
+                ]
+            );
+            $unit = $item?->units()->wherePivot('is_default', 1)->first();
+            $material['unit_id'] = $unit->id ?? 1;
         }
         $currency = $this->getter(
             model: 'Currency',
             getter: 'first',
-            callable: [
-                'where' => [['id', $material['currency_id']]],
-            ]
+            callable: ['where' => [['id', $material['currency_id']]],]
         );
         if (!$currency->is_default) {
             $defaultCurrency = $this->getter(
                 model: 'Currency',
-                callable: [
-                    'where' => [['is_default', 1]]
-                ],
-                getter: 'first'
+                getter: 'first',
+                callable: ['where' => [['is_default', 1]]]
             );
         }
+        $material['rate_to'] = $defaultCurrency->id ?? $currency->id;
+        $material['rate'] = $currency->rate_to_default;
 
         $purchase->materials()
             ->attach($material['material_id'], [
@@ -138,10 +145,9 @@ class PurchaseRepository extends BaseRepository
                 'quantity' => $material['quantity'],
                 'unit_id' => $material['unit_id'],
                 'cost' => $material['cost'],
-                'rate_to' => $defaultCurrency->id ?? $currency->id,
-                'rate' => $currency->rate_to_default,
+                'rate_to' => $material['rate_to'],
+                'rate' => $material['rate'],
             ]);
-        $material['inventory_id'] = $purchase->inventory_id;
         return $this->updateInventory($material);
     }
 
@@ -156,9 +162,7 @@ class PurchaseRepository extends BaseRepository
         if (is_null($material)) {
             $material = $this->getter(
                 model: 'Material',
-                callable: [
-                    'where' => [['id', $data->material_id]]
-                ],
+                callable: ['where' => [['id', $data->material_id]], 'with' => ['units']],
                 getter: 'first'
             );
             return $inventory
@@ -177,8 +181,10 @@ class PurchaseRepository extends BaseRepository
     public function editPurchase($request, $id)
     {
         $purchase = $this->find($id);
+        if ($purchase->bill->status != self::Purchase_stat['unsaved']) {
+            return $this->throw('Purchase Can\'t be modified');
+        }
         $material = $purchase->materials()->wherePivot('material_id', $request->material_id);
-        // && $purchase->materials()->count() > 1
         if ($material->exists()) {
             $material = $material->first();
             $material->inventory_id = $purchase->inventory_id;
@@ -207,7 +213,7 @@ class PurchaseRepository extends BaseRepository
     {
         $purchase = $this->findWith($id, ['materials', 'bill']);
         if ($purchase->materials()->count() > 0 || $purchase->bill->status != 0) {
-            $this->throw('Purchase is not empty Can\'t be Deleted', 9);
+            return $this->throw('Purchase is not empty Can\'t be Deleted', 9);
         }
         foreach ($purchase->materials as $material) {
             $material->inventory_id = $purchase->inventory_id;
@@ -216,25 +222,6 @@ class PurchaseRepository extends BaseRepository
         $purchase->materials()->detach();
         $purchase->bill()->delete();
         return $purchase->delete();
-    }
-
-    public function restoreInventoryMaterial($purchase_id)
-    {
-        $purchase = $this->find($purchase_id);
-        $inventoryRepo = new InventoryRepository();
-        $inventory = $inventoryRepo->find($purchase->inventory_id);
-        foreach ($purchase->materials as $material) {
-            $inventoryMaterial = $inventory
-                ->materials()
-                ->wherePivot('material_id', $material->id)
-                ->first();
-            $inventory->materials()
-                ->updateExistingPivot($material->id, [
-                    'quantity' => $inventoryMaterial->pivot->quantity -
-                        $this->getBaseUnitQuantity($inventoryMaterial->units, $material)
-                ]);
-        }
-        return;
     }
 
     public function getBaseUnitQuantity($collection, $data)

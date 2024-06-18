@@ -47,8 +47,7 @@ class CurrencyController extends BaseController
         try {
             $this->repo->delete($id);
         } catch (Exception $e) {
-            return back()
-                ->with('error', $e->getMessage());
+            return back()->with('error', $e->getMessage());
         }
         return redirect()
             ->route('currency.all')
@@ -57,12 +56,12 @@ class CurrencyController extends BaseController
 
     public function setDefault(Request $request, $id)
     {
-        $default = $this->repo->find($id);
-        $data = $request->except('_token');
-        foreach($data as $key=>$value){
-            $this->repo->find(explode('-',$key)[0])->update(['is_default'=>0,'rate_to_default'=>$value]);
+        foreach ($request->except('_token') as $key => $value) {
+            if ($value > 0) {
+                $this->repo->find($key)->update(['is_default' => 0, 'rate_to_default' => $value]);
+            }
         }
-        $default->update(['is_default'=>1,'rate_to_default'=>1]);
+        $this->repo->find($id)->update(['is_default' => 1, 'rate_to_default' => 1]);
         return back()->with('success', 'Default currency updated');
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Bill;
+use App\Models\Currency;
 use App\Models\Inventory;
 use App\Models\Material;
 use App\Models\Unit;
@@ -21,7 +22,6 @@ class CreateManufacturingsTable extends Migration
             $table->id();
             $table->foreignIdFor(Material::class);
             $table->foreignIdFor(Inventory::class);
-            $table->foreignIdFor(Bill::class);
             $table->foreignIdFor(Unit::class);
             $table->integer('quantity');
             $table->integer('cost');

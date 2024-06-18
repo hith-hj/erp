@@ -25,17 +25,20 @@ class SaleDataTable extends DataTable
                 $lang = __('locale.View');
                 return "<a href='/sale/show/$sale->id'>$lang</a>";
             })
-            ->addColumn('material', function ($sale) {
-                return $sale->material?->name;
+            ->addColumn('client', function ($sale) {
+                return $sale->client?->fullName;
             })
-            ->addColumn('unit', function ($sale) {
-                return $sale->unit?->name;
+            ->addColumn('created_by', function ($sale) {
+                return $sale->user?->username;
+            })
+            ->addColumn('materials', function ($sale) {
+                return $sale->materials()?->count();
+            })
+            ->addColumn('total', function ($sale) {
+                return $sale->materials()?->sum('cost');
             })
             ->addColumn('bill', function ($sale) {
                 return $sale->bill?->serial ?? '';
-            })
-            ->addColumn('currency', function ($sale) {
-                return $sale->currency?->name ?? __('locale.None');
             });
     }
 
@@ -87,12 +90,11 @@ class SaleDataTable extends DataTable
     {
         return [
             Column::make('id'),
-            Column::make('material')->title(__('locale.Material')),
-            Column::make('quantity')->title(__('locale.Quantity')),
-            Column::make('unit')->title(__('locale.Unit')),
-            Column::make('cost')->title(__('locale.Cost')),
-            Column::make('currency')->title(__('locale.Currency')),
+            Column::make('client')->title(__('locale.Client')),
+            Column::make('materials')->title(__('locale.Materials')),
+            Column::make('total')->title(__('locale.Total')),
             Column::make('bill')->title(__('locale.Bill')),
+            Column::make('created_by')->title(__('locale.User')),
             Column::make('created_at')->title(__('locale.Created at')),
             Column::computed('action')
                 ->exportable(false)

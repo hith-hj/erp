@@ -12,17 +12,22 @@ class Manufacturing extends Model
         'inventory_id',
         'material_id',
         'quantity',
-        'bill_id',
         'unit_id',
         'cost',
     ];
 
     public function bill()
     {
-        return $this->belongsTo(Bill::class);
+        return $this->hasOne(Bill::class, 'billable_id')
+            ->where('billable_type', get_class($this));
     }
 
     public function material()
+    {
+        return $this->belongsTo(Material::class);
+    }
+    
+    public function materials()
     {
         return $this->belongsTo(Material::class);
     }

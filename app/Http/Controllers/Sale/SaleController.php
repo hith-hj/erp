@@ -38,36 +38,75 @@ class SaleController extends BaseController
     {
         SaleValidator::validate($request);
         try {
-            $this->repo->storeSale($request);
+            $sale = $this->repo->storeSale($request);
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }
         return redirect()
-            ->route('bill.show', ['id' => $request->bill_id])
+            ->route('sale.show', ['id' => $sale->id])
             ->with('success', 'Sale Created');
     }
 
-    public function delete(Sale $sale)
+    public function addMaterial(Request $request, $id)
     {
-        $this->repo->restorInventoryMaterial($sale->id);
-        $this->repo->delete($sale->id);
-        return redirect()->route('bill.show', ['id' => $sale->bill_id]);
+        SaleValidator::materials($request);
+        try {
+            $this->repo->updateSale($request, $id);
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
+        return back()->with('success', 'Material Added');
     }
 
-    public function storeToBill(Request $request)
+    public function deleteMaterial(Request $request, $id)
     {
-        SaleValidator::validate($request);
         try {
-            $this->repo->updateInventoryMaterial($request);
-            $sale = $this->repo->add($request->all());
+            $this->repo->editSale($request, $id);
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
+        return back()->with('success', 'Material Removed');
+    }
+
+    public function delete($id)
+    {
+        try {
+            $this->repo->delete($id);
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
+        return redirect()
+            ->route('sale.all')
+            ->with('success', 'Sale deleted');
+    }
+
+    public function save($sale_id)
+    {
+        try {
+            $this->repo->save($sale_id);
         } catch (\Throwable $th) {
             return back()->with('error', $th->getMessage());
         }
+        return back()->with('success', 'Sale Saved');
     }
 
-    public function deleteFromBill($sale_id)
+    public function audit($sale_id)
     {
-        $this->repo->restorInventoryMaterial($sale_id);
-        return $this->repo->delete($sale_id);
+        try {
+            $this->repo->audit($sale_id);
+        } catch (\Throwable $th) {
+            return back()->with('error', $th->getMessage());
+        }
+        return back()->with('success', 'Sale Audited');
+    }
+
+    public function check($sale_id)
+    {
+        try {
+            $this->repo->check($sale_id);
+        } catch (\Throwable $th) {
+            return back()->with('error', $th->getMessage());
+        }
+        return back()->with('success', 'Sale Checked');
     }
 }

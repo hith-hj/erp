@@ -22,20 +22,13 @@ class CreateSalesTable extends Migration
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
-            $table->integer('quantity');
-            $table->integer('cost');
+            $table->foreignIdFor(Inventory::class)->nullable();
+            $table->foreignIdFor(User::class,'created_by');
+            $table->foreignIdFor(Client::class,);
+            $table->smallInteger('level')->default(0);
+            $table->smallInteger('mark')->default(0);
             $table->integer('discount')->nullable();
             $table->string('note')->nullable();
-            $table->smallInteger('mark')->default(0);
-            $table->smallInteger('level')->default(0);
-            $table->foreignIdFor(Inventory::class);
-            $table->foreignIdFor(Material::class);
-            $table->foreignIdFor(Unit::class);
-            $table->foreignIdFor(Bill::class);
-            $table->foreignIdFor(User::class,'created_by');
-            $table->foreignIdFor(Currency::class);
-            $table->foreignIdFor(Currency::class,'rate_to');
-            $table->foreignIdFor(Client::class,);
             $table->timestamps();
             $table->softDeletes();
         });

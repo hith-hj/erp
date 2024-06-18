@@ -85,7 +85,7 @@
                                             <td>{{$loop->index + 1}}</td>
                                             <td>{{ $value->name }}</td>
                                             <td>
-                                                <input type="number" name="{{$value->id.'-'.$value->name}}" 
+                                                <input type="number" name="{{$value->id}}" 
                                                     step="0.01" min="0.01" max="100000"
                                                     class="form-control" required>
                                             </td>

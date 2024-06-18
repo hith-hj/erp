@@ -26,7 +26,7 @@ class PurchaseController extends BaseController
 
     public function show($id)
     {
-        return view('main.purchase.show',$this->repo->getShowPayload($id));
+        return view('main.purchase.show', $this->repo->getShowPayload($id));
     }
 
     public function create()
@@ -37,7 +37,6 @@ class PurchaseController extends BaseController
     public function store(Request $request)
     {
         PurchaseValidator::validate($request);
-        // $this->repo->checkForDuplication($request->purchases);
         $purchase = $this->repo->storePurchase($request);
         return redirect()
             ->route('purchase.show', ['id' => $purchase->id])
@@ -46,14 +45,35 @@ class PurchaseController extends BaseController
 
     public function delete(int $id)
     {
-        try{
+        try {
             $this->repo->delete($id);
-        }catch(Exception $e){
-            return back()->with('error',$e->getMessage());
+        } catch (Exception $e) {
+            return back()->with('error', $e->getMessage());
         }
         return redirect()
             ->route('purchase.all')
             ->with('success', 'Purchase deleted');
+    }
+
+    public function addMaterial(Request $request, $id)
+    {
+        PurchaseValidator::purchases($request);
+        try {
+            $this->repo->updatePurchase($request, $id);
+        } catch (\Exception $e) {
+            return back()->with('success', $e->getMessage());
+        }
+        return back()->with('success', 'Material Added');
+    }
+
+    public function deleteMaterial(Request $request, $id)
+    {
+        try {
+            $this->repo->editPurchase($request, $id);
+        } catch (\Exception $e) {
+            return back()->with('success', $e->getMessage());
+        }
+        return back()->with('success', 'Material Removed');
     }
 
     public function save($purchase_id)
@@ -84,16 +104,5 @@ class PurchaseController extends BaseController
             return back()->with('error', $th->getMessage());
         }
         return back()->with('success', 'Purchase Checked');
-    }
-
-    public function addMaterialToPurchase(Request $request, $id){
-        PurchaseValidator::purchases($request);
-        $this->repo->updatePurchase($request, $id);
-        return back()->with('success', 'Material Added');
-    }
-    
-    public function deleteMaterialFromPurchase(Request $request, $id){
-        $this->repo->editPurchase($request, $id);
-        return back()->with('success', 'Material Removed');
     }
 }
