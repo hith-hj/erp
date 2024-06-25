@@ -48,12 +48,7 @@ class PurchaseRepository extends BaseRepository
                 columns: ['id', 'name', 'is_default']
             ) ?? [],
 
-            'currencies' => $this->getter(
-                model: 'Currency',
-                callable: [
-                    'select' => ['id', 'name', 'code', 'is_default', 'rate_to_default'],
-                ],
-            ) ?? [],
+            'currencies' => $this->getter('Currency') ?? [],
 
             'materials' => $this->getter(
                 model: 'Material',

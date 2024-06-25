@@ -178,7 +178,6 @@ Route::group(['middleware' => 'auth',], function () {
         Route::get('create', 'create')->name('manufacturing.create');
         Route::post('store', 'store')->name('manufacturing.store');
         Route::delete('delete/{manufacturing}', 'delete')->name('manufacturing.delete');
-        Route::get('bill/show/{manufacturing}', 'billShow')->name('manufacturing.bill.show');
     });
 
     Route::group(['controller' => HomeController::class,], function () {

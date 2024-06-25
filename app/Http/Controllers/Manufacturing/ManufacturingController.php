@@ -36,11 +36,11 @@ class ManufacturingController extends Controller
     {
         try {
             $manufuctering = $this->repo->storeManufacturig($request);
-        } catch (Exception $th) {
-            return redirect()->back()->with('error', $th->getMessage());
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
         }
         return redirect()
-            ->route('manufacturing.show', ['id' => $manufuctering->id])
+            ->route('manufacturing.show', ['manufuctering' => $manufuctering->id])
             ->with('success', 'manufacturing created');
     }
 }

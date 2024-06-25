@@ -29,7 +29,7 @@ class Manufacturing extends Model
     
     public function materials()
     {
-        return $this->belongsTo(Material::class);
+        return $this->hasMany(ManufactureModel::class, 'manufactured_id', 'material_id');
     }
 
     public function inventory()

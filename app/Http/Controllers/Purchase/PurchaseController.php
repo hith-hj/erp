@@ -61,7 +61,7 @@ class PurchaseController extends BaseController
         try {
             $this->repo->updatePurchase($request, $id);
         } catch (\Exception $e) {
-            return back()->with('success', $e->getMessage());
+            return back()->with('error', $e->getMessage());
         }
         return back()->with('success', 'Material Added');
     }
@@ -71,7 +71,7 @@ class PurchaseController extends BaseController
         try {
             $this->repo->editPurchase($request, $id);
         } catch (\Exception $e) {
-            return back()->with('success', $e->getMessage());
+            return back()->with('error', $e->getMessage());
         }
         return back()->with('success', 'Material Removed');
     }
