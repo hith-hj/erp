@@ -384,8 +384,7 @@ return [
     "AccountTypes" => 'Account Types',
     "AccountType" => "Account Type",
     "New AccountType" => "New Account Type",
-
-
-
+    "Basic info" => "Baisc information",
+    "Rows count" => "Rows count",
 
 ];

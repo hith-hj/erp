@@ -1,7 +1,7 @@
 <?php
 
 
-use App\Models\Bill;
+use App\Models\Currency;
 use App\Models\Inventory;
 use App\Models\User;
 use App\Models\Vendor;
@@ -23,6 +23,9 @@ class CreatePurchasesTable extends Migration
             $table->foreignIdFor(Inventory::class)->nullable();
             $table->foreignIdFor(User::class,'created_by');
             $table->foreignIdFor(Vendor::class);
+            $table->foreignIdFor(Currency::class);
+            $table->foreignIdFor(Currency::class,'rate_to');
+            $table->integer('rate');
             $table->smallInteger('mark')->default(0);
             $table->smallInteger('level')->default(0);
             $table->integer('discount')->nullable();

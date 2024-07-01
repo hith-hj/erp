@@ -13,28 +13,16 @@ class MaterialPurchase extends Pivot
     protected $fillable = [
         'purchase_id',
         'material_id',
-        'currency_id',
         'quantity',
         'unit_id',
-        'rate_to',
-        'rate',
         'cost',
     ];
 
-    protected $with = ['unit', 'currency', 'rateTo'];
+    protected $with = ['unit'];
 
     public function unit()
     {
         return $this->belongsTo(Unit::class);
     }
     
-    public function currency()
-    {
-        return $this->belongsTo(Currency::class);
-    }
-    
-    public function rateTo()
-    {
-        return $this->belongsTo(Currency::class,'rate_to');
-    }
 }

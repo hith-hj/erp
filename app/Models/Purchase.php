@@ -11,10 +11,13 @@ class Purchase extends Model
     use HasFactory, SoftDeletes;
     protected $fillable = [
         'inventory_id',
+        'currency_id',
         'created_by',
         'vendor_id',
         'discount',
+        'rate_to',
         'level',
+        'rate',
         'cost',
         'note',
         'mark',
@@ -30,7 +33,7 @@ class Purchase extends Model
         return $this->belongsToMany(Material::class)
             ->using(MaterialPurchase::class)
             ->withTimestamps()
-            ->withPivot(['quantity', 'unit_id', 'currency_id', 'rate_to', 'rate', 'cost']);
+            ->withPivot(['quantity', 'unit_id',  'cost']);
     }
 
     public function bill()
@@ -47,5 +50,15 @@ class Purchase extends Model
     public function vendor()
     {
         return $this->belongsTo(Vendor::class);
+    }
+
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class);
+    }
+    
+    public function rateTo()
+    {
+        return $this->belongsTo(Currency::class,'rate_to');
     }
 }

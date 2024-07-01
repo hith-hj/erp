@@ -22,14 +22,8 @@ class PurchaseRepository extends BaseRepository
         return [
             'purchase' => $this->findWith(
                 id: $id,
-                relation: ['inventory', 'materials', 'user', 'vendor', 'bill']
+                relation: ['inventory', 'materials', 'user', 'vendor', 'bill', 'currency', 'rateTo']
             ),
-            'currencies' => $this->getter(
-                model: 'Currency',
-                callable: [
-                    'select' => ['id', 'name', 'code', 'is_default', 'rate_to_default'],
-                ],
-            ) ?? [],
             'materials' => $this->getter(
                 model: 'Material',
                 callable: [
@@ -79,6 +73,20 @@ class PurchaseRepository extends BaseRepository
                     getter: 'first'
                 )?->id ?? 1;
         }
+        $currency = $this->getter(
+            model: 'Currency',
+            getter: 'first',
+            callable: ['where' => [['id', $data['currency_id']]],]
+        );
+        if (!$currency->is_default) {
+            $defaultCurrency = $this->getter(
+                model: 'Currency',
+                getter: 'first',
+                callable: ['where' => [['is_default', 1]]]
+            );
+        }
+        $data['rate_to'] = $defaultCurrency->id ?? $currency->id;
+        $data['rate'] = $currency->rate_to_default;
         $purchase = $this->add($data);
         foreach ($request->purchases as $material) {
             $this->addMaterialToPurchase($purchase, $material);
@@ -119,29 +127,12 @@ class PurchaseRepository extends BaseRepository
             $unit = $item?->units()->wherePivot('is_default', 1)->first();
             $material['unit_id'] = $unit->id ?? 1;
         }
-        $currency = $this->getter(
-            model: 'Currency',
-            getter: 'first',
-            callable: ['where' => [['id', $material['currency_id']]],]
-        );
-        if (!$currency->is_default) {
-            $defaultCurrency = $this->getter(
-                model: 'Currency',
-                getter: 'first',
-                callable: ['where' => [['is_default', 1]]]
-            );
-        }
-        $material['rate_to'] = $defaultCurrency->id ?? $currency->id;
-        $material['rate'] = $currency->rate_to_default;
 
         $purchase->materials()
             ->attach($material['material_id'], [
-                'currency_id' => $material['currency_id'],
                 'quantity' => $material['quantity'],
                 'unit_id' => $material['unit_id'],
                 'cost' => $material['cost'],
-                'rate_to' => $material['rate_to'],
-                'rate' => $material['rate'],
             ]);
         return $this->updateInventory($material);
     }

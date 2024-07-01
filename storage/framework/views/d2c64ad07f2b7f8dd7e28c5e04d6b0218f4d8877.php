@@ -4,11 +4,21 @@
     <?php echo e(__('locale.New Purchase')); ?>
 
 <?php $__env->stopSection(); ?>
+<?php $__env->startSection('page-style'); ?>
+<style type="text/css">
+    td{
+        padding:0 !important;
+        width:20rem !important;;
+    }
+</style>
+<?php $__env->stopSection(); ?>
 <?php $__env->startSection('content'); ?>
 <?php echo $__env->make('utils.purchase_form', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('page-script'); ?>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.repeater/1.2.1/jquery.repeater.min.js"></script>
+<script src="https://www.jqueryscript.net/demo/Navigate-Table-Arrow-Keys/dist/arrow-table.js"></script>
+
 <script>
     $(document).ready(function() {
         $(function() {
@@ -20,16 +30,21 @@
                     $(this).slideDown();
                 },
                 hide: function(deleteElement) {
-                    if (confirm(
-                            "<?php echo e(__('Are you sure you want to delete this element?')); ?>"
-                        )) {
-                        $(this).slideUp(deleteElement);
-                    }
+                    $(this).slideUp(deleteElement);
                 },
-
+            });
+            addRowX($('#rowCount').val());
+            $('.table').arrowTable({
+                focusTarget: 'input, textarea, select',
+                listenTarget: 'input, select',
             });
         });
     });
+    function addRowX(count=1){
+        for(let i = 0;i<count;i++){
+            $('.btn-addRow').click();
+        }
+    }
 </script>
 <?php $__env->stopSection(); ?>
 

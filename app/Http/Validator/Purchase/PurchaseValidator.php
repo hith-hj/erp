@@ -17,13 +17,14 @@ class PurchaseValidator
       'vendor_id' => ['required', 'exists:vendors,id'],
       'discount' => ['nullable', 'numeric', 'between:1,100'],
       'inventory_id' => ['nullable', 'exists:inventories,id'],
+      'currency_id' => ['required', 'exists:currencies,id'],
       'purchases' => ['required', 'array', 'min:1'],
       'purchases.*.total' => ['required', 'numeric'],
       'purchases.*.cost' => ['required', 'numeric', 'min:1'],
       'purchases.*.unit_id' => ['nullable', 'exists:units,id'],
       'purchases.*.quantity' => ['required', 'numeric', 'min:1'],
       'purchases.*.material_id' => ['required', 'exists:materials,id'],
-      'purchases.*.currency_id' => ['required', 'exists:currencies,id'],
+      // 'purchases.*.currency_id' => ['required', 'exists:currencies,id'],
     ]);
   }
 
@@ -36,7 +37,6 @@ class PurchaseValidator
       'purchases.*.unit_id' => ['nullable', 'exists:units,id'],
       'purchases.*.quantity' => ['required', 'numeric', 'min:1'],
       'purchases.*.material_id' => ['required', 'exists:materials,id'],
-      'purchases.*.currency_id' => ['required', 'exists:currencies,id'],
     ]);
   }
 }

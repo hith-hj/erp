@@ -10,9 +10,9 @@
         <div class="row">
             <div class="col-12">
                 <div class="card mb-4">
-                    <div class="card-header">
+                    <div class="card-header p-1">
                         <div class="card-head row w-100">
-                            <div class="col-3">
+                            <div class="col-2">
                                 <button
                                     class="btn btn-sm  btn-primary w-100 <?php echo e($purchase->bill->status == 0 ?: 'disabled'); ?>"
                                     data-bs-toggle="modal" type="button" data-bs-target="#addItem">
@@ -77,7 +77,7 @@
                                 </form>
                             </div>
 
-                            <div class="col-3 row">
+                            <div class="col-4 row">
                                 <div class="col-4">
                                     <?php
                                         $color = match ($purchase->bill->status) {
@@ -92,10 +92,22 @@
 
                                     </span>
                                 </div>
+                                <div class="col-4">
+                                    <span class="badge badge-light-info ">
+                                        <?php echo e(__('locale.Mark')); ?> <?php echo e($purchase->mark); ?>
+
+                                    </span>
+                                </div>
+                                <div class="col-4">
+                                    <span class="badge badge-light-info ">
+                                        <?php echo e(__('locale.Level')); ?> <?php echo e($purchase->level); ?>
+
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body px-1">
                         <div class="table-responsive" style="min-height:5rem">
                             <table class="table table-sm">
                                 <thead>
@@ -105,9 +117,9 @@
                                         <th><?php echo e(__('locale.Vendor')); ?></th>
                                         <th><?php echo e(__('locale.Inventory')); ?></th>
                                         <th><?php echo e(__('locale.Discount')); ?></th>
-                                        <th><?php echo e(__('locale.Note')); ?></th>
-                                        <th><?php echo e(__('locale.Mark')); ?></th>
-                                        <th><?php echo e(__('locale.Level')); ?></th>
+                                        <th><?php echo e(__('locale.Currency')); ?></th>
+                                        <th><?php echo e(__('locale.Rate')); ?></th>
+                                        <th><?php echo e(__('locale.Default')); ?></th>
                                         <th><?php echo e(__('locale.User')); ?></th>
                                         <th><?php echo e(__('locale.Created at')); ?></th>
                                     </tr>
@@ -119,9 +131,9 @@
                                         <td><?php echo e($purchase->vendor?->fullName); ?></td>
                                         <td><?php echo e($purchase->inventory?->name); ?></td>
                                         <td><?php echo e($purchase->discount); ?></td>
-                                        <td><?php echo e($purchase->note); ?></td>
-                                        <td><?php echo e($purchase->mark); ?></td>
-                                        <td><?php echo e($purchase->level); ?></td>
+                                        <td><?php echo e($purchase->currency->name); ?></td>
+                                        <td><?php echo e($purchase->rate); ?></td>
+                                        <td><?php echo e($purchase->rateTo->name); ?></td>
                                         <td><?php echo e($purchase->user?->username); ?></td>
                                         <td><?php echo e($purchase->created_at->format('Y-m-d')); ?></td>
                                     </tr>
@@ -137,9 +149,6 @@
                                         <th><?php echo e(__('locale.Quantity')); ?></th>
                                         <th><?php echo e(__('locale.Unit')); ?></th>
                                         <th><?php echo e(__('locale.Cost')); ?></th>
-                                        <th><?php echo e(__('locale.Currency')); ?></th>
-                                        <th><?php echo e(__('locale.Rate')); ?></th>
-                                        <th><?php echo e(__('locale.Rate_to')); ?></th>
                                         <th><?php echo e(__('locale.Action')); ?></th>
                                     </tr>
                                 </thead>
@@ -151,9 +160,6 @@
                                             <td><?php echo e($material->pivot->quantity); ?></td>
                                             <td><?php echo e($material->pivot->unit?->name); ?></td>
                                             <td><?php echo e($material->pivot->cost); ?></td>
-                                            <td><?php echo e($material->pivot->currency?->name); ?></td>
-                                            <td><?php echo e($material->pivot->rate); ?></td>
-                                            <td><?php echo e($material->pivot->rateTo?->name); ?></td>
                                             <td>
                                                 <div class="dropdown">
                                                     <button type="button"
@@ -171,7 +177,8 @@
                                                             action="<?php echo e(route('purchase.deleteMaterial', ['id' => $purchase->id])); ?>"
                                                             method="POST">
                                                             <?php echo csrf_field(); ?> <?php echo method_field('delete'); ?>
-                                                            <input type="hidden" name="material_id" value="<?php echo e($material->id); ?>">
+                                                            <input type="hidden" name="material_id"
+                                                                value="<?php echo e($material->id); ?>">
                                                         </form>
                                                     </div>
                                                 </div>
@@ -182,6 +189,10 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div class="d-flex gap-1 pt-1">
+                            <span><?php echo e(__('locale.Note')); ?> :</span>
+                            <p class="m-0"><?php echo e($purchase->note); ?></p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -189,27 +200,28 @@
     </section>
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('page-script'); ?>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.repeater/1.2.1/jquery.repeater.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $(function() {
-            'use strict';
-            $('.items-repeater').repeater({
-                isFirstItemUndeletable: true,
-                initEmpty: false,
-                show: function() {
-                    $(this).slideDown();
-                },
-                hide: function(deleteElement) {
-                    if (confirm(
-                            "<?php echo e(__('Are you sure you want to delete this element?')); ?>"
-                        )) {
-                        $(this).slideUp(deleteElement);
-                    }
-                },
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.repeater/1.2.1/jquery.repeater.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $(function() {
+                'use strict';
+                $('.items-repeater').repeater({
+                    isFirstItemUndeletable: true,
+                    initEmpty: false,
+                    show: function() {
+                        $(this).slideDown();
+                    },
+                    hide: function(deleteElement) {
+                        if (confirm(
+                                "<?php echo e(__('Are you sure you want to delete this element?')); ?>"
+                            )) {
+                            $(this).slideUp(deleteElement);
+                        }
+                    },
+                });
             });
         });
-    });
-</script>
+    </script>
 <?php $__env->stopSection(); ?>
+
 <?php echo $__env->make('layouts.tableLayout', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\Users\96393\Desktop\y1s\erp_v1\resources\views/main/purchase/show.blade.php ENDPATH**/ ?>

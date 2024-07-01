@@ -188,6 +188,6 @@ return [
     "AccountTypes" => 'انواع الحسابات',
     "AccountType" => "نوع حساب",
     "New AccountType" => "نوع حساب جديد",
-
-    
+    "Basic info" => "معلومات اساسية",
+    "Rows count" => "عدد الاسطر",
 ];
