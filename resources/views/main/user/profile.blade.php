@@ -104,7 +104,10 @@
                     @method('delete')</form>
                 <div class="card-body ">
                     <button type="submit" class="btn btn-danger deactivate-account my-1"
-                        onclick="document.getElementById('deleteUserForm').submit();">{{ __('locale.Delete Account') }}</button>
+                        onclick="
+                        if(confirm('Are you sure you want to delete your Account?'))
+                        {  document.getElementById('deleteUserForm').submit();  }
+                            ">{{ __('locale.Delete Account') }}</button>
                 </div>
             </div>
         </div>

@@ -59,6 +59,9 @@ trait UserLoginTrait
     public function isDeviceTokenMatch(Request $request)
     {   
         $user = User::where('email',$request->email)->first();
+        if(!$user || is_null($user)){
+            return back()->with('error','User not found');
+        }
         $token = $this->GenerateDeviceToken($request);
         if($user->device_token == 'pindding'){
             $user->device_token = Hash::make($token);
