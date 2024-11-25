@@ -120,6 +120,7 @@
                                             <th>{{ __('locale.Quantity') }}</th>
                                             <th>{{ __('locale.Unit') }}</th>
                                             <th>{{ __('locale.Cost') }}</th>
+                                            <th>{{ __('locale.Total') }}</th>
                                             <th>{{ __('locale.Currency') }}</th>
                                             <th>{{ __('locale.Created at') }}</th>
                                         </tr>
@@ -133,6 +134,7 @@
                                                 <td>{{ $model->quantity }}</td>
                                                 <td>{{ $model->unit?->name }}</td>
                                                 <td>{{ $model->cost }}</td>
+                                                <td>{{ $model->cost * $model->quantity }}</td>
                                                 <td>{{ $model->currency?->name }}</td>
                                                 <td>{{ $model->created_at->format('Y-m-d') }}</td>
                                             </tr>

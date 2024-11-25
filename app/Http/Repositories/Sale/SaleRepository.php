@@ -62,6 +62,20 @@ class SaleRepository extends BaseRepository
                     ]
                 )?->id ?? 1;
         }
+        $currency = $this->getter(
+            model: 'Currency',
+            getter: 'first',
+            callable: ['where' => [['id', $data['currency_id']]],]
+        );
+        if (!$currency->is_default) {
+            $defaultCurrency = $this->getter(
+                model: 'Currency',
+                getter: 'first',
+                callable: ['where' => [['is_default', 1]]]
+            );
+        }
+        $data['rate_to'] = $defaultCurrency->id ?? $currency->id;
+        $data['rate'] = $currency->rate_to_default;
         $sale = $this->add($data);
         foreach ($request->sales as $material) {
             $this->addMaterialToSale($sale, $material);
@@ -94,12 +108,9 @@ class SaleRepository extends BaseRepository
         $this->updateInventory($material);
 
         return $sale->materials()->attach($material['material_id'], [
-            'currency_id' => $material['currency_id'],
             'quantity' => $material['quantity'],
             'unit_id' => $material['unit_id'],
             'cost' => $material['cost'],
-            'rate_to' => $material['rate_to'],
-            'rate' => $material['rate'],
         ]);
     }
 
@@ -118,20 +129,6 @@ class SaleRepository extends BaseRepository
             $unit = $item->units()->wherePivot('is_default', 1)->first();
             $material['unit_id'] = $unit->id ?? 1;
         }
-        $currency = $this->getter(
-            model: 'Currency',
-            getter: 'first',
-            callable: ['where' => [['id', $material['currency_id']]],]
-        );
-        if (!$currency->is_default) {
-            $defaultCurrency = $this->getter(
-                model: 'Currency',
-                getter: 'first',
-                callable: ['where' => [['is_default', 1]]]
-            );
-        }
-        $material['rate_to'] = $defaultCurrency->id ?? $currency->id;
-        $material['rate'] = $currency->rate_to_default;
         return $material;
     }
 

@@ -91,12 +91,22 @@ class PurchaseRepository extends BaseRepository
         foreach ($request->purchases as $material) {
             $this->addMaterialToPurchase($purchase, $material);
         }
-        $purchase->bill()->create([
+        $bill = $purchase->bill()->create([
             'billable_id' => $purchase->id,
             'billable_type' => get_class($purchase),
             'serial' => Str::random(8),
             'status' => 0,
         ]);
+        // $cashier = isset($data['cashier_id']) ? $data['cashier_id'] : $this->getter('Cashier',[
+        //     'where' => [['is_default',1]],
+        // ],'first',columns:['id'])?->id;
+        // $bill->transaction()->create([
+        //     'cashier_id'=>$cashier,
+        //     'type'=>2,
+        //     'amount'=> $purchase->total(),
+        //     'remaining'=>0,
+        //     'created_by'=>$request->user()->id,
+        // ]);
         return $purchase;
     }
 

@@ -32,4 +32,8 @@ class Bill extends Model
             default => __('locale.None')
         };
     }
+
+    public function transaction(){
+        return $this->hasOne(Transaction::class);
+    }
 }

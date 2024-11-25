@@ -40,7 +40,7 @@ class ManufacturingController extends Controller
             return redirect()->back()->with('error', $e->getMessage());
         }
         return redirect()
-            ->route('manufacturing.show', ['manufuctering' => $manufuctering->id])
+            ->route('manufacturing.show', ['manufacturing' => $manufuctering->id])
             ->with('success', 'manufacturing created');
     }
 }

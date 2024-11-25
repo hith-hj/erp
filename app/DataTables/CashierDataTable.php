@@ -2,14 +2,14 @@
 
 namespace App\DataTables;
 
-use App\Models\Sale;
+use App\Models\Cashier;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Html\Editor\Editor;
 
-class SaleDataTable extends DataTable
+class CashierDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -21,28 +21,27 @@ class SaleDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->addColumn('action', function ($sale) {
-                $lang = __('locale.View');
-                return "<a href='/sale/show/$sale->id'>$lang</a>";
+            ->addColumn('action', function ($cashier) {
+                $view = __('locale.View');
+                $options = __('locale.Options');
+                return "
+                <div class='dropdown'>
+                    <button type='button' class='btn btn-sm dropdown-toggle hide-arrow py-0' data-bs-toggle='dropdown'>
+                        $options
+                    </button>
+                    <div class='dropdown-menu dropdown-menu-end'>
+                        <a class='dropdown-item' href='/cashier/show/$cashier->id'>
+                            <i data-feather='edit-2' class='me-50'></i>
+                            <span>$view</span>
+                        </a>
+                    </div>
+                </div>";
             })
-            ->addColumn('client', function ($sale) {
-                return $sale->client?->fullName;
+            ->addColumn('is_default', function($cashier){
+                return $cashier->is_default == 1 ? __('locale.Default') : '-';
             })
-            ->addColumn('created_by', function ($sale) {
-                return $sale->user?->username;
-            })
-            ->addColumn('materials', function ($sale) {
-                return $sale->materials()?->count();
-            })
-            ->addColumn('cost', function ($sale) {
-                // return $sale->materials()?->sum('cost');
-                return $sale->total();
-            })
-            ->addColumn('bill', function ($sale) {
-                return $sale->bill?->serial ?? '';
-            })
-            ->addColumn('created_at',function($sale){
-                return $sale->created_at->diffForHumans();
+            ->addColumn('created_at',function($cashier){
+                return $cashier->created_at->diffForHumans();
             })
             ;
     }
@@ -50,10 +49,10 @@ class SaleDataTable extends DataTable
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\Sale $model
+     * @param \App\Models\Cashier $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(Sale $model)
+    public function query(Cashier $model)
     {
         return $model->newQuery();
     }
@@ -66,7 +65,7 @@ class SaleDataTable extends DataTable
     public function html()
     {
         return $this->builder()
-            ->setTableId('sale-table')
+            ->setTableId('cashier-table')
             ->addTableClass('table-sm')
             ->columns($this->getColumns())
             ->minifiedAjax()
@@ -95,12 +94,10 @@ class SaleDataTable extends DataTable
     {
         return [
             Column::make('id'),
-            Column::make('client')->title(__('locale.Client')),
-            Column::make('materials')->title(__('locale.Materials')),
-            Column::make('cost')->title(__('locale.Cost')),
-            Column::make('bill')->title(__('locale.Bill')),
-            Column::make('created_by')->title(__('locale.User')),
-            Column::make('created_at')->title(__('locale.Created at')),
+            Column::make('name'),
+            Column::make('total'),
+            Column::make('is_default'),
+            Column::make('created_at'),
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)
@@ -116,6 +113,6 @@ class SaleDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'Sale_' . date('YmdHis');
+        return 'Cashier_' . date('YmdHis');
     }
 }

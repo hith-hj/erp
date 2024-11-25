@@ -131,6 +131,7 @@
                                             <th><?php echo e(__('locale.Quantity')); ?></th>
                                             <th><?php echo e(__('locale.Unit')); ?></th>
                                             <th><?php echo e(__('locale.Cost')); ?></th>
+                                            <th><?php echo e(__('locale.Total')); ?></th>
                                             <th><?php echo e(__('locale.Currency')); ?></th>
                                             <th><?php echo e(__('locale.Created at')); ?></th>
                                         </tr>
@@ -144,6 +145,7 @@
                                                 <td><?php echo e($model->quantity); ?></td>
                                                 <td><?php echo e($model->unit?->name); ?></td>
                                                 <td><?php echo e($model->cost); ?></td>
+                                                <td><?php echo e($model->cost * $model->quantity); ?></td>
                                                 <td><?php echo e($model->currency?->name); ?></td>
                                                 <td><?php echo e($model->created_at->format('Y-m-d')); ?></td>
                                             </tr>

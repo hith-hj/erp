@@ -25,6 +25,9 @@ class CreateSalesTable extends Migration
             $table->foreignIdFor(Inventory::class)->nullable();
             $table->foreignIdFor(User::class,'created_by');
             $table->foreignIdFor(Client::class,);
+            $table->foreignIdFor(Currency::class);
+            $table->foreignIdFor(Currency::class,'rate_to');
+            $table->integer('rate');
             $table->smallInteger('level')->default(0);
             $table->smallInteger('mark')->default(0);
             $table->integer('discount')->nullable();

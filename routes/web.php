@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccountType\AccountTypeController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Bill\BillController;
+use App\Http\Controllers\Cashier\CashierController;
 use App\Http\Controllers\Client\ClientController;
 use App\Http\Controllers\Currency\CurrencyController;
 use App\Http\Controllers\Expense\ExpenseController;
@@ -111,7 +112,7 @@ Route::group(['middleware' => 'auth',], function () {
         'controller' => BillController::class
     ], function () {
         Route::get('all', 'index')->name('bill.all');
-        
+        Route::get('show/{id}', 'show')->name('bill.show');        
     });
 
     Route::group([
@@ -178,6 +179,21 @@ Route::group(['middleware' => 'auth',], function () {
         Route::get('create', 'create')->name('manufacturing.create');
         Route::post('store', 'store')->name('manufacturing.store');
         Route::delete('delete/{manufacturing}', 'delete')->name('manufacturing.delete');
+    });
+
+    Route::group([
+        'prefix' => 'cashier',
+        'controller' => CashierController::class
+    ], function () {
+        Route::get('all', 'index')->name('cashier.all');
+        Route::get('show/{cashier}', 'show')->name('cashier.show');
+        Route::get('create', 'create')->name('cashier.create');
+        Route::post('store', 'store')->name('cashier.store');
+        Route::delete('delete/{cashier}', 'delete')->name('cashier.delete');
+        Route::post('setDefault/{cashier}','setDefault')->name('cashier.setDefault');
+        Route::post('transaction/{cashier}','transaction')->name('cashier.transaction');
+        Route::post('transfer/{transaction}','transfer')->name('cashier.transfer');
+        Route::post('credits','credits')->name('cashier.credits');
     });
 
     Route::group(['controller' => HomeController::class,], function () {

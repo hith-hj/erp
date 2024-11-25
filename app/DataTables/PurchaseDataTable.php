@@ -28,8 +28,9 @@ class PurchaseDataTable extends DataTable
             ->addColumn('materials', function ($purchase) {
                 return $purchase->materials()->count();
             })
-            ->addColumn('total', function ($purchase) {
-                return $purchase->materials()->sum('cost');
+            ->addColumn('cost', function ($purchase) {
+                // return $purchase->materials()->sum('cost');
+                return $purchase->total();
             })
             ->addColumn('vendor', function ($purchase) {
                 return $purchase->vendor?->fullName;
@@ -39,6 +40,9 @@ class PurchaseDataTable extends DataTable
             })
             ->addColumn('bill', function ($purchase) {
                 return $purchase->bill?->serial;
+            })
+            ->addColumn('created_by', function ($sale) {
+                return $sale->user?->username;
             });
     }
 
@@ -92,8 +96,9 @@ class PurchaseDataTable extends DataTable
             Column::make('id'),
             Column::make('vendor')->title(__('locale.Vendor')),
             Column::make('materials')->title(__('locale.Materials')),
-            Column::make('total')->title(__('locale.Total')),
+            Column::make('cost')->title(__('locale.Cost')),
             Column::make('bill')->title(__('locale.Bill')),
+            Column::make('created_by')->title(__('locale.User')),
             Column::make('created_at')->title(__('locale.Created at')),
             Column::computed('action')
                 ->title(__('locale.Action'))

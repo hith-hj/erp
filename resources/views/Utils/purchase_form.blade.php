@@ -118,6 +118,7 @@
                 </div>
             </div>
         </div>
+
         <div class="items-repeater">
             <button type="button" data-repeater-create hidden class="btn-addRow"></button>
             <div class="card mb-1">
@@ -136,8 +137,12 @@
                     </h4>
                     <div class="d-flex align-items-center justify-content-end">
                         <h5 class="m-0">{{ __('locale.Rows count') }}</h5>
-                        <input type="number" id="rowCount" min="1" value="10"
-                            class="w-25 form-control form-control-sm mx-1" onchange ="addRowX($('#rowCount').val())">
+                        <input type="number" id="rowCount" min="1" value="5"
+                            class="w-25 form-control form-control-sm mx-1" onkeypress ="
+                            if(event.which == 13) {
+                                event.preventDefault();
+                                addRowX($(this).val());
+                            }">
                         <button type="button" class="btn btn-primary btn-sm" onclick="addRowX($('#rowCount').val())">
                             <i data-feather="plus"></i>
                         </button>
@@ -148,28 +153,36 @@
                         <thead class="">
                             <tr>
                                 <th>{{ __('locale.Materials') }}</th>
-                                <th>{{ __('locale.Quantity') }}</th>
                                 <th>{{ __('locale.Unit') }}</th>
+                                <th>{{ __('locale.Quantity') }}</th>
                                 <th>{{ __('locale.Cost') }}</th>
                                 <th>{{ __('locale.Total') }}</th>
                                 <th class="text-center"> - </th>
                             </tr>
                         </thead>
-                        <tbody data-repeater-list="purchases">
+                        <tbody data-repeater-list="purchases" id="purchase_items_list" onkeydown="
+                            if(event.which == 13) {
+                                event.preventDefault();
+                            }">
                             <tr data-repeater-item
                                 x-data='{
-                            material_id:0,
-                            cost:0,
-                            total:0,
-                            materialUnits:{},
-                            setMaterialUnits(id){
-                                this.materialUnits = this.materials[id].units;
-                            },
-                            setTotal(value){
-                                this.total = 0;
-                                return this.total = (this.cost * this.currencies[this.currency_id].rate_to_default).toFixed(2);
-                            },
-                        }'>
+                                material_id:0,
+                                cost:0,
+                                total:0,
+                                quantity:0,
+                                materialUnits:{},
+                                setMaterialUnits(id){
+                                    this.materialUnits = this.materials[id].units;
+                                },
+                                setTotal(value){
+                                    if(this.currency_id == 0){
+                                        alert("Please choose Currency in basic information form");
+                                        return;
+                                    }
+                                    this.total = 0;
+                                    return this.total = this.quantity * (this.cost * this.currencies[this.currency_id].rate_to_default).toFixed(2);
+                                },
+                            }'>
                                 <td id="first">
                                     <select x-model="material_id" id="material_list" name="material_id" required
                                         class="form-select" @error('material_id') border-danger @enderror
@@ -201,7 +214,7 @@
                                     <input type="number" id="material_quantity" name="quantity"
                                         class="form-control @error('quantity') border-danger @enderror"
                                         placeholder="{{ __('locale.Quantity') }}" value="{{ old('quantity') }}"
-                                        required />
+                                        required x-model="quantity" />
                                 </td>
                                 <td>
                                     <input type="number" id="cost" name="cost"

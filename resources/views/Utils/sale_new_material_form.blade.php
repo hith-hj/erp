@@ -21,7 +21,7 @@
                 <div data-repeater-list="sales">
                     <div data-repeater-item class="row" x-data='{
                         material_id:0,
-                        currency_id:0,
+                        currency_id:{{$sale->currency_id}},
                         cost:0,
                         total:0,
                         limit:0,
@@ -37,9 +37,9 @@
                                 }
                             })
                         },
-                        setTotal(id){
+                        setTotal(){
                             this.total = 0;
-                            return this.total = (this.cost * this.currencies[id].rate_to_default).toFixed(2);
+                            return this.total = this.quantity * (this.cost * this.currencies[this.currency_id].rate_to_default).toFixed(2);
                         },
                     }'>
                         <div class="col-2">
@@ -61,19 +61,6 @@
                         </div>
                         <div class="col-2">
                             <div class="mb-1">
-                                <label class="form-label" for="material_quantity"
-                                    x-text="quantity > limit ?
-                                    'Limit Excieded':'{{ __('locale.Quantity') }}' ">
-                                </label>
-                                <input type="number" id="material_quantity" name="quantity"
-                                    class="form-control @error('quantity') border-danger @enderror"
-                                    placeholder="{{ __('locale.Quantity') }}" value="{{ old('quantity') }}"
-                                    required x-model="quantity"
-                                    :class="quantity > limit ? 'border-danger' : ''" />
-                            </div>
-                        </div>
-                        <div class="col-2">
-                            <div class="mb-1">
                                 <label class="form-label" for="units_list">{{ __('locale.Units') }}</label>
                                 <select id="units_list" name="unit_id"
                                     class="form-select @error('unit_id') border-danger @enderror ">
@@ -89,28 +76,26 @@
                         </div>
                         <div class="col-2">
                             <div class="mb-1">
+                                <label class="form-label" for="material_quantity"
+                                    x-text="quantity > limit ?
+                                    'Limit Excieded':'{{ __('locale.Quantity') }}' ">
+                                </label>
+                                <input type="number" id="material_quantity" name="quantity"
+                                    class="form-control @error('quantity') border-danger @enderror"
+                                    placeholder="{{ __('locale.Quantity') }}" value="{{ old('quantity') }}"
+                                    required x-model="quantity"
+                                    :class="quantity > limit ? 'border-danger' : ''" />
+                            </div>
+                        </div>
+                        
+                        <div class="col-2">
+                            <div class="mb-1">
                                 <label class="form-label" for="cost">{{ __('locale.Cost') }}</label>
                                 <input type="number" id="cost" name="cost"
                                     class="form-control @error('cost') border-danger @enderror"
                                     placeholder="{{ __('locale.Cost') }}" value="{{ old('cost') }}"
-                                    required x-model="cost" />
-                            </div>
-                        </div>
-                        <div class="col-2">
-                            <div class="mb-1">
-                                <label class="form-label" for="currency">{{ __('locale.Currency') }}</label>
-                                <select id="currency" name="currency_id" required x-model="currency_id"
-                                    x-init="$watch('currency_id', value => setTotal(value))"
-                                    class="form-select
-                                    @error('currency_id') border-danger @enderror">
-                                    <option value="">{{ __('locale.Chose') }}</option>
-                                    @foreach ($currencies as $currency)
-                                        <option value="{{ $currency->id }}"
-                                            @if (old('currency_id') == $currency->id) selected @endif>
-                                            {{ $currency->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                                    required x-model="cost" 
+                                    x-init="$watch('cost', value => setTotal(value))"/>
                             </div>
                         </div>
                         <div class="col-2">
@@ -121,22 +106,30 @@
                                     readonly value="" x-model="total" value="{{ old('total') }}" />
                             </div>
                         </div>
-                        <div class="col-12 px-1 pb-1">
-                            <button type="button" class="btn btn-danger w-100" data-repeater-delete>
-                                {{ __('locale.Delete') }}
-                            </button>
+                        <div class="col-2" data-repeater-delete>
+                            <div class="mb-1">
+                                <label for="" class="form-label">{{__('locale.Options')}}</label>
+                                <button type="button" class="btn btn-danger w-100">
+                                    {{ __('locale.Delete') }}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-12 pb-1">
-                    <button type="button" class="btn btn-outline-primary w-100" data-repeater-create>
-                        {{ __('locale.Add') }}
-                    </button>
+                <div class="col-12 row">
+                    <div class="col-6">
+                        <button type="button" class="btn btn-outline-primary w-100" data-repeater-create>
+                            {{ __('locale.Add') }}
+                        </button>
+                    </div>
+                    <div class="col-6">
+                        <button type="submit" class="btn btn-primary w-50">
+                            {{__('locale.Store')}}
+                        </button>
+                    </div>
                 </div>
             </div>            
-            <button type="submit" class="btn btn-primary mx-1">
-                {{__('locale.Store')}}
-            </button>
+            
         </div>
     </div>
 </form>

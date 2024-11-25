@@ -36,6 +36,14 @@ class Purchase extends Model
             ->withPivot(['quantity', 'unit_id',  'cost']);
     }
 
+    public function total(){
+        $total = 0;
+        foreach($this->materials as $material){
+            $total += $material->pivot->quantity * $material->pivot->cost;
+        }
+        return $total;
+    }
+
     public function bill()
     {
         return $this->hasOne(Bill::class, 'billable_id')

@@ -116,12 +116,10 @@
                                         <th><?php echo e(__('locale.Bill')); ?></th>
                                         <th><?php echo e(__('locale.Vendor')); ?></th>
                                         <th><?php echo e(__('locale.Inventory')); ?></th>
-                                        <th><?php echo e(__('locale.Discount')); ?></th>
                                         <th><?php echo e(__('locale.Currency')); ?></th>
-                                        <th><?php echo e(__('locale.Rate')); ?></th>
-                                        <th><?php echo e(__('locale.Default')); ?></th>
                                         <th><?php echo e(__('locale.User')); ?></th>
                                         <th><?php echo e(__('locale.Created at')); ?></th>
+                                        <th><?php echo e(__('locale.Discount')); ?></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -130,12 +128,10 @@
                                         <td><?php echo e($purchase->bill?->serial); ?></td>
                                         <td><?php echo e($purchase->vendor?->fullName); ?></td>
                                         <td><?php echo e($purchase->inventory?->name); ?></td>
-                                        <td><?php echo e($purchase->discount); ?></td>
                                         <td><?php echo e($purchase->currency->name); ?></td>
-                                        <td><?php echo e($purchase->rate); ?></td>
-                                        <td><?php echo e($purchase->rateTo->name); ?></td>
                                         <td><?php echo e($purchase->user?->username); ?></td>
                                         <td><?php echo e($purchase->created_at->format('Y-m-d')); ?></td>
+                                        <td><?php echo e($purchase->discount); ?></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -149,6 +145,7 @@
                                         <th><?php echo e(__('locale.Quantity')); ?></th>
                                         <th><?php echo e(__('locale.Unit')); ?></th>
                                         <th><?php echo e(__('locale.Cost')); ?></th>
+                                        <th><?php echo e(__('locale.Total')); ?></th>
                                         <th><?php echo e(__('locale.Action')); ?></th>
                                     </tr>
                                 </thead>
@@ -160,6 +157,7 @@
                                             <td><?php echo e($material->pivot->quantity); ?></td>
                                             <td><?php echo e($material->pivot->unit?->name); ?></td>
                                             <td><?php echo e($material->pivot->cost); ?></td>
+                                            <td><?php echo e($material->pivot->cost * $material->pivot->quantity); ?></td>
                                             <td>
                                                 <div class="dropdown">
                                                     <button type="button"
@@ -212,11 +210,7 @@
                         $(this).slideDown();
                     },
                     hide: function(deleteElement) {
-                        if (confirm(
-                                "<?php echo e(__('Are you sure you want to delete this element?')); ?>"
-                            )) {
-                            $(this).slideUp(deleteElement);
-                        }
+                        $(this).slideUp(deleteElement);
                     },
                 });
             });

@@ -9,9 +9,9 @@
         <div class="row">
             <div class="col-12">
                 <div class="card mb-4">
-                    <div class="card-header">
+                    <div class="card-header p-1">
                         <div class="card-head row w-100">
-                            <div class="col-3">
+                            <div class="col-2">
                                 <button
                                     class="btn btn-sm  btn-primary w-100 {{ $sale->bill->status == 0 ?: 'disabled' }}"
                                     data-bs-toggle="modal" type="button" data-bs-target="#addItem">
@@ -69,7 +69,7 @@
                                     @csrf @method('delete')
                                 </form>
                             </div>
-                            <div class="col-3 row">
+                            <div class="col-4 row">
                                 <div class="col-4">
                                     @php
                                         $color = match ($sale->bill->status) {
@@ -83,10 +83,20 @@
                                         {{ $sale->bill->get_status }}
                                     </span>
                                 </div>
+                                <div class="col-4">
+                                    <span class="badge badge-light-info ">
+                                        {{ __('locale.Mark') }} {{ $sale->mark }}
+                                    </span>
+                                </div>
+                                <div class="col-4">
+                                    <span class="badge badge-light-info ">
+                                        {{ __('locale.Level') }} {{ $sale->level }}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body px-1">
                         <div class="table-responsive" style="min-height:5rem">
                             <table class="table table-sm">
                                 <thead>
@@ -95,12 +105,10 @@
                                         <th>{{ __('locale.Bill') }}</th>
                                         <th>{{ __('locale.Client') }}</th>
                                         <th>{{ __('locale.Inventory') }}</th>
-                                        <th>{{ __('locale.Discount') }}</th>
-                                        <th>{{ __('locale.Note') }}</th>
-                                        <th>{{ __('locale.Mark') }}</th>
-                                        <th>{{ __('locale.Level') }}</th>
+                                        <th>{{ __('locale.Currency') }}</th>
                                         <th>{{ __('locale.User') }}</th>
                                         <th>{{ __('locale.Created at') }}</th>
+                                        <th>{{ __('locale.Discount') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -109,12 +117,10 @@
                                         <td>{{ $sale->bill?->serial }}</td>
                                         <td>{{ $sale->client?->fullName }}</td>
                                         <td>{{ $sale->inventory?->name }}</td>
-                                        <td>{{ $sale->discount }}</td>
-                                        <td>{{ $sale->note }}</td>
-                                        <td>{{ $sale->mark }}</td>
-                                        <td>{{ $sale->level }}</td>
+                                        <td>{{ $sale->currency->name }}</td>
                                         <td>{{ $sale->user?->username }}</td>
                                         <td>{{ $sale->created_at->format('Y-m-d') }}</td>
+                                        <td>{{ $sale->discount }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -128,9 +134,6 @@
                                         <th>{{ __('locale.Quantity') }}</th>
                                         <th>{{ __('locale.Unit') }}</th>
                                         <th>{{ __('locale.Cost') }}</th>
-                                        <th>{{ __('locale.Currency') }}</th>
-                                        <th>{{ __('locale.Rate') }}</th>
-                                        <th>{{ __('locale.Default') }}</th>
                                         <th>{{ __('locale.Action') }}</th>
                                     </tr>
                                 </thead>
@@ -142,9 +145,6 @@
                                             <td>{{ $material->pivot->quantity }}</td>
                                             <td>{{ $material->pivot->unit?->name }}</td>
                                             <td>{{ $material->pivot->cost }}</td>
-                                            <td>{{ $material->pivot->currency?->name }}</td>
-                                            <td>{{ $material->pivot->rate }}</td>
-                                            <td>{{ $material->pivot->rateTo?->name }}</td>
                                             <td>
                                                 <div class="dropdown">
                                                     <button type="button"
@@ -173,6 +173,10 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div class="d-flex gap-1 pt-1">
+                            <span>{{ __('locale.Note') }} :</span>
+                            <p class="m-0">{{ $sale->note }}</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -192,11 +196,7 @@
                     $(this).slideDown();
                 },
                 hide: function(deleteElement) {
-                    if (confirm(
-                            "{{ __('Are you sure you want to delete this element?') }}"
-                        )) {
-                        $(this).slideUp(deleteElement);
-                    }
+                    $(this).slideUp(deleteElement);
                 },
             });
         });

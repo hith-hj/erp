@@ -3,6 +3,7 @@
 namespace App\DataTables;
 
 use App\Models\Bill;
+use App\Models\Manufacturing;
 use SebastianBergmann\CodeCoverage\Report\Xml\Totals;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
@@ -36,8 +37,12 @@ class BillDataTable extends DataTable
                 return $bill->item?->materials()?->count();
             })
             ->addColumn('total', function ($bill) {
-                return $bill->item?->materials()?->sum('cost');
-            });
+                return $bill->item?->total();
+            })
+            ->addColumn('created_at',function($bill){
+                return $bill->created_at->diffForHumans();
+            })
+            ;
     }
 
     /**

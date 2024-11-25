@@ -7,6 +7,12 @@
       "slug": "List-users"
     },
     {
+      "url": "cashier/all",
+      "name": "Cashiers",
+      "icon": "box",
+      "slug": "List-cashiers"
+    },
+    {
       "url": "material/all",
       "name": "Materials",
       "icon": "box",

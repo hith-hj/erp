@@ -32,6 +32,10 @@ class Manufacturing extends Model
         return $this->hasMany(ManufactureModel::class, 'manufactured_id', 'material_id');
     }
 
+    public function total(){
+        return $this->cost;
+    }
+
     public function inventory()
     {
         return $this->belongsTo(Inventory::class);

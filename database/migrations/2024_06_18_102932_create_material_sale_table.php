@@ -24,9 +24,6 @@ class CreateMaterialSaleTable extends Migration
             $table->integer('quantity')->default(1);
             $table->foreignIdFor(Unit::class)->nullable();
             $table->integer('cost')->default(0);
-            $table->foreignIdFor(Currency::class)->nullable();
-            $table->double('rate')->nullable();
-            $table->foreignIdFor(Currency::class,'rate_to')->nullable();
             $table->timestamps();
         });
     }

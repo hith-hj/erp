@@ -107,12 +107,10 @@
                                         <th>{{ __('locale.Bill') }}</th>
                                         <th>{{ __('locale.Vendor') }}</th>
                                         <th>{{ __('locale.Inventory') }}</th>
-                                        <th>{{ __('locale.Discount') }}</th>
                                         <th>{{ __('locale.Currency') }}</th>
-                                        <th>{{ __('locale.Rate') }}</th>
-                                        <th>{{ __('locale.Default') }}</th>
                                         <th>{{ __('locale.User') }}</th>
                                         <th>{{ __('locale.Created at') }}</th>
+                                        <th>{{ __('locale.Discount') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -121,12 +119,10 @@
                                         <td>{{ $purchase->bill?->serial }}</td>
                                         <td>{{ $purchase->vendor?->fullName }}</td>
                                         <td>{{ $purchase->inventory?->name }}</td>
-                                        <td>{{ $purchase->discount }}</td>
                                         <td>{{ $purchase->currency->name }}</td>
-                                        <td>{{ $purchase->rate }}</td>
-                                        <td>{{ $purchase->rateTo->name }}</td>
                                         <td>{{ $purchase->user?->username }}</td>
                                         <td>{{ $purchase->created_at->format('Y-m-d') }}</td>
+                                        <td>{{ $purchase->discount }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -140,6 +136,7 @@
                                         <th>{{ __('locale.Quantity') }}</th>
                                         <th>{{ __('locale.Unit') }}</th>
                                         <th>{{ __('locale.Cost') }}</th>
+                                        <th>{{ __('locale.Total') }}</th>
                                         <th>{{ __('locale.Action') }}</th>
                                     </tr>
                                 </thead>
@@ -151,6 +148,7 @@
                                             <td>{{ $material->pivot->quantity }}</td>
                                             <td>{{ $material->pivot->unit?->name }}</td>
                                             <td>{{ $material->pivot->cost }}</td>
+                                            <td>{{ $material->pivot->cost * $material->pivot->quantity}}</td>
                                             <td>
                                                 <div class="dropdown">
                                                     <button type="button"
@@ -203,11 +201,7 @@
                         $(this).slideDown();
                     },
                     hide: function(deleteElement) {
-                        if (confirm(
-                                "{{ __('Are you sure you want to delete this element?') }}"
-                            )) {
-                            $(this).slideUp(deleteElement);
-                        }
+                        $(this).slideUp(deleteElement);
                     },
                 });
             });

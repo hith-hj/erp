@@ -19,4 +19,9 @@ class BillController extends BaseController
     {
         return (new BillDataTable())->render('main.bill.index');
     }
+
+    public function show($id) {
+        $bill = $this->repo->find($id);
+        return redirect()->route(strtolower($bill->getType).'.show',$bill->billable_id);
+    }
 }

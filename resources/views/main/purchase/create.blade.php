@@ -44,6 +44,20 @@
             for (let i = 0; i < count; i++) {
                 $('.btn-addRow').click();
             }
+            focusElement();
         }
+
+        function focusElement(){
+            let list = $('#purchase_items_list');
+            let valueChecker = list.children('tr:first-child').children('td:first-child').children(':first-child');
+            let elementToBeFocused;
+            if(valueChecker.val().length === 0){
+                elementToBeFocused = list.children('tr:first-child');
+            }else{
+                elementToBeFocused = list.children('tr:last-child');
+            }
+            elementToBeFocused.children('td:first-child').children(":first-child").focus();
+        }
+
     </script>
 @endsection
