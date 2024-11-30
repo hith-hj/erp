@@ -83,4 +83,15 @@ class CashierController extends Controller
         $res = $this->repo->credits($data);
         return redirect()->back()->with(...$res);
     }
+
+    public function bill(Request $request) {
+        $data = $request->validate([
+            'cashier_id'=>['required','exists:cashiers,id'],
+            'bill_id'=>['required','exists:bills,id'],
+            'amount'=>['required','numeric','min:0'],
+        ]);
+        $res = $this->repo->transaction($data['cashier_id'],$data['bill_id'],$data['amount']);
+        $bill = $this->repo->getter('bill',['with'=>['transaction'],'where'=>[['id',$data['bill_id']]]],'first');
+        return redirect()->route('transaction.show',$bill->transaction->id)->with(...$res);
+    }
 }

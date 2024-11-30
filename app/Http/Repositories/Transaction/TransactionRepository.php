@@ -39,7 +39,14 @@ class TransactionRepository extends BaseRepository
         $this->bill = $this->getter('Bill', [
             'where' => [['id', $bill_id]],
         ], 'first');
+        $this->assertBillTypeIsSupported();
         return $this;
+    }
+
+    public function assertBillTypeIsSupported(){
+        if(!in_array($this->bill->billable_type,[Sale::class, Purchase::class])){
+            return $this->throw('Bill Type is not supported');
+        }
     }
     
     public function createTransaction($user = null )
@@ -88,6 +95,9 @@ class TransactionRepository extends BaseRepository
                 $this->cashier->total - $amount 
             ]);
             $this->transaction->update(['remaining' => $this->transaction->remaining - $amount]);
+            if($this->transaction->remaining == 0 ){
+                $this->transaction->update(['is_payed' => true]);
+            }
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
@@ -119,5 +129,9 @@ class TransactionRepository extends BaseRepository
         if ($remaining < 0 || $amount == 0) {
             return $this->throw('the amount you entered is more than the remaining');
         }
+    }
+
+    public function getTransaction(){
+        return $this->transaction;
     }
 }

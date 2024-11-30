@@ -13,6 +13,7 @@ use App\Http\Controllers\Material\MaterialController;
 use App\Http\Controllers\Purchase\PurchaseController;
 use App\Http\Controllers\Vendors\VendorController;
 use App\Http\Controllers\Sale\SaleController;
+use App\Http\Controllers\Transaction\TransactionController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Unit\UnitController;
 use Illuminate\Support\Facades\Route;
@@ -194,6 +195,15 @@ Route::group(['middleware' => 'auth',], function () {
         Route::post('transaction/{cashier}','transaction')->name('cashier.transaction');
         Route::post('transfer/{transaction}','transfer')->name('cashier.transfer');
         Route::post('credits','credits')->name('cashier.credits');
+        Route::post('bill','bill')->name('cashier.billTransaction');
+    });
+
+    Route::group([
+        'prefix' => 'Transaction',
+        'controller' => TransactionController::class
+    ], function () {
+        Route::get('all', 'index')->name('transaction.all');
+        Route::get('show/{transaction}', 'show')->name('transaction.show');
     });
 
     Route::group(['controller' => HomeController::class,], function () {

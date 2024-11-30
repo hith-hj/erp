@@ -3,7 +3,10 @@
 namespace App\DataTables;
 
 use App\Models\Bill;
+use App\Models\Cashier;
 use App\Models\Manufacturing;
+use App\Models\Purchase;
+use App\Models\Sale;
 use SebastianBergmann\CodeCoverage\Report\Xml\Totals;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
@@ -23,9 +26,10 @@ class BillDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->addColumn('action', function ($bill) {
-                $view = __('locale.View');
+                $cashiers = Cashier::all();
                 $type = lcfirst(explode('\\',$bill->billable_type)[2]);
-                return "<a href='/$type/show/$bill->billable_id'>$view</a>";
+                return view('utils.bill_transaction',
+                compact('bill','cashiers','type'));
             })
             ->addColumn('billable_type', function ($bill) {
                 return $bill->get_type;
@@ -52,7 +56,7 @@ class BillDataTable extends DataTable
      */
     public function query(Bill $model)
     {
-        return $model->newQuery();
+        return $model->with(['transaction'])->newQuery()->whereIn('billable_type',[Sale::class,Purchase::class]);
     }    
 
     /**

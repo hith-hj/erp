@@ -23,7 +23,7 @@ class Transaction extends Model
     }
 
     public function transfers(){
-        return $this->hasMany(Transfer::class);
+        return $this->hasMany(Transfer::class)->orderBy('created_at','desc');
     }
 
     public function bill(){

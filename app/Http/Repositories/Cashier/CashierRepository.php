@@ -26,7 +26,7 @@ class CashierRepository extends BaseRepository
             'cashier' => $this->findWith($id, ['transactions.transfers']),
             'bills' => $this->getter('Bill', [
                 'doesntHave' => 'transaction',
-                'where' => [['billable_type', '!=', Manufacturing::class]]
+                'where' => [['billable_type', '!=', Manufacturing::class]],
             ]),
             'cashier_transfers'=>$this->getter('Transfer',[
                 'where'=>[['transaction_id','LIKE','%9900'.$id.'0099%']]

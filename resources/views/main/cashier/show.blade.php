@@ -164,7 +164,7 @@
                         <table class="table table-sm table-bordered">
                             <thead>
                                 <tr>
-                                    <th>Id</th>
+                                    <th>No</th>
                                     <th>{{ __('locale.Transaction') }}</th>
                                     <th>{{ __('locale.Bill') }}</th>
                                     <th>{{ __('locale.Type') }}</th>
@@ -178,7 +178,7 @@
                             <tbody class="table-hover">
                                 @forelse ($cashier->transactions as $transaction)
                                     <tr>
-                                        <td>{{ $cashier->id }}</td>
+                                        <td>{{ $loop->index + 1 }}</td>
                                         <td>{{ $transaction->id }}</td>
                                         <td>
                                             <a href="{{ route('bill.show', $transaction->bill_id) }}">
@@ -189,11 +189,14 @@
                                         <td>{{ $transaction->amount }}</td>
                                         <td>{{ $transaction->remaining }}</td>
                                         <td>
-                                            {{ $transaction->transfers()->count() }}
+                                            {{ $transaction->transfers->count() }}
                                         </td>
                                         <td>{{ $transaction->created_at }}</td>
                                         <td>
-                                            @if ($transaction->remaining > 0)
+                                            <a href="{{route('transaction.show',$transaction->id)}}">
+                                                {{__('locale.View')}}
+                                            </a>
+                                            {{-- @if ($transaction->remaining > 0)
                                                 <button class="btn btn-sm btn-outline-success" type="button"
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#addTransfer{{ $transaction->id }}">
@@ -295,7 +298,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> --}}
                                         </td>
                                     </tr>
                                 @empty

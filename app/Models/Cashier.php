@@ -13,7 +13,7 @@ class Cashier extends Model
     protected $fillable = ['name', 'total', 'is_default', ];
 
     public function transactions(){
-        return $this->hasMany(Transaction::class);
+        return $this->hasMany(Transaction::class)->orderBy('created_at','desc');
     }
 
 }
