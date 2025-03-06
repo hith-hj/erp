@@ -34,6 +34,9 @@ class VendorDataTable extends DataTable
         }
         return $total;
       })
+      ->addColumn('created_at',function($client){
+        return $client->created_at->diffForHumans();
+      })
       ->addColumn('action', function ($vendor) {
         $view = __('locale.View');
         $options = __('locale.Options');
