@@ -22,9 +22,10 @@ class ClientController extends BaseController
         return (new ClientDataTable())->render('main.client.index');
     }
 
-    public function show(Client $client)
+    public function show($id)
     {
-        return view('main.client.show', ['client' => $client]);
+        $client = Client::with(['sales.materials', 'sales.bill.transaction','sales.currency'])->findOrFail($id);
+        return view('main.client.show', ['client' => $client,]);
     }
 
     public function create()

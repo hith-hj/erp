@@ -1,7 +1,6 @@
 
 
 <?php $__env->startSection('title'); ?>
-    
     <?php echo e($client->first_name); ?>
 
 <?php $__env->stopSection(); ?>
@@ -33,15 +32,10 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="card-title">
-                            <?php echo e(__('locale.First name')); ?> :
-                            <?php echo e($client->first_name); ?>
+                            <?php echo e(__('locale.Name')); ?> :
+                            <?php echo e($client->first_name. ' ' .$client->last_name); ?>
 
                         </h4>
-                        <div class="card-text">
-                            <?php echo e(__('locale.Last name')); ?> : 
-                            <?php echo e($client->last_name); ?>
-
-                        </div>
                         <div class="card-text">
                             <?php echo e(__('locale.Email')); ?> : 
                             <?php echo e($client->email); ?>
@@ -52,30 +46,67 @@
                             <?php echo e($client->phone); ?>
 
                         </div>
-                        <p class="card-text">
+                        <div class="card-text">
                             <?php echo e(__('locale.Created at')); ?>
 
                             <?php echo e($client->created_at->diffForHumans()); ?>
 
-                        </p>
+                        </div>
                     </div>
                     <div class="card-body">
-                        <table class="table table-sm table-bordered">
+                        <table class="table table-sm ">
                             <thead>
                                 <tr>
                                     <th>Id</th>
-                                    <th><?php echo e(__('locale.Name')); ?></th>
+                                    <th><?php echo e(__('locale.Bill')); ?></th>
+                                    <th><?php echo e(__('locale.Currency')); ?></th>
+                                    <th><?php echo e(__('locale.Transfers')); ?></th>
+                                    <th><?php echo e(__('locale.Total')); ?></th>
+                                    <th><?php echo e(__('locale.Payed')); ?></th>
+                                    <th><?php echo e(__('locale.Remaining')); ?></th>
                                 </tr>
                             </thead>
                             <tbody class="table-hover">
+                                <?php
+                                    $sales = 0;
+                                    $total = 0;
+                                    $remaining = 0;
+                                ?>
+                                <?php $__empty_1 = true; $__currentLoopData = $client->sales; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $sale): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                                    <?php
+                                        $sales += 1;
+                                        $total += $sale->total();
+                                        $remaining += $sale->bill->transaction->remaining;
+                                        ?>
+                                    <tr>
+                                        <td><?php echo e($sale->id); ?></td>
+                                        <td><?php echo e($sale->bill->serial); ?></td>
+                                        <td><?php echo e($sale->currency->name); ?></td>
+                                        <td><?php echo e($sale->bill->transaction->transfers()->count()); ?></td>
+                                        <td><?php echo e($sale->total()); ?></td>
+                                        <td><?php echo e($total - $remaining); ?></td>
+                                        <td><?php echo e($sale->bill->transaction->remaining); ?></td>
+                                    </tr>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                                     <tr>
                                         <td>
-                                            <span class="badge rounded-pill badge-light-success me-1">
-                                               something
+                                            <span class="badge badge-light-info me-1">
+                                                Not sales yet
                                             </span>
                                         </td>
                                     </tr>
+                                <?php endif; ?>
                             </tbody>
+                            <tr class="text-primary border-primary">
+                                <th> <?php echo e(__('locale.Sales')); ?> : <?php echo e($sales); ?></th>
+                                <td></td>
+                                <th> <?php echo e(__('locale.Total')); ?> : <?php echo e($total); ?></th>
+                                <td></td>
+                                <th> <?php echo e(__('locale.Payed')); ?> : <?php echo e($total - $remaining); ?></th>
+                                <td></td>
+                                <th> <?php echo e(__('locale.Remaining')); ?> : <?php echo e($remaining); ?></th>
+                                <td></td>
+                            </tr>
                         </table>
                     </div>
                 </div>

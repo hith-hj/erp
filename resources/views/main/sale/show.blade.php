@@ -115,7 +115,11 @@
                                     <tr>
                                         <td>{{ $sale->id }}</td>
                                         <td>{{ $sale->bill?->serial }}</td>
-                                        <td>{{ $sale->client?->fullName }}</td>
+                                        <td>
+                                            <a href="{{route('client.show',$sale->client?->id)}}">
+                                                {{ $sale->client?->fullName }}
+                                            </a>
+                                        </td>
                                         <td>{{ $sale->inventory?->name }}</td>
                                         <td>{{ $sale->currency->name }}</td>
                                         <td>{{ $sale->user?->username }}</td>
@@ -134,6 +138,7 @@
                                         <th>{{ __('locale.Quantity') }}</th>
                                         <th>{{ __('locale.Unit') }}</th>
                                         <th>{{ __('locale.Cost') }}</th>
+                                        <th>{{ __('locale.Total') }}</th>
                                         <th>{{ __('locale.Action') }}</th>
                                     </tr>
                                 </thead>
@@ -145,6 +150,7 @@
                                             <td>{{ $material->pivot->quantity }}</td>
                                             <td>{{ $material->pivot->unit?->name }}</td>
                                             <td>{{ $material->pivot->cost }}</td>
+                                            <td>{{ $material->pivot->cost * $material->pivot->quantity  }}</td>
                                             <td>
                                                 <div class="dropdown">
                                                     <button type="button"

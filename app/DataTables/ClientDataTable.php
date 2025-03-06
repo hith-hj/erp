@@ -22,7 +22,7 @@ class ClientDataTable extends DataTable
     return datatables()
       ->eloquent($query)
       ->addColumn('name',function($client){
-        return $client->first_name . ' ' . $client->last_name;
+        return $client->full_name;
       })
       ->addColumn('bills',function($client){
         return $client->sales()->count();

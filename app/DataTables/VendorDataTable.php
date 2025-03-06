@@ -22,7 +22,7 @@ class VendorDataTable extends DataTable
     return datatables()
       ->eloquent($query)
       ->addColumn('name',function($vendro){
-        return $vendro->first_name . ' ' . $vendro->last_name;
+        return $vendro->full_name;
       })
       ->addColumn('bills',function($vendro){
         return $vendro->purchases()->count();
