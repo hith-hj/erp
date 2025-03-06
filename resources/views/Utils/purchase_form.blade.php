@@ -137,7 +137,7 @@
                     </h4>
                     <div class="d-flex align-items-center justify-content-end">
                         <h5 class="m-0">{{ __('locale.Rows count') }}</h5>
-                        <input type="number" id="rowCount" min="1" value="5"
+                        <input type="number" id="rowCount" min="1" value="5" max="30"
                             class="w-25 form-control form-control-sm mx-1" onkeypress ="
                             if(event.which == 13) {
                                 event.preventDefault();
@@ -250,9 +250,9 @@
                             <button typex="submit" class="btn btn-primary w-50">
                                 {{ __('locale.Store') }}
                             </button>
-                            <button type="reset" class="btn btn-outline-primary">
+                            {{-- <button type="reset" class="btn btn-outline-primary">
                                 {{ __('locale.Reset') }}
-                            </button>
+                            </button> --}}
                             <a class="btn btn-outline-dark" data-bs-dismiss="modal" aria-label="Close">
                                 {{ __('locale.Cancel') }}
                             </a>

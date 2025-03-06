@@ -388,6 +388,7 @@ return [
     "Rows count" => "Rows count",
     "Cashier"=>"Cashier",
     "Cashiers"=>"Cashiers",
+    "New Cashier"=>"New Cashier",
     "Cashable id"=>"Cashable id",
     "Cashable type"=>"Cashable type",
     "Unit id"=>"Unit id",
@@ -402,6 +403,7 @@ return [
     "Remaining"=>"Remaining",
     "Deposit"=>"Deposit",
     "Withdraw"=>"Withdraw",
+    "ID"=>"ID",
     ""=>"",
     ""=>"",
 

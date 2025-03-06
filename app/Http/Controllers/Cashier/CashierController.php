@@ -22,7 +22,6 @@ class CashierController extends Controller
     }
 
     public function show($id){
-        // dd($this->repo->getShowPayload($id));
         return view('main.cashier.show',$this->repo->getShowPayload($id));
     }
 

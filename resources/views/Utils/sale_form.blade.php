@@ -133,7 +133,7 @@
                 <h4 class="card-title">{{ __('locale.Materials') }}</h4>
                 <div class="d-flex align-items-center justify-content-end">
                     <h5 class="m-0">{{ __('locale.Rows count') }}</h5>
-                    <input type="number" id="rowCount" min="1" value="1"
+                    <input type="number" id="rowCount" min="1" value="5" max="30"
                         class="w-25 form-control form-control-sm mx-1"
                         onkeypress ="
                         if(event.which == 13) {
@@ -241,98 +241,6 @@
 
                     </tbody>
                 </table>
-                {{-- <div data-repeater-list="sales">
-                    <div data-repeater-item class="row" >
-                        <div class="col-2">
-                            <div class="mb-1">
-                                <label class="form-label"
-                                    for="material_list">{{ __('locale.Material') }}</label>
-                                <select x-model="material_id" id="material_list" name="material_id" required
-                                    class="form-select" @error('material_id') border-danger @enderror
-                                    x-init="$watch('material_id', value => setMaterialUnits(value))">
-                                    <option value="">{{ __('locale.Chose') }}</option>
-                                    <template x-for="material in inventoryMaterials" :key="material.id">
-                                        <option :value="material.id" 
-                                            x-text="material.name+' | '+material.pivot.quantity">
-                                        </option>
-                                    </template>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-2">
-                            <div class="mb-1">
-                                <label class="form-label" for="material_quantity"
-                                    x-text="quantity > limit ?
-                                    'Limit Excieded':'{{ __('locale.Quantity') }}' ">
-                                </label>
-                                <input type="number" id="material_quantity" name="quantity"
-                                    class="form-control @error('quantity') border-danger @enderror"
-                                    placeholder="{{ __('locale.Quantity') }}" value="{{ old('quantity') }}"
-                                    required x-model="quantity"
-                                    :class="quantity > limit ? 'border-danger' : ''" />
-                            </div>
-                        </div>
-                        <div class="col-2">
-                            <div class="mb-1">
-                                <label class="form-label" for="units_list">{{ __('locale.Units') }}</label>
-                                <select id="units_list" name="unit_id"
-                                    class="form-select @error('unit_id') border-danger @enderror ">
-                                    <option value="">{{ __('locale.Chose') }}</option>
-                                    <template x-for="unit in materialUnits" :key="unit.id">
-                                        <option x-bind:value="unit.id"
-                                            x-text="unit.name+' '+unit.pivot.is_default+' '+unit.pivot.rate_to_main_unit"
-                                            :selected="unit.pivot.is_default == 1">
-                                        </option>
-                                    </template>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-2">
-                            <div class="mb-1">
-                                <label class="form-label" for="cost">{{ __('locale.Cost') }}</label>
-                                <input type="number" id="cost" name="cost"
-                                    class="form-control @error('cost') border-danger @enderror"
-                                    placeholder="{{ __('locale.Cost') }}" value="{{ old('cost') }}"
-                                    required x-model="cost" />
-                            </div>
-                        </div>
-                        <div class="col-2">
-                            <div class="mb-1">
-                                <label class="form-label" for="currency">{{ __('locale.Currency') }}</label>
-                                <select id="currency" name="currency_id" required x-model="currency_id"
-                                    x-init="$watch('currency_id', value => setTotal(value))"
-                                    class="form-select
-                                    @error('currency_id') border-danger @enderror">
-                                    <option value="">{{ __('locale.Chose') }}</option>
-                                    @foreach ($currencies as $currency)
-                                        <option value="{{ $currency->id }}"
-                                            @if (old('currency_id') == $currency->id) selected @endif>
-                                            {{ $currency->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-2">
-                            <div class="mb-1">
-                                <label class="form-label" for="total">{{ __('locale.Total') }}</label>
-                                <input type="number" id="total" name="total"
-                                    class="form-control @error('total') border-danger @enderror" required
-                                    readonly x-model="total" value="{{ old('total') }}" />
-                            </div>
-                        </div>
-                        <div class="col-12 px-1 pb-1">
-                            <button type="button" class="btn btn-danger w-100" data-repeater-delete>
-                                {{ __('locale.Delete') }}
-                            </button>
-                        </div>
-                    </div>
-                </div> --}}
-                {{-- <div class="col-12 pb-1">
-                    <button type="button" class="btn btn-primary w-100" data-repeater-create>
-                        {{ __('locale.Add') }}
-                    </button>
-                </div> --}}
             </div>
         </div>
         <div class="card mb-1">
@@ -341,9 +249,9 @@
                     <button typex="submit" class="btn btn-primary w-50">
                         {{ __('locale.Store') }}
                     </button>
-                    <button type="reset" class="btn btn-outline-primary">
+                    {{-- <button type="reset" class="btn btn-outline-primary">
                         {{ __('locale.Reset') }}
-                    </button>
+                    </button> --}}
                     <a class="btn btn-outline-dark">
                         {{ __('locale.Cancel') }}
                     </a>

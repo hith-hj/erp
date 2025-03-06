@@ -44,7 +44,10 @@
         });
 
         function addRowX(count = 1) {
-            for (let i = 0; i < count; i++) {
+            if(count > 30){
+                return alert('only 30 rows at once');
+            }
+            for (let i = 0; i < count && count <= 30; i++) {
                 $('.btn-addRow').click();
             }
             focusElement();

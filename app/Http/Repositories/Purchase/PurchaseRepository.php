@@ -94,7 +94,7 @@ class PurchaseRepository extends BaseRepository
         $bill = $purchase->bill()->create([
             'billable_id' => $purchase->id,
             'billable_type' => get_class($purchase),
-            'serial' => Str::random(8),
+            'serial' => $purchase->id.Str::random(8),
             'status' => 0,
         ]);
         // $cashier = isset($data['cashier_id']) ? $data['cashier_id'] : $this->getter('Cashier',[
@@ -209,7 +209,7 @@ class PurchaseRepository extends BaseRepository
     {
         $purchase = $this->findWith($id, ['materials', 'bill']);
         if ($purchase->materials()->count() > 0 || $purchase->bill->status != 0) {
-            return $this->throw('Purchase is not empty Can\'t be Deleted', 9);
+            $this->throw('Purchase is not empty Can\'t be Deleted', 9);
         }
         foreach ($purchase->materials as $material) {
             $material->inventory_id = $purchase->inventory_id;

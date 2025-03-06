@@ -165,8 +165,9 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>{{ __('locale.Transaction') }}</th>
+                                    <th>{{ __('locale.ID') }}</th>
                                     <th>{{ __('locale.Bill') }}</th>
+                                    {{-- <th>{{ __('locale.Currency') }}</th> --}}
                                     <th>{{ __('locale.Type') }}</th>
                                     <th>{{ __('locale.Amount') }}</th>
                                     <th>{{ __('locale.Remaining') }}</th>
@@ -182,9 +183,12 @@
                                         <td>{{ $transaction->id }}</td>
                                         <td>
                                             <a href="{{ route('bill.show', $transaction->bill_id) }}">
-                                                {{ $transaction->bill_id }}
+                                                {{ $transaction->bill->serial }}
                                             </a>
+                                            --
+                                            {{ $transaction->bill->item->currency->name }}
                                         </td>
+                                        {{-- <td>{{ $transaction->bill->item->currency->name }}</td> --}}
                                         <td>{{ $transaction->getType() }}</td>
                                         <td>{{ $transaction->amount }}</td>
                                         <td>{{ $transaction->remaining }}</td>
@@ -194,10 +198,12 @@
                                         <td>{{ $transaction->created_at }}</td>
                                         <td>
                                             <a href="{{route('transaction.show',$transaction->id)}}">
-                                                {{__('locale.View')}}
+                                                <button class="btn btn-sm text-primary">
+                                                    {{__('locale.View')}}
+                                                </button>
                                             </a>
-                                            {{-- @if ($transaction->remaining > 0)
-                                                <button class="btn btn-sm btn-outline-success" type="button"
+                                            @if ($transaction->remaining > 0)
+                                                <button class="btn btn-sm text-success" type="button"
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#addTransfer{{ $transaction->id }}">
                                                     {{ __('locale.Add') }}
@@ -257,7 +263,7 @@
                                                     </div>
                                                 </div>
                                             @endif
-                                            <button class="btn btn-sm btn-outline-info" type="button"
+                                            <button class="btn btn-sm text-info" type="button"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#transaction{{ $transaction->id }}Transfers">
                                                 {{ __('locale.Transfers') }}
@@ -298,7 +304,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div> --}}
+                                            </div>
                                         </td>
                                     </tr>
                                 @empty

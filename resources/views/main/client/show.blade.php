@@ -51,6 +51,7 @@
                             {{ $client->created_at->diffForHumans() }}
                         </p>
                     </div>
+                    {{$client->sales}}
                     <div class="card-body">
                         <table class="table table-sm table-bordered">
                             <thead>

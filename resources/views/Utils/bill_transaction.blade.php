@@ -28,7 +28,8 @@
                                                 <label class='form-label' for='amount'>{{__('locale.Cashier')}}</label>
                                                 <select name="cashier_id" id="" class="form-select">
                                                     @foreach ($cashiers as $cashier)
-                                                        <option value="{{$cashier->id}}" @selected({{$cashier->is_default}}) >{{$cashier->name}}
+                                                        <option value="{{$cashier->id}}" {{$cashier->is_default ? 'selected' : ''}}  >
+                                                            {{$cashier->name}}
                                                         </option>
                                                     @endforeach
                                                 </select>                                            

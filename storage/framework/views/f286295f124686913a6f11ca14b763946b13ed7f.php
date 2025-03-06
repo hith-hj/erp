@@ -59,6 +59,8 @@
 
                         </p>
                     </div>
+                    <?php echo e($client->sales); ?>
+
                     <div class="card-body">
                         <table class="table table-sm table-bordered">
                             <thead>

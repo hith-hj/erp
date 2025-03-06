@@ -21,6 +21,19 @@ class VendorDataTable extends DataTable
   {
     return datatables()
       ->eloquent($query)
+      ->addColumn('name',function($vendro){
+        return $vendro->first_name . ' ' . $vendro->last_name;
+      })
+      ->addColumn('bills',function($vendro){
+        return $vendro->purchases()->count();
+      })
+      ->addColumn('total',function($vendro){
+        $total = 0;
+        foreach($vendro->purchases as $purchase){
+          $total += $purchase->total();
+        }
+        return $total;
+      })
       ->addColumn('action', function ($vendor) {
         $view = __('locale.View');
         $options = __('locale.Options');
@@ -87,10 +100,11 @@ class VendorDataTable extends DataTable
   {
     return [
       Column::make('id'),
-      Column::make('first_name')->title(__('locale.First name')),
-      Column::make('last_name')->title(__('locale.Last name')),
+      Column::make('name')->title(__('locale.Name')),
       Column::make('email')->title(__('locale.Email')),
       Column::make('phone')->title(__('locale.Phone')),
+      Column::make('bills')->title(__('locale.Bills')),
+      Column::make('total')->title(__('locale.Total')),
       Column::make('created_at')->title(__('locale.Created at')),
       Column::computed('action')
         ->exportable(false)

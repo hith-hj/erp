@@ -21,6 +21,19 @@ class ClientDataTable extends DataTable
   {
     return datatables()
       ->eloquent($query)
+      ->addColumn('name',function($client){
+        return $client->first_name . ' ' . $client->last_name;
+      })
+      ->addColumn('bills',function($client){
+        return $client->sales()->count();
+      })
+      ->addColumn('total',function($client){
+        $total = 0;
+        foreach($client->sales as $sale){
+          $total += $sale->total();
+        }
+        return $total;
+      })
       ->addColumn('action', function ($client) {
         $view = __('locale.View');
         $options = __('locale.Options');
@@ -87,10 +100,11 @@ class ClientDataTable extends DataTable
   {
     return [
       Column::make('id'),
-      Column::make('first_name')->title(__('locale.First name')),
-      Column::make('last_name')->title(__('locale.Last name')),
+      Column::make('name')->title(__('locale.Name')),
       Column::make('email')->title(__('locale.Email')),
       Column::make('phone')->title(__('locale.Phone')),
+      Column::make('bills')->title(__('locale.Bills')),
+      Column::make('total')->title(__('locale.Total')),
       Column::make('created_at')->title(__('locale.Created at')),
       Column::computed('action')
         ->title(__('locale.Action'))

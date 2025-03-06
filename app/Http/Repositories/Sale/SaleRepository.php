@@ -83,7 +83,7 @@ class SaleRepository extends BaseRepository
         $sale->bill()->create([
             'billable_id' => $sale->id,
             'billable_type' => get_class($sale),
-            'serial' => Str::random(8),
+            'serial' => $sale->id.Str::random(8),
             'status' => 0,
         ]);
         return $sale;
@@ -192,7 +192,7 @@ class SaleRepository extends BaseRepository
     {
         $sale = $this->findWith($id, ['materials', 'bill']);
         if ($sale->materials()->count() > 0 || $sale->bill->status != 0) {
-            return $this->throw('Sale is not empty Can\'t be Deleted', 9);
+            $this->throw('Sale is not empty Can\'t be Deleted', 9);
         }
         foreach ($sale->materials as $material) {
             $material->inventory_id = $sale->inventory_id;

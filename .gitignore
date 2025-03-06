@@ -5,3 +5,4 @@ storage
 .env.test
 public/backup
 .editorconfig
+erp_server.txt

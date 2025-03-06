@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountType\AccountTypeController;
+use App\Http\Controllers\CP\LanguageController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Bill\BillController;
 use App\Http\Controllers\Cashier\CashierController;
@@ -18,6 +19,9 @@ use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Unit\UnitController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+
+// locale Route
+Route::get('lang/{locale}', [LanguageController::class, 'swap']);
 
 Route::group(['middleware' => 'auth',], function () {
     Route::view('/', 'main.main');
@@ -214,7 +218,7 @@ Route::group(['middleware' => 'auth',], function () {
     });
 });
 
-require (__DIR__ . '/CP.php');
+// require (__DIR__ . '/CP.php');
 Auth::routes();
 
 
