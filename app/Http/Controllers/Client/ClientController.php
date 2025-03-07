@@ -25,6 +25,19 @@ class ClientController extends BaseController
     public function show($id)
     {
         $client = Client::with(['sales.materials', 'sales.bill.transaction','sales.currency'])->findOrFail($id);
+        foreach($client->sales as $sale){
+            $remaining = $sale->bill->transaction->remaining;
+            $total = $sale->total();
+            if(!$sale->currency->is_default){
+                $rate = $sale->currency->rate_to_default;
+                $sale->remaining = $remaining * $rate;
+                $sale->total = $total * $rate;
+            }else{
+                $sale->remaining = $remaining;
+                $sale->total = $total;
+            }
+            
+        }
         return view('main.client.show', ['client' => $client,]);
     }
 
