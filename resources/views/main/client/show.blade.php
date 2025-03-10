@@ -29,39 +29,49 @@
                     <div class="card-header">
                         <h4 class="card-title">
                             {{ __('locale.Name') }} :
-                            {{ $client->first_name . ' ' . $client->last_name }}
+                            {{ "$client->first_name  $client->last_name" }}
                         </h4>
-                        <div class="card-text">
-                            {{ __('locale.Email') }} :
-                            {{ $client->email }}
+                        <div class="card-text d-flex flex-wrap gap-1">
+                            <span>{{ __('locale.Email').':'.$client->email }}</span>
+                            <span>{{ __('locale.Phone').':'.$client->phone }}</span>
                         </div>
-                        <div class="card-text">
-                            {{ __('locale.Phone') }} :
-                            {{ $client->phone }}
-                        </div>
-                        <div class="card-text">
-                            {{ __('locale.Created at') }}
-                            {{ $client->created_at->diffForHumans() }}
-                        </div>
-                        <div class="card-text">
-                            <button class="btn btn-outline-primary btn-sm" type="button" 
-                            onclick="printTable()">
-                                <i data-feather="printer"></i>
-                            </button>
+                        <div class="card-text d-flex flex-wrap gap-1">
+                            <span>    
+                                <i class="text-primary" data-feather="printer" 
+                                onclick="printTable('printable')"></i>
+                            </span>
+                            <div class='dropdown'>
+                                <i data-feather="filter" data-bs-toggle='dropdown' class="text-primary"></i>
+                                <div class='dropdown-menu dropdown-menu-end'>
+                                    <a class='dropdown-item' onclick="handelFilter()">
+                                        <i class="me-1" data-feather='refresh-cw'></i>
+                                        <span>reset</span>
+                                    </a>
+                                    <a class='dropdown-item {{request('defaultCurrencyApplyed') == true ? 'active' : ''}}' onclick="handelFilter('defaultCurrencyApplyed','true')">
+                                        <i class="me-1" data-feather='circle'></i>
+                                        <span>Apply Default</span>
+                                    </a>
+                                    @foreach ($client->currencies as $currency)
+                                        <a class='dropdown-item {{request('currency') == $currency ? 'active' : ''}}' onclick="handelFilter('currency','{{$currency}}')">
+                                            <i class="me-1" data-feather='circle'></i>
+                                            <span>By Currency : {{$currency}}</span>
+                                        </a>
+                                    @endforeach
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="card-body">
-                        <table class="table table-sm table-bordered" id="printable">
+                        <table class="table table-sm table-bordered sortable" id="printable">
                             <thead>
-                                <tr>
-                                    <th>Id</th>
-                                    <th>{{ __('locale.Bill') }}</th>
+                                <tr id="sortable_by">
+                                    <th>{{__('locale.ID')}}</th>
+                                    <th class="skip_sort">{{ __('locale.Bill') }}</th>
                                     <th>{{ __('locale.Currency') }}</th>
-                                    <th>{{ __('locale.Transfers') }}</th>
                                     <th>{{ __('locale.Total') }}</th>
                                     <th>{{ __('locale.Payed') }}</th>
                                     <th>{{ __('locale.Remaining') }}</th>
-                                    <th>{{ __('locale.Note') }}</th>
+                                    <th class="skip_sort">{{ __('locale.Note') }}</th>
                                 </tr>
                             </thead>
                             <tbody class="table-hover">
@@ -78,15 +88,18 @@
                                     @endphp
                                     <tr>
                                         <td>{{ $sale->id }}</td>
-                                        <td>{{ $sale->bill->serial }}</td>
+                                        <td>
+                                            <a href="{{ route('bill.show',$sale->bill->id) }}">
+                                                {{ $sale->bill->serial }}
+                                            </a>
+                                        </td>
                                         <td>{{ $sale->currency->name }}</td>
-                                        <td>{{ $sale->bill->transaction->transfers()->count() }}</td>
                                         <td>{{ $sale->total }}</td>
                                         <td>{{ $sale->total - $sale->remaining }}</td>
                                         <td>{{ $sale->remaining }}</td>
                                         <td>
-                                            @if (!$sale->currency->is_default)
-                                                "default applyed"
+                                            @if ($sale->defaultCurrencyApplyed)
+                                                "Default Currency Applyed"
                                             @endif
                                         </td>
                                     </tr>
@@ -99,14 +112,14 @@
                                         </td>
                                     </tr>
                                 @endforelse
+                                <tr class="text-primary border-primary">
+                                    <th colspan="3"> {{ __('locale.Sales'). ' : ' .  $sales }} </th>
+                                    <th> {{ __('locale.Total') . ' : ' .  $total}} </th>
+                                    <th> {{ __('locale.Payed') . ' : ' .  $total - $remaining}} </th>
+                                    <th> {{ __('locale.Remaining') . ' : ' .  $remaining}} </th>
+                                    <td></td>
+                                </tr>
                             </tbody>
-                            <tr class="text-primary border-primary">
-                                <th colspan="4"> {{ __('locale.Sales') }} : {{ $sales }}</th>
-                                <th> {{ __('locale.Total') }} : {{ $total }}</th>
-                                <th> {{ __('locale.Payed') }} : {{ $total - $remaining }}</th>
-                                <th> {{ __('locale.Remaining') }} : {{ $remaining }}</th>
-                                <td></td>
-                            </tr>
                         </table>
                     </div>
                 </div>
@@ -119,16 +132,5 @@
 
 @section('page-script')
     <script src="{{asset('js/printout.min.js')}}"></script>
-    <script>
-        function printTable() {
-            printout("#printable", {
-                pageTitle: window.document.title, // Title of the page
-                importCSS: true, // Import parent page css
-                inlineStyle: true, // If true it takes inline style tag
-                header: window.document.title, // String or element this will be appended to the top of the printout
-                footer: null, // String or element this will be appended to the bottom of the printout
-                noPrintClass: "no-print", // Class to remove the elements that should not be printed
-            });
-        }
-    </script>
+    <script src="{{asset('js/helpers.js')}}"></script>
 @endsection
