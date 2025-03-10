@@ -89,9 +89,13 @@
                                     <tr>
                                         <td>{{ $sale->id }}</td>
                                         <td>
-                                            <a href="{{ route('bill.show',$sale->bill->id) }}">
-                                                {{ $sale->bill->serial }}
-                                            </a>
+                                            @if(isset($sale->bill))
+                                                <a href="{{ route('bill.show',$sale->bill?->id) }}">
+                                                    {{ $sale->bill?->serial }}
+                                                </a>
+                                            @else
+                                                No Bill
+                                            @endif
                                         </td>
                                         <td>{{ $sale->currency->name }}</td>
                                         <td>{{ $sale->total }}</td>
@@ -134,6 +138,6 @@
 
 
 @section('page-script')
-    <script src="{{asset('js/printout.min.js')}}"></script>
+    <script src="{{asset('js/printout.js')}}"></script>
     <script src="{{asset('js/helpers.js')}}"></script>
 @endsection

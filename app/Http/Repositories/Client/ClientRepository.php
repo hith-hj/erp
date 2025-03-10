@@ -27,9 +27,9 @@ class ClientRepository extends BaseRepository
         foreach($sales as $sale){
             $sale->defaultCurrencyApplyed = false;
             $sale->hasTransaction = true;
-            $sale->remaining = $sale->bill->transaction?->remaining;
-            $sale->total = $sale->bill->transaction?->amount;
-            if($sale->bill->transaction === null){
+            $sale->remaining = $sale->bill?->transaction?->remaining;
+            $sale->total = $sale->bill?->transaction?->amount;
+            if($sale->bill?->transaction === null){
                 $sale->hasTransaction = false;
             }
             if(!$sale->currency->is_default && $request->filled('defaultCurrencyApplyed')){
