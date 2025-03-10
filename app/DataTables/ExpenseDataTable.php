@@ -22,20 +22,11 @@ class ExpenseDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->addColumn('action', function ($expense) {
-                $view = __('locale.View');
-                $options = __('locale.Options');
-                return "
-                <div class='dropdown'>
-                  <button type='button' class='btn btn-sm dropdown-toggle hide-arrow py-0' data-bs-toggle='dropdown'>
-                    $options
-                  </button>
-                  <div class='dropdown-menu dropdown-menu-end'>
-                    <a class='dropdown-item' href='/expense/show/$expense->id'>
-                      <i data-feather='edit-2' class='me-50'></i>
-                      <span>$view</span>
-                    </a>
-                  </div>
-                </div>";
+                return view('utils.datatable_options',[
+                    'route'=>route('expense.show',$expense->id),
+                    'options'=>[]
+                    ]
+                );
             });
     }
 

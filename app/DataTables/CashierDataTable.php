@@ -22,28 +22,18 @@ class CashierDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->addColumn('action', function ($cashier) {
-                $view = __('locale.View');
-                $options = __('locale.Options');
-                return "
-                <div class='dropdown'>
-                    <button type='button' class='btn btn-sm dropdown-toggle hide-arrow py-0' data-bs-toggle='dropdown'>
-                        $options
-                    </button>
-                    <div class='dropdown-menu dropdown-menu-end'>
-                        <a class='dropdown-item' href='/cashier/show/$cashier->id'>
-                            <i data-feather='edit-2' class='me-50'></i>
-                            <span>$view</span>
-                        </a>
-                    </div>
-                </div>";
+                return view('utils.datatable_options', [
+                    'route' => route('cashier.show', $cashier->id),
+                    'options' => [],
+                ]);
             })
-            ->addColumn('is_default', function($cashier){
+            ->addColumn('is_default', function ($cashier) {
                 return $cashier->is_default == 1 ? __('locale.Default') : '-';
             })
-            ->addColumn('created_at',function($cashier){
+            ->addColumn('created_at', function ($cashier) {
                 return $cashier->created_at->diffForHumans();
             })
-            ;
+        ;
     }
 
     /**

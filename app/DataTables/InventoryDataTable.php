@@ -22,8 +22,11 @@ class InventoryDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->addColumn('action', function ($inventroy) {
-                $lang = __('locale.View');
-                return "<a href='show/$inventroy->id'>$lang</a>";
+                return view('utils.datatable_options',[
+                    'route'=>route('inventory.show',$inventroy->id),
+                    'options'=>[]
+                    ]
+                );
             })
             ->addColumn('status', function ($inventroy) {
                 return $inventroy->status();

@@ -21,37 +21,27 @@ class VendorDataTable extends DataTable
   {
     return datatables()
       ->eloquent($query)
-      ->addColumn('name',function($vendro){
+      ->addColumn('name', function ($vendro) {
         return $vendro->full_name;
       })
-      ->addColumn('bills',function($vendro){
+      ->addColumn('bills', function ($vendro) {
         return $vendro->purchases()->count();
       })
-      ->addColumn('total',function($vendro){
+      ->addColumn('total', function ($vendro) {
         $total = 0;
-        foreach($vendro->purchases as $purchase){
+        foreach ($vendro->purchases as $purchase) {
           $total += $purchase->total();
         }
         return $total;
       })
-      ->addColumn('created_at',function($client){
+      ->addColumn('created_at', function ($client) {
         return $client->created_at->diffForHumans();
       })
       ->addColumn('action', function ($vendor) {
-        $view = __('locale.View');
-        $options = __('locale.Options');
-        return "
-                <div class='dropdown'>
-                  <button type='button' class='btn btn-sm dropdown-toggle hide-arrow py-0' data-bs-toggle='dropdown'>
-                    $options
-                  </button>
-                  <div class='dropdown-menu dropdown-menu-end'>
-                    <a class='dropdown-item' href='/vendor/show/$vendor->id'>
-                      <i data-feather='edit-2' class='me-50'></i>
-                      <span>$view</span>
-                    </a>
-                  </div>
-                </div>";
+        return view('utils.datatable_options', [
+          'route' => route('vendor.show', $vendor->id),
+          'options' => []
+        ]);
       });
   }
 

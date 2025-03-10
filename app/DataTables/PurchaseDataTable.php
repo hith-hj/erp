@@ -22,8 +22,10 @@ class PurchaseDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->addColumn('action', function ($purchase) {
-                $lang = __('locale.View');
-                return "<a href='/purchase/show/$purchase->id'>$lang</a>";
+                return view('utils.datatable_options',[
+                    'route'=>route('purchase.show',$purchase->id),
+                    'options'=>[]
+                ]);
             })
             ->addColumn('materials', function ($purchase) {
                 return $purchase->materials()->count();

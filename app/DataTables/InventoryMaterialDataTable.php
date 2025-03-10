@@ -31,7 +31,8 @@ class InventoryMaterialDataTable extends DataTable
                 $view = __('locale.View');
                 $delete = __('locale.Delete');
                 $options = __('locale.Options');
-                return "
+
+                $test = "
                 <div class='dropdown'>
                   <button type='button' class='btn btn-sm dropdown-toggle hide-arrow py-0' data-bs-toggle='dropdown'>
                     $options
@@ -48,6 +49,30 @@ class InventoryMaterialDataTable extends DataTable
                   </div>
                 </div>
                 ";
+                return view(
+                    'utils.datatable_options',
+                    [
+                        'route' => route('currency.show', $material->material_id),
+                        'options' => [
+                            [
+                                'route' => route(
+                                    'inventory.material.delete',
+                                    [
+                                        'inventory_id' => $material->inventory_id,
+                                        'material_id' => $material->material_id,
+                                    ]
+                                ),
+                                'name' => 'Delete',
+                            ],
+                            [
+                                'route' => route('material.show',
+                                    ['id' => $material->material_id,]
+                                ),
+                                'name' => 'View',
+                            ],
+                        ]
+                    ]
+                );
             })
             ->addColumn('name', function ($material) {
                 return $material->material->name ?? __('locale.Deleted');

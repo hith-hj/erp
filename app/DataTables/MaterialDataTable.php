@@ -23,8 +23,10 @@ class MaterialDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->addColumn('action', function ($material) {
-                $lang = __('locale.View');
-                return "<a href='show/$material->id'>$lang</a>";
+                return view('utils.datatable_options',[
+                    'route'=>route('manufacturing.show',$material->id),
+                    'options'=>[]
+                ]);
             })
             ->setRowAttr([
                 'id' => function ($material) {

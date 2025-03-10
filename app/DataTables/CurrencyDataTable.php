@@ -22,8 +22,11 @@ class CurrencyDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->addColumn('action', function ($currency) {
-                $view = __('locale.View');
-                return "<a href='/currency/show/$currency->id'>$view</a>";
+                return view('utils.datatable_options',[
+                    'route'=>route('currency.show',$currency->id),
+                    'options'=>[]
+                    ]
+                );
             })
             ->addColumn('is_default', function ($currency) {
                 return $currency->is_default ? __('locale.Default') : '-';

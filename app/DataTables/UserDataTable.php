@@ -27,8 +27,10 @@ class UserDataTable extends DataTable
                 return $user->getSetting('phone_number');
             })
             ->addColumn('action', function ($user) {
-                $lang = __('locale.View');
-                return "<a href='show/$user->id'>$lang</a>";
+                return view('utils.datatable_options',[
+                    'route'=>route('user.show',$user->id),
+                    'options'=>[]
+                ]);
             });
     }
 

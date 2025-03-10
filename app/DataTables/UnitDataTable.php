@@ -22,20 +22,10 @@ class UnitDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->addColumn('action', function ($unit) {
-                $view = __('locale.View');
-                $options = __('locale.Options');
-                return "
-                <div class='dropdown'>
-                  <button type='button' class='btn btn-sm dropdown-toggle hide-arrow py-0' data-bs-toggle='dropdown'>
-                    $options
-                  </button>
-                  <div class='dropdown-menu dropdown-menu-end'>
-                    <a class='dropdown-item' href='/unit/show/$unit->id'>
-                      <i data-feather='edit-2' class='me-50'></i>
-                      <span>$view</span>
-                    </a>
-                  </div>
-                </div>";
+                return view('utils.datatable_options',[
+                    'route'=>route('unit.show',$unit->id),
+                    'options'=>[]
+                ]);
             })
             ->addColumn('materials', function ($unit) {
                 return $unit->materials()->count();
@@ -50,7 +40,7 @@ class UnitDataTable extends DataTable
      */
     public function query(Unit $model)
     {
-        return $model->with('materials')->newQuery();
+        return $model->with('materials');
     }
 
     /**

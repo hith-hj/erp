@@ -22,8 +22,10 @@ class SaleDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->addColumn('action', function ($sale) {
-                $lang = __('locale.View');
-                return "<a href='/sale/show/$sale->id'>$lang</a>";
+                return view('utils.datatable_options',[
+                    'route'=>route('sale.show',$sale->id),
+                    'options'=>[]
+                ]);
             })
             ->addColumn('client', function ($sale) {
                 return $sale->client?->fullName;

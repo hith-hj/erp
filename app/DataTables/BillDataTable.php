@@ -56,7 +56,7 @@ class BillDataTable extends DataTable
      */
     public function query(Bill $model)
     {
-        return $model->with(['transaction'])->newQuery()->whereIn('billable_type',[Sale::class,Purchase::class]);
+        return $model->with(['transaction'])->whereIn('billable_type',[Sale::class,Purchase::class]);
     }    
 
     /**
