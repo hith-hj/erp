@@ -6,8 +6,6 @@ use App\DataTables\ClientDataTable;
 use App\Http\Controllers\BaseController;
 use App\Http\Repositories\Client\ClientRepository;
 use App\Http\Validator\Client\ClientValidator;
-use App\Models\Client;
-use App\Models\Currency;
 use Illuminate\Http\Request;
 
 class ClientController extends BaseController
@@ -23,35 +21,12 @@ class ClientController extends BaseController
         return (new ClientDataTable())->render('main.client.index');
     }
 
-    public function show(Request $request, $id)
+    public function show(Request $request,$id)
     {
-        $client = Client::with(['sales.materials:id', 'sales.bill.transaction','sales.currency'])
-        ->findOrFail($id);
-        $currencies = [];
-        
-        foreach($client->sales as $key=>$sale){
-            $sale->defaultCurrencyApplyed = false;
-            if($request->filled('currency') && in_array($request->currency,Currency::pluck('name')->toArray())){
-                if($sale->currency->name != $request->currency){
-                    $client->sales->splice($key, 1);
-                }
-            }
-            if(!in_array($sale->currency->name,$currencies)){
-                $currencies[] = $sale->currency->name;
-            }
-
-            $sale->remaining = $sale->bill->transaction->remaining;
-            $sale->total = $sale->total();
-            if(!$sale->currency->is_default && $request->filled('defaultCurrencyApplyed')){
-                $rate = $sale->currency->rate_to_default;
-                $sale->remaining *= $rate;
-                $sale->total *= $rate;
-                $sale->defaultCurrencyApplyed = true;
-            }
-            
-        }
-        $client->currencies = $currencies;
-        return view('main.client.show', ['client' => $client,]);
+        $request->validate([
+            'currency'=>['sometimes','string','exists:currencies,name'],
+        ]);
+        return view('main.client.show', $this->repo->getShowPayload($id));
     }
 
     public function create()

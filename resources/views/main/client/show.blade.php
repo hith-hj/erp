@@ -45,16 +45,16 @@
                                 <div class='dropdown-menu dropdown-menu-end'>
                                     <a class='dropdown-item' onclick="handelFilter()">
                                         <i class="me-1" data-feather='refresh-cw'></i>
-                                        <span>reset</span>
+                                        <span>{{__('locale.Reset')}}</span>
                                     </a>
                                     <a class='dropdown-item {{request('defaultCurrencyApplyed') == true ? 'active' : ''}}' onclick="handelFilter('defaultCurrencyApplyed','true')">
                                         <i class="me-1" data-feather='circle'></i>
                                         <span>Apply Default</span>
                                     </a>
-                                    @foreach ($client->currencies as $currency)
+                                    @foreach ($sales->currencies as $currency)
                                         <a class='dropdown-item {{request('currency') == $currency ? 'active' : ''}}' onclick="handelFilter('currency','{{$currency}}')">
                                             <i class="me-1" data-feather='circle'></i>
-                                            <span>By Currency : {{$currency}}</span>
+                                            <span>{{__('locale.Currency')}} : {{$currency}}</span>
                                         </a>
                                     @endforeach
                                 </div>
@@ -76,13 +76,13 @@
                             </thead>
                             <tbody class="table-hover">
                                 @php
-                                    $sales = 0;
+                                    $totalSales = 0;
                                     $total = 0;
                                     $remaining = 0;
                                 @endphp
-                                @forelse ($client->sales as $sale)
+                                @forelse ($sales as $sale)
                                     @php
-                                        $sales += 1;
+                                        $totalSales += 1;
                                         $total += $sale->total;
                                         $remaining += $sale->remaining;
                                     @endphp
@@ -98,8 +98,11 @@
                                         <td>{{ $sale->total - $sale->remaining }}</td>
                                         <td>{{ $sale->remaining }}</td>
                                         <td>
-                                            @if ($sale->defaultCurrencyApplyed)
+                                            @if ($sale->defaultCurrencyApplyed && $sale->hasTransaction)
                                                 "Default Currency Applyed"
+                                            @endif
+                                            @if (!$sale->hasTransaction)
+                                                "No Transaction Found"
                                             @endif
                                         </td>
                                     </tr>
@@ -113,7 +116,7 @@
                                     </tr>
                                 @endforelse
                                 <tr class="text-primary border-primary">
-                                    <th colspan="3"> {{ __('locale.Sales'). ' : ' .  $sales }} </th>
+                                    <th colspan="3"> {{ __('locale.Sales'). ' : ' .  $totalSales }} </th>
                                     <th> {{ __('locale.Total') . ' : ' .  $total}} </th>
                                     <th> {{ __('locale.Payed') . ' : ' .  $total - $remaining}} </th>
                                     <th> {{ __('locale.Remaining') . ' : ' .  $remaining}} </th>
