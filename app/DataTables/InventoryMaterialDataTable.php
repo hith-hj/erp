@@ -28,54 +28,32 @@ class InventoryMaterialDataTable extends DataTable
         return datatables()
             ->eloquent($query)
             ->addColumn('action', function ($material) {
-                $view = __('locale.View');
-                $delete = __('locale.Delete');
-                $options = __('locale.Options');
-
-                $test = "
-                <div class='dropdown'>
-                  <button type='button' class='btn btn-sm dropdown-toggle hide-arrow py-0' data-bs-toggle='dropdown'>
-                    $options
-                  </button>
-                  <div class='dropdown-menu dropdown-menu-end'>
-                    <a class='dropdown-item' href='/material/show/$material->material_id'>
-                      <i data-feather='edit-2' class='me-50'></i>
-                      <span>$view</span>
-                    </a>
-                    <a class='dropdown-item' href='/inventory/$material->inventory_id/material/$material->material_id/delete'>
-                      <i data-feather='trash' class='me-50'></i>
-                      <span>$delete</span>
-                    </a>
-                  </div>
-                </div>
-                ";
                 return view(
                     'utils.datatable_options',
                     [
-                        'route' => route('currency.show', $material->material_id),
+                        'route' => route('material.show', $material->material_id),
                         'options' => [
                             [
-                                'route' => route(
-                                    'inventory.material.delete',
-                                    [
-                                        'inventory_id' => $material->inventory_id,
-                                        'material_id' => $material->material_id,
-                                    ]
-                                ),
-                                'name' => 'Delete',
+                                'route' => route('inventory.material.delete',[
+                                    'inventory_id' => $material->inventory_id,
+                                    'material_id' => $material->material_id,
+                                ]),
+                                'name' => __('locale.Delete'),
+                                'class' => 'text-danger',
+                                'icon' => 'fa-trash',
                             ],
                             [
-                                'route' => route('material.show',
-                                    ['id' => $material->material_id,]
-                                ),
-                                'name' => 'View',
+                                'route' => route('material.show',[
+                                    'id' => $material->material_id,
+                                ]),
+                                'name' => __('locale.View'),
                             ],
                         ]
                     ]
                 );
             })
             ->addColumn('name', function ($material) {
-                return $material->material->name ?? __('locale.Deleted');
+                return $material->material->name ?? __('locale.Nothing found');
             })
             ->addColumn('status', function ($material) {
                 return $material->status();
@@ -136,8 +114,7 @@ class InventoryMaterialDataTable extends DataTable
             Column::make('quantity')->title(__('locale.Quantity')),
             Column::make('status')->title(__('locale.Status')),
             Column::make('created_at')->title(__('locale.Created at')),
-            Column::computed('action')
-                ->title(__('locale.Action'))
+            Column::computed('action')->title(__('locale.Action'))
                 ->exportable(false)
                 ->printable(false)
                 ->width(60)

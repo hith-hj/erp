@@ -16,6 +16,7 @@
 <link rel="stylesheet" href="{{ asset('vendors/css/extensions/toastr.min.css') }}">
 
 <link rel="stylesheet" href="{{ asset('css/base/themes/dark-layout.css') }}" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 @yield('vendor-style')
 
 @yield('page-style')

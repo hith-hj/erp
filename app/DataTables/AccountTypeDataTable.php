@@ -21,8 +21,14 @@ class AccountTypeDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->addColumn('action', function ($expense) {
-                return view('utils.datatable_options', ['route' => route('accountType.show', $expense->id), 'options' => [] ]);
+            ->addColumn('action', function ($type) {
+                return view('utils.datatable_options', [
+                    'route' => route('accountType.show', $type->id),
+                    'options' => [] 
+                ]);
+            })
+            ->addColumn('created_at', function ($type) {
+                return $type->created_at->diffForHumans();
             });
     }
 

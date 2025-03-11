@@ -29,6 +29,9 @@ class UnitDataTable extends DataTable
             })
             ->addColumn('materials', function ($unit) {
                 return $unit->materials()->count();
+            })
+            ->addColumn('created_at', function ($unit) {
+                return $unit->created_at->diffForHumans();
             });
     }
 

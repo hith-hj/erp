@@ -38,7 +38,10 @@ class ClientDataTable extends DataTable
         return $client->created_at->diffForHumans();
       })
       ->addColumn('action', function ($client) {
-        return view('utils.datatable_options',['route'=>route('client.show',$client->id),'options'=>[]]);
+        return view('utils.datatable_options',[
+          'route'=>route('client.show',$client->id),
+          'options'=>[]
+        ]);
       });
   }
 

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class InventoryMaterial extends Pivot
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
     public $incrementing = true;
     protected $casts = ['status' => 'integer'];

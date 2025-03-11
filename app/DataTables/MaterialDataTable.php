@@ -24,7 +24,7 @@ class MaterialDataTable extends DataTable
             ->eloquent($query)
             ->addColumn('action', function ($material) {
                 return view('utils.datatable_options',[
-                    'route'=>route('manufacturing.show',$material->id),
+                    'route'=>route('material.show',$material->id),
                     'options'=>[]
                 ]);
             })
@@ -51,7 +51,7 @@ class MaterialDataTable extends DataTable
                 return $material->getType();
             })
             ->addColumn('created_at', function ($material) {
-                return $material->created_at;
+                return $material->created_at->diffForHumans();
             });
     }
 

@@ -37,7 +37,6 @@ class SaleDataTable extends DataTable
                 return $sale->materials()?->count();
             })
             ->addColumn('cost', function ($sale) {
-                // return $sale->materials()?->sum('cost');
                 return $sale->total();
             })
             ->addColumn('bill', function ($sale) {

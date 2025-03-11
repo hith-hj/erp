@@ -31,6 +31,9 @@ class UserDataTable extends DataTable
                     'route'=>route('user.show',$user->id),
                     'options'=>[]
                 ]);
+            })
+            ->addColumn('created_at', function ($user) {
+                return $user->created_at->diffForHumans();
             });
     }
 

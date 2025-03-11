@@ -31,7 +31,6 @@ class PurchaseDataTable extends DataTable
                 return $purchase->materials()->count();
             })
             ->addColumn('cost', function ($purchase) {
-                // return $purchase->materials()->sum('cost');
                 return $purchase->total();
             })
             ->addColumn('vendor', function ($purchase) {

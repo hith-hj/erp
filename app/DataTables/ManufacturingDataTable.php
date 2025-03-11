@@ -35,6 +35,9 @@ class ManufacturingDataTable extends DataTable
             })
             ->addColumn('bill',function($manufacturing){
                 return $manufacturing->bill?->serial ?? __('locale.None'); 
+            })
+            ->addColumn('created_at', function ($manufacturing) {
+                return $manufacturing->created_at->diffForHumans();
             });
     }
 

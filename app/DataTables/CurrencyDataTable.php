@@ -30,6 +30,9 @@ class CurrencyDataTable extends DataTable
             })
             ->addColumn('is_default', function ($currency) {
                 return $currency->is_default ? __('locale.Default') : '-';
+            })
+            ->addColumn('created_at', function ($currency) {
+                return $currency->created_at->diffForHumans();
             });
     }
 

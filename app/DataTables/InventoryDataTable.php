@@ -21,21 +21,24 @@ class InventoryDataTable extends DataTable
     {
         return datatables()
             ->eloquent($query)
-            ->addColumn('action', function ($inventroy) {
+            ->addColumn('action', function ($inventory) {
                 return view('utils.datatable_options',[
-                    'route'=>route('inventory.show',$inventroy->id),
+                    'route'=>route('inventory.show',$inventory->id),
                     'options'=>[]
                     ]
                 );
             })
-            ->addColumn('status', function ($inventroy) {
-                return $inventroy->status();
+            ->addColumn('status', function ($inventory) {
+                return $inventory->status();
             })
-            ->addColumn('materials', function ($inventroy) {
-                return !is_null($inventroy->materials) ? $inventroy->materials()->count() : 0;
+            ->addColumn('materials', function ($inventory) {
+                return !is_null($inventory->materials) ? $inventory->materials()->count() : 0;
             })
-            ->addColumn('default', function ($inventroy) {
-                return $inventroy->is_default ? __('locale.Default') : '-';
+            ->addColumn('default', function ($inventory) {
+                return $inventory->is_default ? __('locale.Default') : '-';
+            })
+            ->addColumn('created_at', function ($inventory) {
+                return $inventory->created_at->diffForHumans();
             })
             ;
     }

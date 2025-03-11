@@ -27,12 +27,6 @@
                         @csrf
                         <div class="row">
                             <div class="col-12 col-sm-6 mb-1">
-                                <label class="form-label" for="accountFirstName">
-                                    {{ __('locale.Full Name') }}</label>
-                                <input type="text" class="form-control" id="accountFirstName" name="full_name"
-                                    placeholder="{{ __('locale.Full Name') }}" value="{{ $user->full_name }}" />
-                            </div>
-                            <div class="col-12 col-sm-6 mb-1">
                                 <label class="form-label" for="accountLastName">
                                     {{ __('locale.Username') }}
                                 </label>
@@ -45,6 +39,12 @@
                                 </label>
                                 <input type="email" class="form-control" id="accountEmail"
                                     placeholder="{{ __('locale.Email') }}" value="{{ $user->email }}" readonly />
+                            </div>
+                            <div class="col-12 col-sm-6 mb-1">
+                                <label class="form-label" for="accountFirstName">
+                                    {{ __('locale.Full Name') }}</label>
+                                <input type="text" class="form-control" id="accountFirstName" name="full_name"
+                                    placeholder="{{ __('locale.Full Name') }}" value="{{ $user->full_name }}" />
                             </div>
                             <div class="col-12 col-sm-6 mb-1">
                                 <label class="form-label" for="accountPhoneNumber">

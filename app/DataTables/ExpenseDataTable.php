@@ -27,6 +27,9 @@ class ExpenseDataTable extends DataTable
                     'options'=>[]
                     ]
                 );
+            })
+            ->addColumn('created_at', function ($expense) {
+                return $expense->created_at->diffForHumans();
             });
     }
 

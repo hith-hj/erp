@@ -86,14 +86,17 @@ class InventoryController extends BaseController
         
         $inventory = $this->repo->updateInventory($inventory, $materials);
         
-        return redirect()->route('inventory.show', ['id' => $inventory->id]);
+        return redirect()
+        ->route('inventory.show', ['id' => $inventory->id])
+        ->with('success', 'Material added to inventory ');
     }
-
+    
     public function material_delete($inventory_id, $material_id)
     {
         $inventory = $this->repo->find($inventory_id);
         $inventory->materials()->detach($material_id);
-        return redirect()->route('inventory.show', ['id' => $inventory->id]);
+        return redirect()->route('inventory.show', ['id' => $inventory->id])
+        ->with('success', 'Material removed from inventory ');
     }
 
     public function material_update(
