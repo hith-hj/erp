@@ -13,7 +13,7 @@ class InventoryRepository extends BaseRepository
         parent::__construct(Inventory::class);
     }
 
-    public function defaultNotExists()
+    public function defaultDontExist()
     {
         return $this->getter('inventory', ['where' => [['is_default', true]] ])->isEmpty();
     }
@@ -70,9 +70,11 @@ class InventoryRepository extends BaseRepository
 
     public function setDefault($id)
     {
-        $this
-            ->getter('inventory', ['where' => [['is_default', true]]], 'first')
+        if(!$this->defaultDontExist()){   
+            $this
+            ->getter('inventory', ['where' => [['is_default', true]]], 'firstOrFail')
             ?->update(['is_default' => false]);
+        }
         $this->update($id, ['is_default' => true]);
         return;
     }
