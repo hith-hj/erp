@@ -36,15 +36,17 @@
                             <span>{{ __('locale.Phone').':'.$client->phone }}</span>
                         </div>
                         <div class="card-text d-flex flex-wrap gap-1">
-                            <span>    
-                                <i class="text-primary" data-feather="printer" 
-                                onclick="printTable('printable')"></i>
+                            <span onclick="printTable('printable')" title="Print table">    
+                                <i class="text-primary fa fa-print" ></i>
+                            </span>
+                            <span onclick="prepTableForSort()" title="prepare table for sort">
+                                <i class="text-primary fa fa-sort" ></i>
                             </span>
                             <div class='dropdown'>
-                                <i data-feather="filter" data-bs-toggle='dropdown' class="text-primary"></i>
+                                <i data-bs-toggle='dropdown' class="fa fa-filter text-primary"></i>
                                 <div class='dropdown-menu dropdown-menu-end'>
                                     <a class='dropdown-item' onclick="handelFilter()">
-                                        <i class="me-1" data-feather='refresh-cw'></i>
+                                        <i class="me-1 fa fa-refresh" ></i>
                                         <span>{{__('locale.Reset')}}</span>
                                     </a>
                                     <a class='dropdown-item {{request('defaultCurrencyApplyed') == true ? 'active' : ''}}' onclick="handelFilter('defaultCurrencyApplyed','true')">
@@ -61,8 +63,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card-body">
-                        <table class="table table-sm table-bordered sortable" id="printable">
+                    <div class="card-body" id="printable">
+                        @php
+                            $stats = [];
+                        @endphp
+                        <table class="table table-sm table-bordered sortable">
                             <thead>
                                 <tr id="sortable_by">
                                     <th>{{__('locale.ID')}}</th>
@@ -75,16 +80,20 @@
                                 </tr>
                             </thead>
                             <tbody class="table-hover">
-                                @php
-                                    $totalSales = 0;
-                                    $total = 0;
-                                    $remaining = 0;
-                                @endphp
                                 @forelse ($sales as $sale)
                                     @php
-                                        $totalSales += 1;
-                                        $total += $sale->total;
-                                        $remaining += $sale->remaining;
+                                        $currency = $sale->currency->name;
+                                        if(!isset($stats[$currency])){
+                                            $stats[$currency] = [
+                                                'count' => 1,
+                                                'total'=>$sale->total,
+                                                'remaining'=>$sale->remaining,
+                                            ];
+                                        }else{
+                                            $stats[$currency]['count'] += 1;
+                                            $stats[$currency]['total'] += $sale->total;
+                                            $stats[$currency]['remaining'] += $sale->remaining;
+                                        }
                                     @endphp
                                     <tr>
                                         <td>{{ $sale->id }}</td>
@@ -102,7 +111,9 @@
                                         <td>{{ $sale->total - $sale->remaining }}</td>
                                         <td>{{ $sale->remaining }}</td>
                                         <td>
-                                            @if ($sale->defaultCurrencyApplyed && $sale->hasTransaction)
+                                            @if ($sale->hasTransaction 
+                                            && !$sale->currency->is_default 
+                                            && request()->filled('defaultCurrencyApplyed'))
                                                 "Default Currency Applyed"
                                             @endif
                                             @if (!$sale->hasTransaction)
@@ -119,20 +130,29 @@
                                         </td>
                                     </tr>
                                 @endforelse
-                                <tr class="text-primary border-primary">
-                                    <th colspan="3"> {{ __('locale.Sales'). ' : ' .  $totalSales }} </th>
-                                    <th> {{ __('locale.Total') . ' : ' .  $total}} </th>
-                                    <th> {{ __('locale.Payed') . ' : ' .  $total - $remaining}} </th>
-                                    <th> {{ __('locale.Remaining') . ' : ' .  $remaining}} </th>
-                                    <td></td>
-                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="table table-sm table-bordered mt-1">
+                            <tbody class="table-hover">
+                                @forelse ($stats as $key => $item)
+                                    <tr class="text-primary border-primary">
+                                        <th> {{ __('locale.Currency') . ' : ' . $key}} </th>
+                                        <th colspan="9"> {{ __('locale.Rows count'). ' : ' .  $item['count'] }} </th>
+                                        <th> {{ __('locale.Total') . ' : ' . $item['total']}} </th>
+                                        <th> {{ __('locale.Payed') . ' : ' . $item['total'] - $item['remaining']}} </th>
+                                        <th> {{ __('locale.Remaining') . ' : ' . $item['remaining']}} </th>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <th> {{__('locale.Nothing found')}} </th>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
-
     </section>
 @endsection
 

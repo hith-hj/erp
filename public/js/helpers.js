@@ -37,28 +37,22 @@ function handelFilter(param= null,value=null){
 
 prevColumn = -1;
 prevElement = null;
-window.onload = ()=>{
+
+function prepTableForSort(options={}){
     let list = document.querySelector("#sortable_by");
     if(list){
         [...list.children].forEach((child,index)=>{
             if(!child.classList.contains('skip_sort')){
-                child.classList.add('clickable')
-                child.setAttribute('onclick',`sortBy(${index},this)`);
+                child.classList.add('clickable');
+                child.setAttribute('onclick',`sortTableBy(${index},this)` );
             }
         });
     }
 }
-function sortBy(byColumn,el,options={}) {
-    let defOptions = {
-        removeLastRow:true
-    }
-    options = Object.assign(options,defOptions);
+
+function sortTableBy(byColumn,el) {
     sortable = document.querySelector(".sortable");
-    if(options.removeLastRow){
-        rows = sortable.rows.length-1; // -1 to remove last line 
-    }else{
-        rows = sortable.rows.length;
-    }
+    rows = sortable.rows.length;    
     columns = sortable.rows[0].cells.length; 
     arrTable = [...Array(rows)].map(r => Array(columns));
     
