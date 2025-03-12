@@ -39,7 +39,7 @@ class InventoryController extends BaseController
     {
         InventoryValidator::validateInventorylDetails($request);
         $inventory = $this->repo->add($request->only('name'));
-        if ($request->is_default || $this->defaultDontExist()) {
+        if ($request->is_default || $this->repo->defaultDontExist()) {
             $this->repo->setDefault($inventory->id);
         }
         $materials = $this->repo->checkForMaterialDuplication($request->only('materials'));
