@@ -1,61 +1,68 @@
 @extends('layouts.contentLayoutMaster')
 
 @section('title')
-    {{ $client->first_name }}
+    {{ $client->full_name }}
 @endsection
 
 @section('content')
     <section id="card-content-types">
-        <div class="card-head mb-1 row">
-            <h4 class="col-10">{{ __('locale.Show') }}</h4>
-            <div class="col-2">
-                <button class="btn btn-sm btn-outline-danger w-100"
-                    onclick="
-                        if(confirm('{{ __('locale.Delete') }} ?')){
-                            document.getElementById('deleteClientForm').submit();
-                        }
-                    ">
-                    {{ __('locale.Delete') }}
-                </button>
-                <form id="deleteClientForm" method="Post" action="{{ route('client.delete', ['client' => $client->id]) }}">
-                    @csrf @method('delete')
-                </form>
-            </div>
-        </div>
         <div class="row">
             <div class="col-12">
-                <h5>{{ __('locale.Details') }}</h5>
                 <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">
-                            {{ __('locale.Name') }} :
-                            {{ "$client->first_name  $client->last_name" }}
-                        </h4>
-                        <div class="card-text d-flex flex-wrap gap-1">
-                            <span>{{ __('locale.Email').':'.$client->email }}</span>
-                            <span>{{ __('locale.Phone').':'.$client->phone }}</span>
+                    <div class="card-body">
+                        <div class="row">
+                            <h4 class="col-10">{{ __('locale.Client') .' : '."$client->full_name" }}</h4>
+                            <div class="col-2">
+                                <button class="btn btn-outline-danger btn-sm"
+                                    onclick="
+                                        if(confirm('{{ __('locale.Delete') }} ?')){
+                                            document.getElementById('deleteClientForm').submit();
+                                        }
+                                    ">
+                                    <i class="fa fa-trash me-1"></i>
+                                    {{ __('locale.Delete') }}
+                                </button>
+                                <form id="deleteClientForm" method="Post" action="{{ route('client.delete', ['client' => $client->id]) }}">
+                                    @csrf @method('delete')
+                                </form>
+                            </div>
+                        </div>
+                        <div class="card-text">
+                            {{ __('locale.Email').': '.$client->email }}
+                        </div>
+                        <div class="card-text">
+                            {{ __('locale.Phone').': '.$client->phone }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header justify-content-between">
+                        <div class="">
+                            {{__('locale.Sales')}}
                         </div>
                         <div class="card-text d-flex flex-wrap gap-1">
                             <span onclick="printTable('printable')" title="Print table">    
-                                <i class="text-primary fa fa-print" ></i>
+                                <i class="text-primary fa fa-lg fa-print" ></i>
                             </span>
                             <span onclick="prepTableForSort()" title="prepare table for sort">
-                                <i class="text-primary fa fa-sort" ></i>
+                                <i class="text-primary fa fa-lg fa-sort" ></i>
                             </span>
                             <div class='dropdown'>
-                                <i data-bs-toggle='dropdown' class="fa fa-filter text-primary"></i>
+                                <i data-bs-toggle='dropdown' class="fa fa-lg fa-filter text-primary"></i>
                                 <div class='dropdown-menu dropdown-menu-end'>
                                     <a class='dropdown-item' onclick="handelFilter()">
                                         <i class="me-1 fa fa-refresh" ></i>
                                         <span>{{__('locale.Reset')}}</span>
                                     </a>
                                     <a class='dropdown-item {{request('defaultCurrencyApplyed') == true ? 'active' : ''}}' onclick="handelFilter('defaultCurrencyApplyed','true')">
-                                        <i class="me-1" data-feather='circle'></i>
+                                        <i class="me-1 fa fa-circle-thin"></i>
                                         <span>Apply Default</span>
                                     </a>
                                     @foreach ($sales->currencies as $currency)
                                         <a class='dropdown-item {{request('currency') == $currency ? 'active' : ''}}' onclick="handelFilter('currency','{{$currency}}')">
-                                            <i class="me-1" data-feather='circle'></i>
+                                            <i class="me-1 fa fa-circle-thin"></i>
                                             <span>{{__('locale.Currency')}} : {{$currency}}</span>
                                         </a>
                                     @endforeach

@@ -45,6 +45,10 @@ class ClientController extends BaseController
 
     public function delete($id)
     {
+        $client = $this->repo->findWith($id,['sales']);
+        if(!$client || !$client->sales->isEmpty()){
+            return redirect()->back()->with('error','client has sales can\'t be deleted');
+        }
         $this->repo->delete($id);
         return redirect()->route('client.all')->with('success', 'Client Deleted');
     }

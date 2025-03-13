@@ -64,6 +64,6 @@ class HomeController extends Controller
                 ]);
             }
         }
-        return redirect('/')->with('success', 'theme stored');
+        return redirect()->back()->with('success', 'theme stored');
     }
 }
