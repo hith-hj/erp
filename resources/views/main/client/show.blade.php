@@ -90,16 +90,19 @@
                                 @forelse ($sales as $sale)
                                     @php
                                         $currency = $sale->currency->name;
+                                        
+                                        $total = $sale->total;
+                                        $remaining = $sale->remaining;
                                         if(!isset($stats[$currency])){
                                             $stats[$currency] = [
                                                 'count' => 1,
-                                                'total'=>$sale->total,
-                                                'remaining'=>$sale->remaining,
+                                                'total'=>$total,
+                                                'remaining'=>$remaining,
                                             ];
                                         }else{
                                             $stats[$currency]['count'] += 1;
-                                            $stats[$currency]['total'] += $sale->total;
-                                            $stats[$currency]['remaining'] += $sale->remaining;
+                                            $stats[$currency]['total'] += $total;
+                                            $stats[$currency]['remaining'] += $remaining;
                                         }
                                     @endphp
                                     <tr>
@@ -110,7 +113,7 @@
                                                     {{ $sale->bill?->serial }}
                                                 </a>
                                             @else
-                                                No Bill
+                                                "No Bill"
                                             @endif
                                         </td>
                                         <td>{{ $sale->currency->name }}</td>
@@ -118,9 +121,11 @@
                                         <td>{{ $sale->total - $sale->remaining }}</td>
                                         <td>{{ $sale->remaining }}</td>
                                         <td>
-                                            @if ($sale->hasTransaction 
-                                            && !$sale->currency->is_default 
-                                            && request()->filled('defaultCurrencyApplyed'))
+                                            @if (
+                                                $sale->hasTransaction 
+                                                && !$sale->currency->is_default 
+                                                && request()->filled('defaultCurrencyApplyed')
+                                            )
                                                 "Default Currency Applyed"
                                             @endif
                                             @if (!$sale->hasTransaction)
