@@ -31,10 +31,10 @@ class CashierController extends Controller
 
     public function store(Request $request){
         $data = $request->validate([
-            'name'=>['required','string','min:3','max:20'],
+            'name'=>['required','string','min:3','max:20','unique:cashiers,name'],
             'is_default'=>['nullable','in:true,false'],
         ]);
-        $cashier = $this->repo->add($data);
+        $cashier = $this->repo->add($request->only('name'));
         if(
             (isset($data['is_default']) && (bool)$data['is_default'] === true) ||
             $this->repo->defaultNotExists()
