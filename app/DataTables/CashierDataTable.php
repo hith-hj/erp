@@ -24,7 +24,12 @@ class CashierDataTable extends DataTable
             ->addColumn('action', function ($cashier) {
                 return view('utils.datatable_options', [
                     'route' => route('cashier.show', $cashier->id),
-                    'options' => [],
+                    'options' => [
+                        [
+                            'route' => route('ledger.show',['cashier_id'=>$cashier->id]),
+                            'name' => __('locale.Ledger'),
+                        ],
+                    ],
                 ]);
             })
             ->addColumn('is_default', function ($cashier) {

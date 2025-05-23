@@ -5,6 +5,7 @@ use App\Http\Controllers\CP\LanguageController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Bill\BillController;
 use App\Http\Controllers\Cashier\CashierController;
+use App\Http\Controllers\Ledger\LedgerController;
 use App\Http\Controllers\Client\ClientController;
 use App\Http\Controllers\Currency\CurrencyController;
 use App\Http\Controllers\Expense\ExpenseController;
@@ -208,6 +209,14 @@ Route::group(['middleware' => 'auth',], function () {
     ], function () {
         Route::get('all', 'index')->name('transaction.all');
         Route::get('show/{transaction}', 'show')->name('transaction.show');
+    });
+
+    Route::group([
+        'prefix' => 'Ledger',
+        'controller' => LedgerController::class
+    ], function () {
+        Route::get('show', 'show')->name('ledger.show');
+        Route::post('store', 'store')->name('ledger.store');
     });
 
     Route::group(['controller' => HomeController::class,], function () {

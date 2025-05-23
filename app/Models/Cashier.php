@@ -16,4 +16,7 @@ class Cashier extends Model
         return $this->hasMany(Transaction::class)->orderBy('created_at','desc');
     }
 
+    public function ledgers(){
+        return $this->hasMany(Ledger::class);
+    }
 }
