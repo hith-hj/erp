@@ -28,6 +28,6 @@ class Ledger extends Model
 
     public function records()
     {
-        return $this->hasMany(ledgerRecord::class);
+        return $this->hasMany(LedgerRecord::class);
     }
 }

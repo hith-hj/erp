@@ -36,5 +36,5 @@ interface Repository
         array $callable = [],
         string $getter = 'get',
         array $columns = ['*']
-    ) : Collection|Model;
+    ) : Collection|Model|null;
 }

@@ -95,7 +95,7 @@ class BaseRepository implements Repository
         array $callable = [],
         string $getter = 'get',
         array $columns = ['*']
-    ): Collection|Model {
+    ): Collection|Model|null {
         $model = '\App\Models\\' . ucfirst(trim($model));
         $query = $model::query();
         foreach ($callable as $key => $value) {

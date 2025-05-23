@@ -18,25 +18,34 @@ class LedgerController extends Controller
     public function show(Request $request)
     {
         $request->validate([
-            'cashier_id'=>['required','exists:cashiers,id']
+            'cashier_id' => ['required', 'exists:cashiers,id']
         ]);
-        
-        return view('main.ledger.show',$this->repo->getShowPayload($request));
+
+        return view('main.ledger.show', $this->repo->getShowPayload($request));
     }
 
-    public function store(Request $request){
-        dd($request->all());
+    public function store(Request $request)
+    {
         $request->validate([
-            'ledger_items'=>['required','array','min:1'],
-            'ledger_items.*.type' => ['required', 'string' , 'in:debit,credit'],
-            'ledger_items.*.account' => ['required', 'numeric'],
-            'ledger_items.*.currency' => ['required', 'exists:currencies,id'],
-            'ledger_items.*.quantity' => ['required', 'numeric', 'min:1'],
-            'ledger_items.*.note' => ['nullable', 'string','max:250'],
+            'ledger_id'=>['required','exists:ledgers,id'],
+            'records' => ['required', 'array', 'min:1'],
+            'records.*.record_type' => ['required', 'string', 'in:debit,credit'],
+            'records.*.account_id' => ['required', 'numeric'],
+            'records.*.currency_id' => ['required', 'exists:currencies,id'],
+            'records.*.quantity' => ['required', 'numeric', 'min:1'],
+            'records.*.note' => ['nullable', 'string', 'max:250'],
         ]);
+        $records = $request->records;
 
-        $this->repo->storeLedgerItems($request->ledger_items);
-
-
+        try {
+            $ledger = $this->repo->getLedger($request->input('ledger_id'));
+            $records = $this->repo->checkForDuplicates($records);
+            $records = $this->repo->checkAccounts($records);
+            $records = $this->repo->setToDefaultCurrency($records);
+            $this->repo->storeLedgerRecords($ledger,$records);
+            return redirect()->back()->with('success', 'records stored');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
     }
 }
