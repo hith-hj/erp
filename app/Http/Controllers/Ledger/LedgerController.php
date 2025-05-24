@@ -15,13 +15,19 @@ class LedgerController extends Controller
         $this->repo = new LedgerRepository();
     }
 
-    public function show(Request $request)
+    public function all(Request $request, $cashier_id)
     {
-        $request->validate([
-            'cashier_id' => ['required', 'exists:cashiers,id']
-        ]);
+        return view('main.ledger.all',$this->repo->getCashierLedgersPayload($cashier_id) );
+    }
 
-        return view('main.ledger.show', $this->repo->getShowPayload($request));
+    public function today(Request $request, $cashier_id)
+    {
+        return view('main.ledger.today', $this->repo->getTodayPayload($cashier_id));
+    }
+
+    public function records(Request $request, $ledger_id)
+    {
+        return view('main.ledger.records', $this->repo->getLedgerRecordsPayload($ledger_id));
     }
 
     public function store(Request $request)

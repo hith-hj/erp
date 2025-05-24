@@ -5,6 +5,7 @@ namespace App\Http\Repositories\Ledger;
 use App\Http\Repositories\BaseRepository;
 use App\Models\Ledger;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class LedgerRepository extends BaseRepository
 {
@@ -13,10 +14,32 @@ class LedgerRepository extends BaseRepository
         parent::__construct(Ledger::class);
     }
 
-    public function getShowPayload($request)
+    public function getCashierLedgersPayload($cashier_id)
     {
+        $validator = Validator::make(
+            ['cashier_id' => $cashier_id],
+            ['cashier_id' => ['required', 'exists:cashiers,id']],
+        );
+        $cashier = $this->getter(
+            model: 'cashier',
+            callable: [
+                'where' => [['id', $validator->validated()['cashier_id']]],
+                'with' => ['ledgers'],
+            ],
+            getter: 'first'
+        );
+        return ['cashier' => $cashier];
+    }
+
+    public function getTodayPayload($cashier_id)
+    {
+        $validator = Validator::make(
+            ['cashier_id' => $cashier_id],
+            ['cashier_id' => ['required', 'exists:cashiers,id']],
+        );
+        $ledger = $this->createTodayLedgerForCashierIfNotExists($validator->validated()['cashier_id']);
         return [
-            'ledger' => $this->createTodayLedgerForCashierIfNotExists($request->input('cashier_id')),
+            'ledger' => $ledger,
             'currencies' => $this->getter(model: 'currency'),
             'clients' => $this->getter(model: 'client'),
             'vendors' => $this->getter(model: 'vendor'),
@@ -28,28 +51,49 @@ class LedgerRepository extends BaseRepository
         $cashier = $this->getter(model: 'cashier', callable: [
             'where' => [['id', $id]],
         ], getter: 'first');
-        $lastCashierLedger = $cashier->ledgers->sortByDesc('created_at')->first();
-        if ($lastCashierLedger && $lastCashierLedger->created_at->format('Y-m-d') === now()->format('Y-m-d')) {
-            return $lastCashierLedger->load(['records.currency']);
+        $ledgers = $cashier->ledgers()->orderBy('created_at', 'desc');
+        if (
+            $ledgers->count() > 0 &&
+            ($last = $ledgers->first())->created_at->format('Y-m-d') === now()->format('Y-m-d')
+        ) {
+            $ledger = $last;
+        } elseif (
+            $ledgers->count() > 0 &&
+            ($last = $ledgers->first())->created_at->format('Y-m-d') !== now()->format('Y-m-d')
+        ) {
+            $ledger = $this->add([
+                'cashier_id' => $id,
+                'created_by' => Auth::id(),
+                'start_balance' => $last->end_balance,
+                'end_balance' => $last->end_balance,
+            ]);
+        } else {
+            $ledger = $this->add([
+                'cashier_id' => $id,
+                'created_by' => Auth::id(),
+                'start_balance' => $cashier->total,
+                'end_balance' => $cashier->total,
+            ]);
         }
-        $newLedger = Ledger::create([
-            'cashier_id' => $id,
-            'created_by' => Auth::id(),
-            'start_balance' => $cashier->total,
-            'end_balance' => $cashier->total,
-        ]);
 
-        return $newLedger->load(['records.currency']);
+        return $ledger->load(['records.currency']);
+    }
+
+    public function getLedgerRecordsPayload($ledger_id)
+    {
+        return ['ledger' => $this->getLedger($ledger_id),];
     }
 
     public function getLedger($id)
     {
         $ledger = $this->getter(
-            'ledger',
-            [
+            model: 'ledger',
+            callable: [
                 'where' => [['id', $id],],
-                'with'=>['records']
-            ], 'first');
+                'with' => ['records']
+            ],
+            getter: 'first'
+        );
         if (!$ledger) {
             return $this->throw('ledger not found');
         }
@@ -65,7 +109,13 @@ class LedgerRepository extends BaseRepository
 
     public function storeItem(Ledger $ledger, array $record)
     {
-        // dd($record, $ledger);
+        if($record['record_type'] === 'credit'){
+            $ledger->cashier()->increment('total',$record['quantity']);
+            $ledger->increment('end_balance',$record['quantity']);
+        }else{
+            $ledger->cashier()->decrement('total',$record['quantity']);
+            $ledger->decrement('end_balance',$record['quantity']);
+        }
         return $ledger->records()->create($record);
     }
 

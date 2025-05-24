@@ -289,7 +289,6 @@ return [
     "Unsaved" => "Unsaved",
     "Audited" => "Audited",
     "Checked" => "Checked",
-    "" => "",
 
     
     "Is Default" => "Is Default",
@@ -365,5 +364,18 @@ return [
     "Withdraw"=>"Withdraw",
     "ID"=>"ID",
     "Payed"=>"Payed",
+
+    "Ledgers"=>"Ledgers",
+    "Ledger"=>"Ledger",
+    "Today ledger"=>"Today ledger",
+    "Start balance"=>"Start Balance",
+    "End balance"=>"End Balance",
+    "Records"=>"Records",
+    "Record"=>"Record",
+    "Date"=>"Date",
+    "Changed balance"=>"Changed balance",
+    "Balance difference"=>"Balance difference",
+    "Base balance"=>"Base balance",
+    "Today"=>"Today",
 
 ];

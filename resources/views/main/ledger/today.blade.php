@@ -93,11 +93,27 @@
                                         <th>{{ __('locale.Currency') }}</th>
                                         <th>{{ __('locale.Quantity') }}</th>
                                         <th>{{ __('locale.Note') }}</th>
-                                        <th>{{ __('locale.Created_at')}}</th>
+                                        <th>{{ __('locale.Created at')}}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @php
+                                        $stats = [];
+                                    @endphp
                                     @forelse($ledger->records as $record)
+                                        @php
+                                            $currency = $record->currency->name;
+                                            $total = $record->quantity;
+                                            if(!isset($stats[$currency])){
+                                                $stats[$currency] = [
+                                                    'count' => 1,
+                                                    'total'=>$total,
+                                                ];
+                                            }else{
+                                                $stats[$currency]['count'] += 1;
+                                                $stats[$currency]['total'] += $total;
+                                            }
+                                        @endphp
                                         <tr>
                                             <th>{{$loop->index + 1}}</th>
                                             <th>{{ $record->id }}</th>
@@ -115,6 +131,36 @@
                                         </tr>
                                     @empty
                                         not records found
+                                    @endforelse
+                                </tbody>
+                            </table>
+                            <table class="table table-sm table-bordered mt-1">
+                                <tbody class="table-hover">
+                                    <tr>
+                                        <th>{{__('locale.Records')}}</th>
+                                        <th>{{$ledger->records->count()}}</th>
+                                        <th>{{__('locale.Start balance')}}</th>
+                                        <th>{{ $ledger->start_balance }}</th>
+                                        <th>{{__('locale.End balance')}}</th>
+                                        <th>{{$ledger->end_balance}}</th>
+                                        <th>{{__('locale.Balance difference')}}</th>
+                                        <th>{{$ledger->start_balance - $ledger->end_balance}}</th>
+                                    </tr>
+                                </tbody>
+                                <tbody class="table-hover">
+                                    @forelse ($stats as $key => $item)
+                                        <tr class="text-primary border-primary">
+                                            <th> {{ __('locale.Currency') }} </th>
+                                            <th> {{ $key}} </th>
+                                            <th> {{ __('locale.Rows count')}} </th>
+                                            <th> {{ $item['count'] }} </th>
+                                            <th> {{ __('locale.Total') }} </th>
+                                            <th> {{ $item['total']}} </th>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <th> {{__('locale.Nothing found')}} </th>
+                                        </tr>
                                     @endforelse
                                 </tbody>
                             </table>
@@ -303,11 +349,11 @@
                                 <table class="table table-sm mb-1 ">
                                     <tbody class="table-hover">
                                         <tr class="text-primary border-primary">
-                                            <th>{{ __('locale.Base Balance') }}</th>
+                                            <th>{{ __('locale.Base balance') }}</th>
                                             <th>{{ $ledger->end_balance }}</th>
-                                            <th>{{ __('locale.changed Balance') }}</th>
+                                            <th>{{ __('locale.Changed balance') }}</th>
                                             <th x-text="changed_balanced"></th>
-                                            <th>{{ __('locale.Diff') }}</th>
+                                            <th>{{ __('locale.Balance difference') }}</th>
                                             <th x-text="balance_diff"></th>
                                         </tr>
                                     </tbody>

@@ -215,7 +215,15 @@ Route::group(['middleware' => 'auth',], function () {
         'prefix' => 'Ledger',
         'controller' => LedgerController::class
     ], function () {
-        Route::get('show', 'show')->name('ledger.show');
+        Route::get('all', function(){
+            return redirect()->back()->with('error','Route not available');
+        })->name('ledger.all');
+        Route::get('create', function(){
+            return redirect()->back()->with('error','Route not available');;
+        })->name('ledger.create');
+        Route::get('all/{cashier_id}', 'all')->name('ledger.all');
+        Route::get('today/{cashier_id}', 'today')->name('ledger.today');
+        Route::get('records/{ledger_id}', 'records')->name('ledger.records');
         Route::post('store', 'store')->name('ledger.store');
     });
 

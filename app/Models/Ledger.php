@@ -30,4 +30,14 @@ class Ledger extends Model
     {
         return $this->hasMany(LedgerRecord::class);
     }
+
+    public function admin()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class);
+    }
 }

@@ -1,7 +1,5 @@
 <?php
 
-use App\Models\Expense;
-
 return [
     "Apps & Pages" => "  التطبيق و الصفحة ",
     "User Interface" =>"واجهة المستخدم",
@@ -199,4 +197,18 @@ return [
     "Withdraw"=>"سحب",
     "ID"=>"ID",
     "Payed"=>"المدفوع",
+    "List"=>"قائمة",
+
+    "Ledgers"=>"سجلات",
+    "Ledger"=>"سجل",
+    "Today ledger"=>"سجل اليوم",
+    "Start balance"=>"رصيد البدء",
+    "End balance"=>"رصيد النهاية",
+    "Records"=>"بنود",
+    "Record"=>"بند",
+    "Date"=>"تاريخ",
+    "Changed balance"=>"الرصيد المعدل",
+    "Balance difference"=>"فرق الرصيد",
+    "Base balance"=>"الرصيد الاساسي",
+    "Today"=>"اليوم",
 ];
