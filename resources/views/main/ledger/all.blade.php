@@ -38,8 +38,8 @@
                         <th>NO</th>
                         <th>{{ __('locale.ID') }}</th>
                         <th class="skip_sort">{{ __('locale.User') }}</th>
-                        <th>{{ __('locale.Start Balance') }}</th>
-                        <th>{{ __('locale.End Balance') }}</th>
+                        <th>{{ __('locale.Start balance') }}</th>
+                        <th>{{ __('locale.End balance') }}</th>
                         <th>{{ __('locale.Records') }}</th>
                         <th class="skip_sort">{{ __('locale.Created at') }}</th>
                         <th class="skip_sort">{{ __('locale.Options') }}</th>
