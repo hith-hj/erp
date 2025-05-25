@@ -17,17 +17,29 @@ class LedgerController extends Controller
 
     public function all(Request $request, $cashier_id)
     {
-        return view('main.ledger.all',$this->repo->getCashierLedgersPayload($cashier_id) );
+        try{
+            return view('main.ledger.all',$this->repo->getCashierLedgersPayload($cashier_id) );
+        }catch(\Exception $e){
+            return redirect()->back()->with('error',$e->getMessage());
+        }
     }
 
     public function today(Request $request, $cashier_id)
     {
-        return view('main.ledger.today', $this->repo->getTodayPayload($cashier_id));
+        try{
+            return view('main.ledger.today', $this->repo->getTodayPayload($cashier_id));
+        }catch(\Exception $e){
+            return redirect()->back()->with('error',$e->getMessage());
+        }
     }
 
     public function records(Request $request, $ledger_id)
     {
-        return view('main.ledger.records', $this->repo->getLedgerRecordsPayload($ledger_id));
+        try{
+            return view('main.ledger.records', $this->repo->getLedgerRecordsPayload($ledger_id));
+        }catch(\Exception $e){
+            return redirect()->back()->with('error',$e->getMessage());
+        }
     }
 
     public function store(Request $request)

@@ -28,6 +28,7 @@ class LedgerRepository extends BaseRepository
             ],
             getter: 'first'
         );
+        throw_if($cashier === null ,'cashier not found');
         return ['cashier' => $cashier];
     }
 
@@ -38,6 +39,7 @@ class LedgerRepository extends BaseRepository
             ['cashier_id' => ['required', 'exists:cashiers,id']],
         );
         $ledger = $this->createTodayLedgerForCashierIfNotExists($validator->validated()['cashier_id']);
+        throw_if($ledger === null ,'ledger not found');
         return [
             'ledger' => $ledger,
             'currencies' => $this->getter(model: 'currency'),
@@ -51,6 +53,7 @@ class LedgerRepository extends BaseRepository
         $cashier = $this->getter(model: 'cashier', callable: [
             'where' => [['id', $id]],
         ], getter: 'first');
+        throw_if($cashier === null ,'cashier not found');
         $ledgers = $cashier->ledgers()->orderBy('created_at', 'desc');
         if (
             $ledgers->count() > 0 &&
@@ -94,9 +97,8 @@ class LedgerRepository extends BaseRepository
             ],
             getter: 'first'
         );
-        if (!$ledger) {
-            return $this->throw('ledger not found');
-        }
+        throw_if($ledger === null ,'ledger not found');
+
         return $ledger;
     }
 
