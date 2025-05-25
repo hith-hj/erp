@@ -21,7 +21,7 @@ class CreateLedgerRecordsTable extends Migration
             $table->foreignIdFor(Ledger::class);
             $table->foreignIdFor(Currency::class);
             $table->foreignId('account_id');
-            $table->foreignId('account_type');
+            $table->string('account_type');
             $table->string('record_type');
             $table->string('quantity');
             $table->string('note')->nullable();
