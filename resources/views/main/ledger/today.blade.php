@@ -144,7 +144,7 @@
                                         <th>{{__('locale.End balance')}}</th>
                                         <th>{{$ledger->end_balance}}</th>
                                         <th>{{__('locale.Balance difference')}}</th>
-                                        <th>{{$ledger->start_balance - $ledger->end_balance}}</th>
+                                        <th>{{$ledger->end_balance - $ledger->start_balance}}</th>
                                     </tr>
                                 </tbody>
                                 <tbody class="table-hover">
