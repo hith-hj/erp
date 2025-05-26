@@ -40,20 +40,22 @@
                         <th class="skip_sort">{{ __('locale.User') }}</th>
                         <th>{{ __('locale.Start balance') }}</th>
                         <th>{{ __('locale.End balance') }}</th>
-                        <th>{{ __('locale.Records') }}</th>
                         <th class="skip_sort">{{ __('locale.Created at') }}</th>
                         <th class="skip_sort">{{ __('locale.Options') }}</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($cashier->ledgers as $ledger)
+                        @if($ledger->created_at->format('Y-m-d') === now()->format('Y-m-d'))
+                            <small>Today ledger can't be until tomorrow</small>
+                            @continue
+                        @endif
                         <tr>
                             <th>{{$loop->index + 1}}</th>
                             <th>{{ $ledger->id }}</th>
                             <th>{{ $ledger->admin?->full_name }}</th>
                             <th>{{ $ledger->start_balance }}</th>
                             <th>{{ $ledger->end_balance }}</th>
-                            <th>{{ $ledger->records()->count() }}</th>
                             <th>{{ $ledger->created_at->diffForHumans() }}</th>
                             <th>
                                 <a href="{{route('ledger.records',['ledger_id'=>$ledger->id])}}">

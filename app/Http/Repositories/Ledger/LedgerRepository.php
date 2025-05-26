@@ -24,7 +24,7 @@ class LedgerRepository extends BaseRepository
             model: 'cashier',
             callable: [
                 'where' => [['id', $validator->validated()['cashier_id']]],
-                'with' => ['ledgers'],
+                'with' => ['ledgers.admin'],
             ],
             getter: 'first'
         );
@@ -54,31 +54,25 @@ class LedgerRepository extends BaseRepository
             'where' => [['id', $id]],
         ], getter: 'first');
         throw_if($cashier === null ,'cashier not found');
-        $ledgers = $cashier->ledgers()->orderBy('created_at', 'desc');
-        if (
-            $ledgers->count() > 0 &&
-            ($last = $ledgers->first())->created_at->format('Y-m-d') === now()->format('Y-m-d')
-        ) {
-            $ledger = $last;
-        } elseif (
-            $ledgers->count() > 0 &&
-            ($last = $ledgers->first())->created_at->format('Y-m-d') !== now()->format('Y-m-d')
-        ) {
-            $ledger = $this->add([
-                'cashier_id' => $id,
-                'created_by' => Auth::id(),
-                'start_balance' => $last->end_balance,
-                'end_balance' => $last->end_balance,
-            ]);
-        } else {
+        $ledgers = $cashier->ledgers()->orderBy('created_at', 'desc')->get();
+        if( $ledgers->count() === 0 ){
             $ledger = $this->add([
                 'cashier_id' => $id,
                 'created_by' => Auth::id(),
                 'start_balance' => $cashier->total,
                 'end_balance' => $cashier->total,
             ]);
+        }elseif( ($last = $ledgers->first())->created_at->format('Y-m-d') !== now()->format('Y-m-d')){
+            $ledger = $this->add([
+                'cashier_id' => $id,
+                'created_by' => Auth::id(),
+                'start_balance' => $last->end_balance,
+                'end_balance' => $last->end_balance,
+            ]);
+        }else{
+            $ledger = $ledgers->first();
         }
-
+        throw_if($ledger === null ,'ledger not found');
         return $ledger->load(['records.currency']);
     }
 
@@ -93,7 +87,7 @@ class LedgerRepository extends BaseRepository
             model: 'ledger',
             callable: [
                 'where' => [['id', $id],],
-                'with' => ['records']
+                'with' => ['records.currency']
             ],
             getter: 'first'
         );
