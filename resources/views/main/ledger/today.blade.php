@@ -56,11 +56,29 @@
                         </div>
                     </div>
                 </div>
+                <table class="table table-sm table-bordered mb-1">
+                    <thead>
+                        <tr>
+                            <th>{{__('locale.Records')}}</th>
+                            <th>{{__('locale.Start balance')}}</th>
+                            <th>{{__('locale.End balance')}}</th>
+                            <th>{{__('locale.Balance difference')}}</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-hover">
+                        <tr>
+                            <td>{{$ledger->records->count()}}</td>
+                            <td>{{ $ledger->start_balance }}</td>
+                            <td>{{$ledger->end_balance}}</td>
+                            <td>{{$ledger->end_balance - $ledger->start_balance}}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
         <div class="card mb-1">
-            <ul class="nav nav-tabs px-1" role="tablist">
+            <ul class="nav nav-tabs px-1 mb-0" role="tablist">
                 <li class="nav-item">
                     <a class="nav-link w-100 active"
                         data-bs-toggle="tab" href="#list_items" aria-controls="list_items" role="tab">
@@ -83,7 +101,7 @@
                             </h4>
                         </div>
                         <div class="card-body p-0 px-1">
-                            <table class="table table-sm mb-1">
+                            <table class="table table-sm table-bordered mb-1">
                                 <thead class="">
                                     <tr>
                                         <th>NO</th>
@@ -130,37 +148,28 @@
                                             <th>{{ $record->created_at->diffForHumans() }}</th>
                                         </tr>
                                     @empty
-                                        not records found
+                                        <tr>
+                                            <th>{{__('locale.Nothing found')}}</th>
+                                        </tr>
                                     @endforelse
                                 </tbody>
                             </table>
-                            <table class="table table-sm table-bordered mt-1">
-                                <tbody class="table-hover">
+                            <table class="table table-sm table-bordered mb-1">
+                                <thead>
                                     <tr>
-                                        <th>{{__('locale.Records')}}</th>
-                                        <th>{{$ledger->records->count()}}</th>
-                                        <th>{{__('locale.Start balance')}}</th>
-                                        <th>{{ $ledger->start_balance }}</th>
-                                        <th>{{__('locale.End balance')}}</th>
-                                        <th>{{$ledger->end_balance}}</th>
-                                        <th>{{__('locale.Balance difference')}}</th>
-                                        <th>{{$ledger->end_balance - $ledger->start_balance}}</th>
+                                        <th> {{ __('locale.Currency') }} </th>
+                                        <th> {{ __('locale.Rows count')}} </th>
+                                        <th> {{ __('locale.Total') }} </th>
                                     </tr>
-                                </tbody>
+                                </thead>
                                 <tbody class="table-hover">
                                     @forelse ($stats as $key => $item)
-                                        <tr class="text-primary border-primary">
-                                            <th> {{ __('locale.Currency') }} </th>
-                                            <th> {{ $key}} </th>
-                                            <th> {{ __('locale.Rows count')}} </th>
-                                            <th> {{ $item['count'] }} </th>
-                                            <th> {{ __('locale.Total') }} </th>
-                                            <th> {{ $item['total']}} </th>
+                                        <tr>
+                                            <td> {{ $key}} </td>
+                                            <td> {{ $item['count'] }} </td>
+                                            <td> {{ $item['total']}} </td>
                                         </tr>
                                     @empty
-                                        <tr>
-                                            <th> {{__('locale.Nothing found')}} </th>
-                                        </tr>
                                     @endforelse
                                 </tbody>
                             </table>
@@ -183,7 +192,6 @@
                                     <h4 class="m-0">
                                         {{ __('locale.New') }}
                                     </h4>
-                                    <small class="card-subheader"> default currency will be applyed </small>
                                 </div>
                                 <div class="d-flex align-items-center justify-content-end">
                                     <h5 class="m-0">
@@ -276,9 +284,9 @@
                                                         {{ __('locale.Chose') }}
                                                     </option>
                                                     <option value="debit">
-                                                        debit </option>
+                                                        {{__('locale.Debit')}} </option>
                                                     <option value="credit">
-                                                        credit </option>
+                                                        {{__('locale.Credit')}} </option>
                                                 </select>
                                             </td>
                                             <td>
@@ -347,14 +355,18 @@
                                 </table>
 
                                 <table class="table table-sm mb-1 ">
-                                    <tbody class="table-hover">
-                                        <tr class="text-primary border-primary">
+                                    <thead>
+                                        <tr>
                                             <th>{{ __('locale.Base balance') }}</th>
-                                            <th>{{ $ledger->end_balance }}</th>
                                             <th>{{ __('locale.Changed balance') }}</th>
-                                            <th x-text="changed_balanced"></th>
                                             <th>{{ __('locale.Balance difference') }}</th>
-                                            <th x-text="balance_diff"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table-hover">
+                                        <tr >
+                                            <td >{{ $ledger->end_balance }}</td>
+                                            <td x-text="changed_balanced" ></td>
+                                            <td x-text="balance_diff" ></td>
                                         </tr>
                                     </tbody>
                                 </table>

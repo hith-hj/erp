@@ -377,5 +377,6 @@ return [
     "Balance difference"=>"Balance difference",
     "Base balance"=>"Base balance",
     "Today"=>"Today",
-
+    "Credit"=>"Credit",
+    "Debit"=>"Debit",
 ];

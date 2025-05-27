@@ -32,7 +32,25 @@
             </div>
         </div>
         <div class="card-body p-0 px-1" id="printable">
-            <table class="table table-sm mb-1 sortable">
+            <table class="table table-sm table-bordered my-2">
+                <thead>
+                    <tr>
+                        <th>{{__('locale.Records')}}</th>
+                        <th>{{__('locale.Start balance')}}</th>
+                        <th>{{__('locale.End balance')}}</th>
+                        <th>{{__('locale.Balance difference')}}</th>
+                    </tr>
+                </thead>
+                <tbody class="table-hover">
+                    <tr>
+                        <th>{{$ledger->records->count()}}</th>
+                        <th>{{ $ledger->start_balance }}</th>
+                        <th>{{$ledger->end_balance}}</th>
+                        <th>{{$ledger->end_balance - $ledger->start_balance}}</th>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-sm table-bordered sortable">
                 <thead class="">
                     <tr id="sortable_by">
                         <th>NO</th>
@@ -79,37 +97,28 @@
                             <th>{{ $record->created_at->diffForHumans() }}</th>
                         </tr>
                     @empty
-                        Nothing found
+                        <tr>
+                            <th>{{__('locale.Nothing found')}}</th>
+                        </tr>
                     @endforelse
                 </tbody>
             </table>
             <table class="table table-sm table-bordered my-2">
-                <tbody class="table-hover">
+                <thead>
                     <tr>
-                        <th>{{__('locale.Records')}}</th>
-                        <th>{{$ledger->records->count()}}</th>
-                        <th>{{__('locale.Start balance')}}</th>
-                        <th>{{ $ledger->start_balance }}</th>
-                        <th>{{__('locale.End balance')}}</th>
-                        <th>{{$ledger->end_balance}}</th>
-                        <th>{{__('locale.Balance difference')}}</th>
-                        <th>{{$ledger->end_balance - $ledger->start_balance}}</th>
+                        <th> {{ __('locale.Currency') }} </th>
+                        <th> {{ __('locale.Rows count')}} </th>
+                        <th> {{ __('locale.Total') }} </th>
                     </tr>
-                </tbody>
+                </thead>
                 <tbody class="table-hover">
                     @forelse ($stats as $key => $item)
-                        <tr class="text-primary border-primary">
-                            <th> {{ __('locale.Currency') }} </th>
+                        <tr>
                             <th> {{ $key}} </th>
-                            <th> {{ __('locale.Rows count')}} </th>
                             <th> {{ $item['count'] }} </th>
-                            <th> {{ __('locale.Total') }} </th>
                             <th> {{ $item['total']}} </th>
                         </tr>
                     @empty
-                        <tr>
-                            <th> {{__('locale.Nothing found')}} </th>
-                        </tr>
                     @endforelse
                 </tbody>
             </table>

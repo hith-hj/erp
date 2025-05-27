@@ -211,4 +211,6 @@ return [
     "Balance difference"=>"فرق الرصيد",
     "Base balance"=>"الرصيد الاساسي",
     "Today"=>"اليوم",
+    "Credit"=>"قبض",
+    "Debit"=>"دفع",
 ];
