@@ -22,6 +22,11 @@ class Bill extends Model
         return __('locale.'.explode('\\',$this->billable_type)[2]) ?? __('locale.None');
     }
 
+    public function getBaseTypeAttribute()
+    {
+        return explode('\\',$this->billable_type)[2];
+    }
+
     public function getGetStatusAttribute()
     {
         return match ($this->status) {

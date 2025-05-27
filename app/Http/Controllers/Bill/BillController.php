@@ -22,6 +22,6 @@ class BillController extends BaseController
 
     public function show($id) {
         $bill = $this->repo->find($id);
-        return redirect()->route(strtolower($bill->getType).'.show',$bill->billable_id);
+        return redirect()->route(strtolower($bill->baseType).'.show',$bill->billable_id);
     }
 }
