@@ -6,6 +6,7 @@ use App\DataTables\ClientDataTable;
 use App\Http\Controllers\BaseController;
 use App\Http\Repositories\Client\ClientRepository;
 use App\Http\Validator\Client\ClientValidator;
+use App\Models\Client;
 use Illuminate\Http\Request;
 
 class ClientController extends BaseController
@@ -21,12 +22,12 @@ class ClientController extends BaseController
         return (new ClientDataTable())->render('main.client.index');
     }
 
-    public function show(Request $request,$id)
+    public function show(Request $request,Client $client)
     {
         $request->validate([
             'currency'=>['sometimes','string','exists:currencies,name'],
         ]);
-        return view('main.client.show', $this->repo->getShowPayload($id));
+        return view('main.client.show', $this->repo->getShowPayload($client));
     }
 
     public function create()

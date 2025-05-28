@@ -13,13 +13,10 @@ class ClientRepository extends BaseRepository
         parent::__construct(Client::class);
     }
 
-    public function getShowPayload($id)
+    public function getShowPayload($client)
     {
         $request = request();
         $currencies = $this->getter(model: 'currency', columns: ['name']);
-        $client = $this->getter(model: 'client', callable: [
-            'where' => [['id', $id]]
-        ], getter: 'firstOrFail');
         $sales = Sale::with(['bill.transaction', 'currency'])
             ->when($request->filled('currency'), function ($query) use ($request) {
                 $query->whereRelation('currency', 'name', $request->currency);

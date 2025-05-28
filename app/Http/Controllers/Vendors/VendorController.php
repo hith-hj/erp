@@ -25,7 +25,7 @@ class VendorController extends Controller
 
     public function show(Vendor $vendor)
     {
-        return view('main.vendors.show', ['vendor' => $vendor]);
+        return view('main.vendors.show', $this->repo->getShowPayload($vendor));
     }
 
     public function create()
