@@ -54,10 +54,13 @@
 <div class="navbar-container d-flex content">
     <div class="bookmark-wrapper d-flex align-items-center">
         <ul class="nav navbar-nav d-xl-none">
-            <li class="nav-item"><a class="nav-link menu-toggle" href="javascript:void(0);"><i class="ficon"
-                        data-feather="menu"></i></a></li>
+            <li class="nav-item">
+                <a class="nav-link menu-toggle" href="javascript:void(0);">
+                    <i class="ficon" data-feather="menu"></i>
+                </a>
+            </li>
         </ul>
-        <ul class="nav navbar-nav bookmark-icons">
+        {{-- <ul class="nav navbar-nav bookmark-icons">
             <li class="nav-item d-none d-lg-block"><a class="nav-link" href="{{ url('app/email') }}"
                     data-bs-toggle="tooltip" data-bs-placement="bottom" title="Email"><i class="ficon"
                         data-feather="mail"></i></a></li>
@@ -70,8 +73,8 @@
             <li class="nav-item d-none d-lg-block"><a class="nav-link" href="{{ url('app/todo') }}"
                     data-bs-toggle="tooltip" data-bs-placement="bottom" title="Todo"><i class="ficon"
                         data-feather="check-square"></i></a></li>
-        </ul>
-        <ul class="nav navbar-nav">
+        </ul> --}}
+        {{-- <ul class="nav navbar-nav">
             <li class="nav-item d-none d-lg-block">
                 <a class="nav-link bookmark-star">
                     <i class="ficon text-warning" data-feather="star"></i>
@@ -85,7 +88,7 @@
                     <ul class="search-list search-list-bookmark"></ul>
                 </div>
             </li>
-        </ul>
+        </ul> --}}
     </div>
     <ul class="nav navbar-nav align-items-center ms-auto">
         <li class="nav-item dropdown dropdown-language">
