@@ -9,6 +9,12 @@ use Illuminate\Support\Str;
 
 class Helper
 {
+
+    public static function settings($key =null , $default = null)
+    {
+        ['inventory_minimum_quantity'];
+        return $default;
+    }
     public static function applClasses()
     {
         // Demo

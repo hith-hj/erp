@@ -19,4 +19,11 @@ class Cashier extends Model
     public function ledgers(){
         return $this->hasMany(Ledger::class);
     }
+
+    public function transfers(){
+        return $this->hasMany(Transaction::class,'belongTo_id')
+        ->where(['belongTo_type'=>$this::class])
+        ->orderBy('created_at','desc');
+    }
+
 }

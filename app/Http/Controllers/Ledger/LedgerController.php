@@ -48,7 +48,7 @@ class LedgerController extends Controller
             'ledger_id'=>['required','exists:ledgers,id'],
             'records' => ['required', 'array', 'min:1'],
             'records.*.record_type' => ['required', 'string', 'in:debit,credit'],
-            'records.*.account_id' => ['required', 'numeric'],
+            'records.*.account_id' => ['required', 'string'],
             'records.*.currency_id' => ['required', 'exists:currencies,id'],
             'records.*.quantity' => ['required', 'numeric', 'min:1'],
             'records.*.note' => ['nullable', 'string', 'max:250'],
@@ -59,7 +59,6 @@ class LedgerController extends Controller
             $ledger = $this->repo->getLedger($request->input('ledger_id'));
             $records = $this->repo->checkForDuplicates($records);
             $records = $this->repo->checkAccounts($records);
-            $records = $this->repo->setToDefaultCurrency($records);
             $this->repo->storeLedgerRecords($ledger,$records);
             return redirect()->back()->with('success', 'records stored');
         } catch (\Exception $e) {

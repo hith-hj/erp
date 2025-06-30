@@ -2,6 +2,7 @@
 
 namespace App\Http\Repositories\Sale;
 
+use App\Helpers\Helper;
 use Illuminate\Support\Str;
 use App\Http\Repositories\BaseRepository;
 use App\Http\Repositories\Inventory\InventoryRepository;
@@ -83,7 +84,7 @@ class SaleRepository extends BaseRepository
         $sale->bill()->create([
             'billable_id' => $sale->id,
             'billable_type' => get_class($sale),
-            'serial' => $sale->id.Str::random(8),
+            'serial' => $sale->id . Str::random(8),
             'status' => 0,
         ]);
         return $sale;
@@ -160,17 +161,27 @@ class SaleRepository extends BaseRepository
             $this->throw("$material->name material is not found in $inventory->name inventory");
         }
 
-        if ($material->pivot->quantity < $this->getBaseUnitQuantity($material->units, $data)) {
-            $this->throw("$material->name material in $inventory->name inventory is not suffecint to fullfil this sale");
-        }
+        // material type is manifactured
         if ($material->type == 2 && !$material->hasManufactureModel() && $material->pivot->quantity == 0) {
             $this->throw("$material->name material is not manufacturd yet");
         }
-        return $inventory->materials()
-            ->updateExistingPivot($data->material_id, [
-                'quantity' => $material->pivot->quantity -
-                    $this->getBaseUnitQuantity($material->units, $data)
-            ]);
+
+        $is_less = $material->pivot->quantity < $this->getBaseUnitQuantity($material->units, $data);
+        $diffrence = $material->pivot->quantity - $this->getBaseUnitQuantity($material->units, $data);
+        if ($is_less && ($diffrence < Helper::settings('inventory_minimum_quantity', -100))) {
+            $this->throw("$material->name material in $inventory->name inventory not suffecint ");
+        }
+
+        $dataToUpdate = [
+            'quantity' => $material->pivot->quantity - $this->getBaseUnitQuantity($material->units, $data)
+        ];
+
+
+        if($diffrence == 0){
+            $dataToUpdate['status'] = -1;
+        }
+
+        return $inventory->materials()->updateExistingPivot($data->material_id, $dataToUpdate);
     }
 
     public function restoreInventory($material)

@@ -59,7 +59,8 @@ class InventoryRepository extends BaseRepository
             if ($item->exists()) {
                 $inventory->materials()
                     ->updateExistingPivot($material['material_id'], [
-                        'quantity' => $material['quantity'] + $item->first()->pivot->quantity
+                        'quantity' => $material['quantity'] + $item->first()->pivot->quantity,
+                        'status' => 1,
                     ]);
             } else {
                 $inventory->materials()->attach($material['material_id'], ['quantity' => $material['quantity']]);

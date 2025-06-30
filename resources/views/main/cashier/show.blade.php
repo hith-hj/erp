@@ -31,13 +31,12 @@
                                             <div class="row">
                                                 <div class="col-6">
                                                     <div class="mb-1">
-                                                        <label class="form-label" for="amount">{{ __('locale.Type') }}</label>
-                                                        <select name="type" id="credit_amount" class="form-select">
+                                                        <label class="form-label" for="amount">{{ __('locale.Cashiers') }}</label>
+                                                        <select name="to_cashier" id="credit_amount" class="form-select">
                                                             <option value="">{{ __('locale.Chose')}}</option>
-                                                            <option value="1">{{ __('locale.Deposit')}}</option>
-                                                            @if($cashier->total > 0)
-                                                                <option value="2">{{ __('locale.Withdraw')}}</option>
-                                                            @endif
+                                                            @foreach($cashiers as $cash)
+                                                                <option value="{{$cash->id}}">{{$cash->name}}</option>
+                                                            @endforeach
                                                         </select>
                                                     </div>
                                                 </div>
@@ -45,15 +44,13 @@
                                                     <div class="mb-1">
                                                         <label class="form-label"
                                                             for="amount">{{ __('locale.Amount') }}</label>
-                                                        <input type="number" name="amount" min="0"
+                                                        <input type="number" name="amount" min="0" max="{{$cashier->total}}"
                                                             id="amount" class="form-control" oninput="
                                                                 let select = $('#credit_amount');
-                                                                if(select.val() == 2){
-                                                                    if(this.value > {{$cashier->total}}){
-                                                                        this.classList.add('border-danger');
-                                                                    }else{
-                                                                        this.classList.remove('border-danger');
-                                                                    }
+                                                                if(this.value > {{$cashier->total}}){
+                                                                    this.classList.add('border-danger');
+                                                                }else{
+                                                                    this.classList.remove('border-danger');
                                                                 }
                                                             ">
                                                     </div>
@@ -61,9 +58,6 @@
                                                 <div class="col-12">
                                                     <button typex="submit" class="btn btn-primary w-50">
                                                         {{ __('locale.Store') }}
-                                                    </button>
-                                                    <button type="reset" class="btn btn-outline-primary">
-                                                        {{ __('locale.Reset') }}
                                                     </button>
                                                     <a class="btn btn-outline-dark" data-bs-dismiss="modal"
                                                         aria-label="Close">
@@ -78,22 +72,37 @@
                                 <details class="m-1">
                                     <summary>{{__('locale.Transfers')}}</summary>
                                     <ul>
-                                        @forelse ($cashier_transfers as $transfer)
-                                            @php
-                                                $type = '0';
-                                                if(preg_match("/66(\d+)66/",$transfer->transaction_id,$match)){
-                                                    $type = $match[1];
-                                                }
-                                            @endphp
-                                            <li>
-                                                {{__('locale.Type')}} : {{ str_contains($transfer->transaction_id,'2') ?
-                                                 __('locale.Withdraw') : __('locale.Deposit') }}   /  /
-                                                {{__('locale.Amount')}} : {{$transfer->amount}}   /  /
-                                                {{__('locale.Date')}} : {{$transfer->created_at->diffForHumans()}}
-                                            </li>
-                                        @empty
-                                            <li>{{__('locale.Nothing found')}}</li>
-                                        @endforelse
+
+                                            <table class="table table-sm table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>No</th>
+                                                        <th>{{ __('locale.ID') }}</th>
+                                                        <th>{{__('locale.from')}}</th>
+                                                        <th>{{ __('locale.Amount') }}</th>
+                                                        <th>{{ __('locale.Created at') }}</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="table-hover">
+                                                    @forelse ($cashierTransactions as $item)
+                                                        <tr>
+                                                            <td>{{ $loop->index + 1 }}</td>
+                                                            <td>{{ $item->id }}</td>
+                                                            <td>
+
+                                                                <a href="{{ route("cashier.show",
+                                                                 $item->cashier->id) }}">
+                                                                    {{ $item->cashier->name }}
+                                                                </a>
+                                                            </td>
+                                                            <td>{{ $item->amount }}</td>
+                                                            <td>{{ $item->created_at }}</td>
+                                                        </tr>
+                                                    @empty
+                                                        <li>{{__('locale.Nothing found')}}</li>
+                                                    @endforelse
+                                                </tbody>
+                                            </table>
                                     </ul>
                                 </details>
                             </div>
@@ -168,7 +177,7 @@
                                 <tr>
                                     <th>No</th>
                                     <th>{{ __('locale.ID') }}</th>
-                                    <th>{{ __('locale.Bill') }}</th>
+                                    <th>{{__('locale.BelongTo')}}</th>
                                     <th>{{ __('locale.Type') }}</th>
                                     <th>{{ __('locale.Amount') }}</th>
                                     <th>{{ __('locale.Remaining') }}</th>
@@ -183,11 +192,15 @@
                                         <td>{{ $loop->index + 1 }}</td>
                                         <td>{{ $transaction->id }}</td>
                                         <td>
-                                            <a href="{{ route('bill.show', $transaction->bill_id) }}">
-                                                {{ $transaction->bill->serial }}
+                                            @php
+                                                $name = strtolower(class_basename($transaction->belongTo_type));
+                                            @endphp
+                                            <a href="{{ route("$name.show",
+                                             $transaction->belongTo_id) }}">
+                                                {{$name}}
+                                                --
+                                                {{ $transaction->belongTo->name }}
                                             </a>
-                                            --
-                                            {{ $transaction->bill->item->currency->name }}
                                         </td>
                                         <td>{{ $transaction->getType() }}</td>
                                         <td>{{ $transaction->amount }}</td>
@@ -242,10 +255,6 @@
                                                                                         <button typex="submit"
                                                                                             class="btn btn-primary">
                                                                                             {{ __('locale.Store') }}
-                                                                                        </button>
-                                                                                        <button type="reset"
-                                                                                            class="btn btn-outline-primary">
-                                                                                            {{ __('locale.Reset') }}
                                                                                         </button>
                                                                                         <a class="btn btn-outline-dark"
                                                                                             data-bs-dismiss="modal"

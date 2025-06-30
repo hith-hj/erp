@@ -77,6 +77,7 @@ Route::group(['middleware' => 'auth',], function () {
         Route::post('store', 'store')->name('currency.store');
         Route::delete('delete/{id}', 'delete')->name('currency.delete');
         Route::post('setDefault/{id}','setDefault')->name('currency.setDefault');
+        Route::post('changeRate/{id}','changeRate')->name('currency.changeRate');
     });
 
     Route::group([

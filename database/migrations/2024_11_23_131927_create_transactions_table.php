@@ -19,7 +19,8 @@ class CreateTransactionsTable extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Cashier::class);
-            $table->foreignIdFor(Bill::class);
+            $table->foreignId('belongTo_id');
+            $table->string('belongTo_type');
             $table->smallInteger('type')->default(1);
             $table->integer('amount')->default(0);
             $table->integer('remaining')->default(0);

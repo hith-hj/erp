@@ -28,7 +28,7 @@ class LedgerRepository extends BaseRepository
             ],
             getter: 'first'
         );
-        throw_if($cashier === null ,'cashier not found');
+        throw_if($cashier === null, 'cashier not found');
         return ['cashier' => $cashier];
     }
 
@@ -39,12 +39,13 @@ class LedgerRepository extends BaseRepository
             ['cashier_id' => ['required', 'exists:cashiers,id']],
         );
         $ledger = $this->createTodayLedgerForCashierIfNotExists($validator->validated()['cashier_id']);
-        throw_if($ledger === null ,'ledger not found');
+        throw_if($ledger === null, 'ledger not found');
         return [
             'ledger' => $ledger,
             'currencies' => $this->getter(model: 'currency'),
             'clients' => $this->getter(model: 'client'),
             'vendors' => $this->getter(model: 'vendor'),
+            'expences' => $this->getter(model: 'expense'),
         ];
     }
 
@@ -53,11 +54,11 @@ class LedgerRepository extends BaseRepository
         $cashier = $this->getter(model: 'cashier', callable: [
             'where' => [['id', $id]],
         ], getter: 'first');
-        throw_if($cashier === null ,'cashier not found');
+        throw_if($cashier === null, 'cashier not found');
         $ledgers = $cashier->ledgers()->orderBy('created_at', 'desc')->get();
-        if(($last = $ledgers->first())->created_at->format('Y-m-d') === now()->format('Y-m-d')){
+        if (($last = $ledgers->first())?->created_at->format('Y-m-d') === now()->format('Y-m-d')) {
             $ledger = $last;
-        }else{
+        } else {
             $ledger = $this->add([
                 'cashier_id' => $id,
                 'created_by' => Auth::id(),
@@ -65,7 +66,7 @@ class LedgerRepository extends BaseRepository
                 'end_balance' => $cashier->total,
             ]);
         }
-        throw_if($ledger === null ,'ledger not found');
+        throw_if($ledger === null, 'ledger not found');
         return $ledger->load(['records.currency']);
     }
 
@@ -84,7 +85,7 @@ class LedgerRepository extends BaseRepository
             ],
             getter: 'first'
         );
-        throw_if($ledger === null ,'ledger not found');
+        throw_if($ledger === null, 'ledger not found');
 
         return $ledger;
     }
@@ -98,13 +99,15 @@ class LedgerRepository extends BaseRepository
 
     public function storeItem(Ledger $ledger, array $record)
     {
-        if($record['record_type'] === 'credit'){
-            $ledger->cashier()->increment('total',$record['quantity']);
-            $ledger->increment('end_balance',$record['quantity']);
-        }else{
-            $ledger->cashier()->decrement('total',$record['quantity']);
-            $ledger->decrement('end_balance',$record['quantity']);
+        $defaulted = $this->setToDefaultCurrency($record);
+        if ($record['record_type'] === 'credit') {
+            $ledger->cashier()->increment('total', $defaulted['quantity']);
+            $ledger->increment('end_balance', $record['quantity']);
+        } else {
+            $ledger->cashier()->decrement('total', $defaulted['quantity']);
+            $ledger->decrement('end_balance', $record['quantity']);
         }
+        $record['note'] .= $defaulted['note'];
         return $ledger->records()->create($record);
     }
 
@@ -128,23 +131,40 @@ class LedgerRepository extends BaseRepository
     public function checkAccounts(array $records)
     {
         for ($i = 0; $i < count($records); $i++) {
-            $type = $records[$i]['record_type'] === 'debit' ? 'vendor' : 'client';
-            $account = $this->getter($type, ['where' => [['id', $records[$i]['account_id']]]], 'first');
-            throw_if(!$account, "Account $type Not Found");
-            $records[$i]['account_type'] = $type;
+            $record = $this->getRecordType($records[$i]);
+            $type = $record['account_type'];
+            $account = $this->getter(
+                model: $type,
+                callable: [
+                    'where' => [
+                        ['id', $record['account_id'] ],
+                    ]
+                ],
+                getter: 'first',
+            );
+            $record['account_type'] = $account::class;
+            $records[$i]=$record;
         }
         return $records;
     }
 
-    public function setToDefaultCurrency(array $records)
+    private function getRecordType(array $record)
     {
-        for ($i = 0; $i < count($records); $i++) {
-            $currency = $this->getter('currency', ['where' => [['id', $records[$i]['currency_id']]]], 'first');
-            throw_if(!$currency, "Currency Not Found");
-            if (! $currency->is_default) {
-                $records[$i]['quantity'] *= $currency->rate_to_default;
-            }
+        [$type, $id] = explode('_', $record['account_id']);
+        throw_if(!isset($type, $id), 'invalid record info');
+        $record['account_id'] = $id;
+        $record['account_type'] = $type;
+        return $record;
+    }
+
+    public function setToDefaultCurrency(array $record)
+    {
+        $currency = $this->getter('currency', ['where' => [['id', $record['currency_id']]]], 'first');
+        throw_if(!$currency, "Currency Not Found");
+        if (! $currency->is_default) {
+            $record['quantity'] *= $currency->rate_to_default;
+            $record['note'] .= " defaulted: rate- {$currency->rate_to_default}";
         }
-        return $records;
+        return $record;
     }
 }

@@ -116,11 +116,17 @@
                                         <td>{{ $sale->id }}</td>
                                         <td>{{ $sale->bill?->serial }}</td>
                                         <td>
-                                            <a href="{{route('client.show',$sale->client?->id)}}">
+                                            <a href="{{route('client.show',$sale->client?->id)}}"
+                                                target="__blanck">
                                                 {{ $sale->client?->fullName }}
                                             </a>
                                         </td>
-                                        <td>{{ $sale->inventory?->name }}</td>
+                                        <td>
+                                            <a href="{{route('inventory.show',$sale->inventory?->id)}}"
+                                                target="__blanck">
+                                                {{ $sale->inventory?->name }}
+                                            </a>
+                                        </td>
                                         <td>{{ $sale->currency->name }}</td>
                                         <td>{{ $sale->user?->username }}</td>
                                         <td>{{ $sale->created_at->format('Y-m-d') }}</td>

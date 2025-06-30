@@ -42,12 +42,6 @@ class InventoryMaterialDataTable extends DataTable
                                 'class' => 'text-danger',
                                 'icon' => 'fa-trash',
                             ],
-                            [
-                                'route' => route('material.show',[
-                                    'id' => $material->material_id,
-                                ]),
-                                'name' => __('locale.View'),
-                            ],
                         ]
                     ]
                 );

@@ -1,7 +1,7 @@
 <form id="sale_form" method="POST" action="{{ route('sale.store') }}" class="form form-vertical">
     @csrf
     <div class="items-repeater" x-data="{
-        currency_id: 0,
+        currency_id: null,
         currencies: {{ $currencies->keyBy('id')->toJson() }},
         inventories: {{ $inventories->keyBy('id')->toJson() }},
         inventory_id: 0,
@@ -181,6 +181,9 @@
                                 })
                             },
                             setTotal(){
+                                if(this.currency_id == null){
+                                    alert("select currency");
+                                }
                                 this.total = 0;
                                 return this.total = this.quantity * (this.cost * this.currencies[this.currency_id].rate_to_default).toFixed(2);
                             },

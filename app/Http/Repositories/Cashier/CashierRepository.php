@@ -28,8 +28,11 @@ class CashierRepository extends BaseRepository
                 'doesntHave' => 'transaction',
                 'where' => [['billable_type', '!=', Manufacturing::class]],
             ]),
-            'cashier_transfers'=>$this->getter('Transfer',[
-                'where'=>[['transaction_id','LIKE','%9900'.$id.'0099%']]
+            'cashiers' => $this->getter('cashier', [
+                'where' => [['id', '!=', $id]]
+            ]),
+            'cashierTransactions' => $this->getter('transaction', [
+                'where' => [['belongTo_id',$id],['belongTo_type',Cashier::class]]
             ])
         ];
     }
@@ -46,45 +49,31 @@ class CashierRepository extends BaseRepository
         return $new->update(['is_default' => 1]);
     }
 
-    public function transaction($cashier_id, $bill_id, $amount)
+    public function transaction($cashier_id, $type, $id, $amount)
     {
         try {
             $transaction = new TransactionRepository();
             $transaction->setCashier($cashier_id)
-            ->setBill($bill_id)
-            ->createTransaction(auth()->id())
-            ->transfer($amount,auth()->id());
+                ->setBelongTo($type,$id)
+                ->createTransaction(auth()->id(),$amount);
+            if(in_array($type,['bill'])){
+                $transaction->transfer($amount, auth()->id());
+            }
         } catch (\Exception $e) {
-            return ['error',$e->getMessage()];
+            return ['error', $e->getMessage()];
         }
         return ['success', 'Transaction is started'];
     }
-    
-    public function transfers($transaction_id, $amount){
+
+    public function transfers($transaction_id, $amount)
+    {
         try {
             $transaction = new TransactionRepository();
-            $transaction->setTransaction($transaction_id)->transfer($amount,auth()->id());
+            $transaction->setTransaction($transaction_id)->transfer($amount, auth()->id());
         } catch (\Exception $e) {
-            return ['error',$e->getMessage()];
+            return ['error', $e->getMessage()];
         }
         return ['success', 'Transfer is stored'];
     }
 
-    public function credits($data){
-        $cashier = $this->getter('Cashier',['where'=>[['id',$data['cashier_id']],] ],'first');
-        if($data['type'] == 2 && $cashier->total < $data['amount']){
-            return ['error','No enough money in this cashier'];
-        }
-        $cashier->update([
-            'total'=> $data['type'] == 2 ? 
-            $cashier->total - $data['amount'] :
-            $cashier->total + $data['amount'] ]);
-        $id = "9900$cashier->id"."0099"."66".$data['type']."66". rand(000,999);
-        $transfers = Transfer::create([
-            'transaction_id'=> $id,
-            'amount'=>$data['amount'],
-            'created_by'=>auth()->id()
-        ]);
-        return ['success','Money is transfered'];        
-    }
 }

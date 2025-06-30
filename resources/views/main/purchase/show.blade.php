@@ -116,9 +116,24 @@
                                 <tbody>
                                     <tr>
                                         <td>{{ $purchase->id }}</td>
-                                        <td>{{ $purchase->bill?->serial }}</td>
-                                        <td>{{ $purchase->vendor?->fullName }}</td>
-                                        <td>{{ $purchase->inventory?->name }}</td>
+                                        <td>
+                                            <a href="{{route('bill.show',$purchase->bill?->id)}}"
+                                                target="__blanck">
+                                                {{ $purchase->bill?->serial }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="{{route('client.show',$purchase->vendor?->id)}}"
+                                                target="__blanck">
+                                                {{ $purchase->vendor?->fullName }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="{{route('inventory.show',$purchase->inventory?->id)}}"
+                                                target="__blanck">
+                                                {{ $purchase->inventory?->name }}
+                                            </a>
+                                        </td>
                                         <td>{{ $purchase->currency->name }}</td>
                                         <td>{{ $purchase->user?->username }}</td>
                                         <td>{{ $purchase->created_at->format('Y-m-d') }}</td>

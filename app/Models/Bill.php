@@ -11,6 +11,11 @@ class Bill extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = ['billable_id', 'billable_type', 'serial', 'status'];
+
+    public function getNameAttribute()
+    {
+        return $this->serial;
+    }
     
     public function item()
     {
@@ -39,6 +44,7 @@ class Bill extends Model
     }
 
     public function transaction(){
-        return $this->hasOne(Transaction::class);
+        return $this->hasOne(Transaction::class,'belongTo_id')
+        ->where(['belongTo_type'=>$this::class]);
     }
 }

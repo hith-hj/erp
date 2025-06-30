@@ -64,4 +64,11 @@ class CurrencyController extends BaseController
         $this->repo->find($id)->update(['is_default' => 1, 'rate_to_default' => 1]);
         return back()->with('success', 'Default currency updated');
     }
+
+    public function changeRate(Request $request, $id)
+    {
+        $data = $request->validate(['rate'=>['required','numeric','min:1','max:100000']]);
+        $this->repo->find($id)->update(['rate_to_default' => $data['rate'] ]);
+        return back()->with('success', 'Change rate updated');
+    }
 }

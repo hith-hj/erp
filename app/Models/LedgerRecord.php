@@ -15,6 +15,11 @@ class LedgerRecord extends Model
         return $this->belongsTo(Ledger::class);
     }
 
+    public function account()
+    {
+        return $this->morphTo(__FUNCTION__,'account_type','account_id');
+    }
+
     public function currency(){
         return $this->belongsTo(Currency::class);
     }

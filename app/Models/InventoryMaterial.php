@@ -16,6 +16,7 @@ class InventoryMaterial extends Pivot
         'inventory_id',
         'material_id',
         'quantity',
+        'status'
     ];
 
     public function material()

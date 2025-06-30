@@ -89,27 +89,42 @@ class BaseRepository implements Repository
      * @param string $getter type of getter get(), first(), ...
      * @param array $columns array of columns to get
      * @return Collection|Model the returned value deppend on the getter
+     * @throws Exception if result not found
      **/
     public function getter(
         string $model,
         array $callable = [],
         string $getter = 'get',
-        array $columns = ['*']
+        array $columns = ['*'],
+        bool $sql = false,
     ): Collection|Model|null {
         $model = '\App\Models\\' . ucfirst(trim($model));
+        $class = class_basename($model);
+        if (!class_exists($model)) {
+            $this->throw("class $class not found");
+        }
         $query = $model::query();
-        foreach ($callable as $key => $value) {
-            if (in_array($key, ['has', 'whereHas',])) {
-                $query->$key(...$value);
-            } else {
-                $query->$key($value);
+        if (! empty($callable)) {
+            foreach ($callable as $key => $value) {
+                if (in_array($key, ['has', 'whereHas',])) {
+                    $query->$key(...$value);
+                } else {
+                    $query->$key($value);
+                }
             }
         }
-        return $query->$getter($columns);
+        if($sql){
+            $this->throw($query->toSql());
+        }
+        $result = $query->$getter($columns);
+        if ($result == null) {
+            $this->throw("No result found for: $class");
+        }
+        return $result;
     }
 
-    public function throw(string $message,int $code=0)
+    public function throw(string $message, int $code = 0)
     {
-        throw new Exception($message,$code);
+        throw new Exception($message, $code);
     }
 }

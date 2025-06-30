@@ -10,24 +10,36 @@ class Transaction extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['cashier_id','bill_id', 'type', 'amount', 'remaining', 'created_by','is_payed'];
+    protected $fillable = [
+        'cashier_id',
+        'belongTo_id',
+        'belongTo_type',
+        'type',
+        'amount',
+        'remaining',
+        'created_by',
+        'is_payed'
+    ];
 
-    protected $transaction_type = [1=>'Deposit',2=>'Withdraw'];
+    protected $transaction_type = [1 => 'Deposit', 2 => 'Withdraw'];
 
-    public function getType(){
+    public function getType()
+    {
         return $this->transaction_type[$this->type];
     }
 
-    public function cashier(){
+    public function cashier()
+    {
         return $this->belongsTo(Cashier::class);
     }
 
-    public function transfers(){
-        return $this->hasMany(Transfer::class)->orderBy('created_at','desc');
+    public function transfers()
+    {
+        return $this->hasMany(Transfer::class)->orderBy('created_at', 'desc');
     }
 
-    public function bill(){
-        return $this->belongsTo(Bill::class);
+    public function belongTo()
+    {
+        return $this->morphTo(__FUNCTION__,'belongTo_type','belongTo_id');
     }
-
 }

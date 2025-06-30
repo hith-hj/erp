@@ -40,14 +40,10 @@ class Material extends Model
 
     public function defaultUnit()
     {
-        return Unit::where(
-            'id',
-            $this
+        return $this
                 ->units()
                 ->wherePivot('is_default', 1)
-                ->first()?->id
-        )
-            ->first()?->name ?? __('locale.None');
+                ->first()?->name ?? __('locale.None');
     }
 
     public function getType()
