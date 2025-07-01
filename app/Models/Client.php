@@ -16,6 +16,12 @@ class Client extends Model
         return $this->hasMany(Sale::class);
     }
 
+    public function ledgersRecords()
+    {
+        return $this->hasMany(LedgerRecord::class,'account_id')
+            ->where(['account_type'=>$this::class]);
+    }
+
     public function getfullNameAttribute()
     {
         return $this->first_name . ' ' . $this->last_name;

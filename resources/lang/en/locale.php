@@ -379,4 +379,9 @@ return [
     "Today"=>"Today",
     "Credit"=>"Credit",
     "Debit"=>"Debit",
+
+    "To" => "To",
+    "On" => "On",
+    "Stats" => "Statistics",
+    "Summary" => "Summary",
 ];

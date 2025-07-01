@@ -177,7 +177,7 @@
                                 <tr>
                                     <th>No</th>
                                     <th>{{ __('locale.ID') }}</th>
-                                    <th>{{__('locale.BelongTo')}}</th>
+                                    <th>{{ __('locale.On')}}</th>
                                     <th>{{ __('locale.Type') }}</th>
                                     <th>{{ __('locale.Amount') }}</th>
                                     <th>{{ __('locale.Remaining') }}</th>

@@ -383,178 +383,23 @@
                                             </td>
                                         </tr>
                                     </tbody>
-
-                                    {{-- <tbody data-repeater-list="records"
-                                        id="ledger_records"
-                                        onkeydown="
-                                            if(event.which == 13) {
-                                                event.preventDefault();
-                                            }">
-                                        <tr class="mt-5" data-repeater-item
-                                            x-data="{
-                                                    record_type: null,
-                                                    debit:null,
-                                                    credit:null,
-                                                    quantity: null,
-                                                    currency_id:null,
-                                                    stored_quantity: 0,
-                                                    accounts_title: null,
-                                                    accounts: {},
-                                                    setAccounts(record_type) {
-                                                        if (this.record_type === 'debit') {
-                                                            this.accounts = this.vendors;
-                                                            this.accounts_title = 'Vendors';
-                                                        } else if (this.record_type === 'credit') {
-                                                            this.accounts = this.clients;
-                                                            this.accounts_title = 'Clients';
-                                                        } else {
-                                                            this.accounts_title = null;
-                                                            alert('wrong account record_type');
-                                                        }
-                                                    },
-                                                    setCurrency(quantity){
-                                                        if(this.currency_id === null){
-                                                            return alert('Select Currency');
-                                                        }
-                                                        this.currency = this.currencies[this.currency_id];
-                                                        if(!this.currency.is_default){
-                                                            quantity = quantity * Number(this.currency.rate_to_default);
-                                                        }
-                                                        return quantity;
-                                                    },
-                                                    updateBalance() {
-                                                        amount = this.setCurrency(this.quantity);
-                                                        amount = Number(amount);
-                                                        this.stored_quantity = Number(this.stored_quantity);
-                                                        if (this.record_type === 'debit') {
-                                                            this.changed_balanced += this.stored_quantity;
-                                                            this.changed_balanced -= amount
-                                                            this.totals.debits -= this.stored_quantity;
-                                                            this.totals.debits += amount
-                                                        } else if (this.record_type === 'credit') {
-                                                            this.changed_balanced -= this.stored_quantity;
-                                                            this.changed_balanced += amount
-                                                            this.totals.credits -= this.stored_quantity;
-                                                            this.totals.credits += amount
-                                                        } else {
-                                                            alert('set account type');
-                                                            return;
-                                                        }
-                                                        this.balance_diff = Number(this.changed_balanced) - Number({{ $ledger->end_balance }})
-                                                        this.stored_quantity = amount
-                                                    },
-                                                    setRecordType(value,type){
-                                                        if(value > 0){
-                                                            this.record_type = type;
-                                                            this.setAccounts(this.record_type);
-                                                            this.quantity = value;
-                                                        }else{
-                                                            this.record_type = null;
-                                                            this.currency_id = null;
-                                                            this.quantity = null;
-                                                            this.accounts = {};
-                                                        }
-                                                    }
-                                                }">
-                                            <td>
-                                                <input type="hidden" name="record_type" x-model="record_type" >
-                                                <input type="hidden" name="quantity" x-model="quantity" >
-                                                <input type="number"
-                                                    class="form-control"
-                                                    x-ref="debit"
-                                                    x-model="debit"
-                                                    x-init="$watch('debit', (value) => setRecordType(value,'debit'))"
-                                                    :disabled="record_type == 'credit' " />
-                                            </td>
-                                            <td>
-                                                <input type="number"
-                                                    class="form-control"
-                                                    x-ref="credit"
-                                                    x-model="credit"
-                                                    x-init="$watch('credit', (value) => setRecordType(value,'credit'))"
-                                                    :disabled="record_type == 'debit' "/>
-                                            </td>
-                                            <td>
-                                                <select name="account_id" class="form-select" required>
-                                                    <option value="">{{ __('locale.Chose') }} </option>
-                                                    <option readonly disabled x-text="'{{__('locale.Expenses')}}'" class="text-primary"></option>
-                                                    @foreach($expences as $expence)
-                                                        <option value="{{$expence->id}}">
-                                                            {{$expence->name}}
-                                                        </option>
-                                                    @endforeach
-                                                    <option readonly disabled class="text-primary">
-                                                        {{__('locale.'.@js())}}
-                                                    </option>
-                                                    <template
-                                                        x-for="account in accounts"
-                                                        :key="account.id">
-                                                        <option
-                                                            :value="account.id"
-                                                            x-text="account.first_name+' '+account.last_name">
-                                                        </option>
-                                                    </template>
-                                                </select>
-                                            </td>
-                                            <td>
-                                                <select name="currency_id" class="form-select" x-model="currency_id"
-                                                x-init="$watch('currency_id',(value)=>updateBalance())" required>
-                                                    <option value="">{{ __('locale.Chose') }} </option>
-                                                    @foreach ($currencies as $currency)
-                                                    <option value="{{ $currency->id }}">
-                                                        {{ $currency->name }}
-                                                    </option>
-                                                    @endforeach
-                                                </select>
-                                            </td>
-                                            <td>
-                                                <input type="text"
-                                                    name="note"
-                                                    class="form-control" />
-                                            </td>
-                                            <td>
-                                                <button
-                                                    class="btn btn-default "
-                                                    type="button"
-                                                    data-repeater-delete>
-                                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                                        width="14"
-                                                        height="14"
-                                                        viewBox="0 0 24 24"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        stroke-width="2"
-                                                        stroke-linecap="round"
-                                                        stroke-linejoin="round"
-                                                        class="feather feather-trash text-danger">
-                                                        <polyline
-                                                            points="3 6 5 6 21 6">
-                                                        </polyline>
-                                                        <path
-                                                            d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
-                                                        </path>
-                                                    </svg>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    </tbody> --}}
                                 </table>
 
                                 <table class="table table-sm mb-1 ">
                                     <thead>
                                         <tr>
-                                            <th>{{ __('locale.Base balance') }}</th>
                                             <th>{{ __('locale.Debit')}}</th>
                                             <th>{{ __('locale.Credit')}}</th>
+                                            <th>{{ __('locale.Base balance') }}</th>
                                             <th>{{ __('locale.Changed balance') }}</th>
                                             <th>{{ __('locale.Balance difference') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody class="table-hover">
                                         <tr >
-                                            <td >{{ $ledger->end_balance }}</td>
                                             <td x-text="totals.debits" ></td>
                                             <td x-text="totals.credits" ></td>
+                                            <td >{{ $ledger->end_balance }}</td>
                                             <td x-text="changed_balanced" ></td>
                                             <td x-text="balance_diff" ></td>
                                         </tr>

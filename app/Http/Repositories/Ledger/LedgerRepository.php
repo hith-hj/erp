@@ -163,7 +163,7 @@ class LedgerRepository extends BaseRepository
         throw_if(!$currency, "Currency Not Found");
         if (! $currency->is_default) {
             $record['quantity'] *= $currency->rate_to_default;
-            $record['note'] .= " defaulted: rate- {$currency->rate_to_default}";
+            $record['note'] .= " rate:{$currency->rate_to_default}: ";
         }
         return $record;
     }

@@ -18,9 +18,11 @@
                                 @error('bill_id') border-danger @enderror >
                                 <option value="">{{ __('locale.Chose') }}</option>
                                 @forelse ($bills as $bill)
-                                    <option value="{{$bill->id}}">
-                                        {{$bill->getType.' - '.$bill->serial. ' - '.$bill->item->total()}}
-                                    </option>
+                                    @if($bill->item !== null)
+                                        <option value="{{$bill->id}}">
+                                            {{$bill->getType.' - '.$bill->serial. ' - '.$bill->item?->total()}}
+                                        </option>
+                                    @endif
                                 @empty
                                     <option value="">{{__('locale.None')}}</option>
                                 @endforelse

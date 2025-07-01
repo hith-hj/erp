@@ -50,7 +50,7 @@
                     </tr>
                 </tbody>
             </table>
-            <table class="table table-sm table-bordered sortable">
+            {{-- <table class="table table-sm table-bordered sortable">
                 <thead class="">
                     <tr id="sortable_by">
                         <th>NO</th>
@@ -94,6 +94,64 @@
                                     <small> - defaulted</small>
                                 @endif
                             </th>
+                            <th>{{ $record->created_at->diffForHumans() }}</th>
+                        </tr>
+                    @empty
+                        <tr>
+                            <th>{{__('locale.Nothing found')}}</th>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table> --}}
+            <table class="table table-sm table-bordered sortable">
+                <thead class="">
+                    <tr id="sortable_by">
+                        <th>NO</th>
+                        <th>{{ __('locale.ID') }}</th>
+                        <th>{{ __('locale.Type') }}</th>
+                        <th>{{ __('locale.Account') }}</th>
+                        <th>{{ __('locale.Currency') }}</th>
+                        <th>{{ __('locale.Quantity') }}</th>
+                        <th>{{ __('locale.Note') }}</th>
+                        <th>{{ __('locale.Created at')}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php
+                        $stats = [];
+                    @endphp
+                    @forelse($ledger->records as $record)
+                        @php
+                            $currency = $record->currency->name;
+                            $total = $record->quantity;
+                            if(!isset($stats[$currency])){
+                                $stats[$currency] = [
+                                    'count' => 1,
+                                    'total'=>$total,
+                                ];
+                            }else{
+                                $stats[$currency]['count'] += 1;
+                                $stats[$currency]['total'] += $total;
+                            }
+                        @endphp
+                        <tr>
+                            <th>{{$loop->index + 1}}</th>
+                            <th>{{ $record->id }}</th>
+                            <th>{{ $record->record_type }}</th>
+                            <th>
+                                @php
+                                    $class = class_basename($record->account_type);
+                                    $route = strtolower($class);
+                                @endphp
+                                <a href="{{route($route.'.show',[$route=>$record->account_id])}}"
+                                    target="__blanck"
+                                    >
+                                    {{$class}}
+                                </a>
+                            </th>
+                            <th>{{ $record->currency?->name }}</th>
+                            <th>{{ $record->quantity }}</th>
+                            <th>{{ $record->note }}</th>
                             <th>{{ $record->created_at->diffForHumans() }}</th>
                         </tr>
                     @empty

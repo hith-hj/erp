@@ -40,7 +40,7 @@
                 <div class="card">
                     <div class="card-header justify-content-between">
                         <div class="">
-                            {{__('locale.Sales')}}
+                            {{__('locale.Stats')}}
                         </div>
                         <div class="card-text d-flex flex-wrap gap-1">
                             <span onclick="printTable('printable')" title="Print table">    
@@ -74,15 +74,20 @@
                         @php
                             $stats = [];
                         @endphp
+                        <div class="mt-1">
+                            {{__('locale.Sales')}}
+                        </div>
                         <table class="table table-sm table-bordered sortable">
                             <thead>
                                 <tr id="sortable_by">
-                                    <th>{{__('locale.ID')}}</th>
+                                    <th>{{ __('locale.ID')}}</th>
                                     <th class="skip_sort">{{ __('locale.Bill') }}</th>
                                     <th>{{ __('locale.Currency') }}</th>
                                     <th>{{ __('locale.Total') }}</th>
                                     <th>{{ __('locale.Payed') }}</th>
                                     <th>{{ __('locale.Remaining') }}</th>
+                                    <th>{{ __('locale.Created at') }}</th>
+
                                     <th class="skip_sort">{{ __('locale.Note') }}</th>
                                 </tr>
                             </thead>
@@ -120,6 +125,7 @@
                                         <td>{{ $sale->total }}</td>
                                         <td>{{ $sale->total - $sale->remaining }}</td>
                                         <td>{{ $sale->remaining }}</td>
+                                        <td>{{ $sale->created_at }}</td>
                                         <td>
                                             @if (
                                                 $sale->hasTransaction 
@@ -144,7 +150,61 @@
                                 @endforelse
                             </tbody>
                         </table>
-                        <table class="table table-sm table-bordered mt-1">
+                        <div class="mt-1">
+                            {{__('locale.Transfers')}}
+                        </div>
+                        <table class="table table-sm table-bordered sortable">
+                            <thead>
+                                <tr id="sortable_by">
+                                    <th>{{ __('locale.ID') }}</th>
+                                    <th>{{ __('locale.Type') }}</th>
+                                    <th>{{ __('locale.Amount') }}</th>
+                                    <th>{{ __('locale.Currency') }}</th>
+                                    <th>{{ __('locale.Created at') }}</th>
+                                    <th class="skip_sort">{{ __('locale.Note') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-hover">
+                                @forelse ($client->records as $record)
+                                    @php
+                                        $currency = $record->currency->name;
+                                        $total = $record->quantity;
+                                        $remaining = 0;
+                                        if(!isset($stats[$currency])){
+                                            $stats[$currency] = [
+                                                'count' => 1,
+                                                'total'=>$total,
+                                                'remaining'=>$remaining,
+                                            ];
+                                        }else{
+                                            $stats[$currency]['count'] += 1;
+                                            $stats[$currency]['total'] += $total;
+                                            $stats[$currency]['remaining'] += $remaining;
+                                        }
+                                    @endphp
+                                    <tr>
+                                        <td>{{ $record->id }}</td>
+                                        <td>{{ $record->record_type }}</td>
+                                        <td>{{ $record->quantity }}</td>
+                                        <td>{{ $record->currency->name }}</td>
+                                        <td>{{ $record->created_at }}</td>
+                                        <td>{{ $record->note }}</td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td>
+                                            <span class="badge badge-light-info me-1">
+                                                {{__('locale.Not Found')}}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                        <div class="mt-1">
+                            {{__('locale.Summary')}}
+                        </div>
+                        <table class="table table-sm table-bordered">
                             <tbody class="table-hover">
                                 @forelse ($stats as $key => $item)
                                     <tr class="text-primary border-primary">

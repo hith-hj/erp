@@ -177,7 +177,7 @@ class SaleRepository extends BaseRepository
         ];
 
 
-        if($diffrence == 0){
+        if($diffrence == 0 || $is_less){
             $dataToUpdate['status'] = -1;
         }
 

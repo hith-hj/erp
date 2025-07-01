@@ -17,11 +17,24 @@ class ClientRepository extends BaseRepository
     {
         $request = request();
         $currencies = $this->getter(model: 'currency', columns: ['name']);
+        $sales = $this->getFeeds($client,$request);
+        $client->records = $this->getRecords($client,$request);
+
+        $sales->currencies = $currencies->map(fn($curency) => $curency->name)->toArray();
+        return ['client' => $client, 'sales' => $sales];
+    }
+
+    private function getFeeds($client,$request)
+    {
         $sales = Sale::with(['bill.transaction', 'currency'])
             ->when($request->filled('currency'), function ($query) use ($request) {
                 $query->whereRelation('currency', 'name', $request->currency);
             })->where('client_id', $client->id)->get();
+        return $this->prepareFeeds($sales,$request);
+    }
 
+    private function prepareFeeds($sales,$request)
+    {
         foreach ($sales as $sale) {
             $sale->hasTransaction = true;
             $sale->remaining = $sale->bill?->transaction?->remaining ?? 0;
@@ -30,13 +43,34 @@ class ClientRepository extends BaseRepository
                 $sale->hasTransaction = false;
             }
             if (!$sale->currency->is_default && $request->filled('defaultCurrencyApplyed')) {
-                $rate = $sale->currency->rate_to_default;
+                // $rate = $sale->currency->rate_to_default;
+                $rate = $sale->rate;
                 $sale->remaining *= $rate;
                 $sale->total *= $rate;
             }
         }
-        $sales->currencies = $currencies->map(fn($curency)=> $curency->name)->toArray();
-        return ['client' => $client, 'sales' => $sales];
+        return $sales;
     }
 
+    private function getRecords($client,$request)
+    {
+        $records = $client->ledgersRecords()
+            ->when($request->filled('currency'), function ($query) use ($request) {
+                $query->whereRelation('currency', 'name', $request->currency);
+            })->get();
+        return $this->prepareRecords($records,$request);
+    }
+
+    private function prepareRecords($records,$request)
+    {
+        foreach ($records as $record){
+            if (!$record->currency->is_default && $request->filled('defaultCurrencyApplyed')) {
+                // $rate = $record->currency->rate_to_default;
+                $matches = [];
+                preg_match('/rate:(\d+):/',$record->note,$matches);
+                $record->quantity *= $matches[1];
+            }
+        }
+        return $records;
+    }
 }

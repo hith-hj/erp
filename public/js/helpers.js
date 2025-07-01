@@ -39,19 +39,27 @@ prevColumn = -1;
 prevElement = null;
 
 function prepTableForSort(options={}){
-    let list = document.querySelector("#sortable_by");
+    let sortable = document.querySelectorAll(".sortable");
+    sortable.forEach(function(t){
+        t.setAttribute('id','sortable_table_'+Math.floor(Math.random() * (10000)));
+        prepColumnForSort(t);
+    });
+}
+
+function prepColumnForSort(table){
+    let list = table.querySelector("#sortable_by");
     if(list){
         [...list.children].forEach((child,index)=>{
             if(!child.classList.contains('skip_sort')){
                 child.classList.add('clickable');
-                child.setAttribute('onclick',`sortTableBy(${index},this)` );
+                child.setAttribute('onclick',`sortTableBy('${index}','${table.getAttribute('id')}',this)` );
             }
         });
     }
 }
 
-function sortTableBy(byColumn,el) {
-    sortable = document.querySelector(".sortable");
+function sortTableBy(byColumn,tableId,el) {
+    sortable = document.querySelector("#"+tableId);
     rows = sortable.rows.length;    
     columns = sortable.rows[0].cells.length; 
     arrTable = [...Array(rows)].map(r => Array(columns));
