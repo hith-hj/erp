@@ -127,17 +127,18 @@
                                 </tr>
                             </thead>
                             <tbody class="table-hover">
-                                @forelse ($purchases as $sale)
+                                @forelse ($purchases as $purchase)
                                     @php
-                                        $currency = $sale->currency->name;
+                                        $currency = $purchase->currency->name;
 
-                                        $total = $sale->total;
-                                        $remaining = $sale->remaining;
+                                        $total = $purchase->total;
+                                        $remaining = $purchase->remaining;
                                         if(!isset($stats[$currency])){
                                             $stats[$currency] = [
                                                 'count' => 1,
                                                 'total'=>$total,
                                                 'remaining'=>$remaining,
+                                                'is_default'=>$purchase->currency->is_default,
                                             ];
                                         }else{
                                             $stats[$currency]['count'] += 1;
@@ -146,30 +147,30 @@
                                         }
                                     @endphp
                                     <tr>
-                                        <td>{{ $sale->id }}</td>
+                                        <td>{{ $purchase->id }}</td>
                                         <td>
-                                            @if(isset($sale->bill))
-                                                <a href="{{ route('bill.show',$sale->bill?->id) }}">
-                                                    {{ $sale->bill?->serial }}
+                                            @if(isset($purchase->bill))
+                                                <a href="{{ route('bill.show',$purchase->bill?->id) }}">
+                                                    {{ $purchase->bill?->serial }}
                                                 </a>
                                             @else
                                                 "No Bill"
                                             @endif
                                         </td>
-                                        <td>{{ $sale->currency->name }}</td>
-                                        <td>{{ $sale->total }}</td>
-                                        <td>{{ $sale->total - $sale->remaining }}</td>
-                                        <td>{{ $sale->remaining }}</td>
-                                        <td>{{ $sale->created_at }}</td>
+                                        <td>{{ $purchase->currency->name }}</td>
+                                        <td>{{ $purchase->total }}</td>
+                                        <td>{{ $purchase->total - $purchase->remaining }}</td>
+                                        <td>{{ $purchase->remaining }}</td>
+                                        <td>{{ $purchase->created_at }}</td>
                                         <td>
                                             @if (
-                                                $sale->hasTransaction
-                                                && !$sale->currency->is_default
+                                                $purchase->hasTransaction
+                                                && !$purchase->currency->is_default
                                                 && request()->filled('defaultCurrencyApplyed')
                                             )
                                                 "Default Currency Applyed"
                                             @endif
-                                            @if (!$sale->hasTransaction)
+                                            @if (!$purchase->hasTransaction)
                                                 "No Transaction Found"
                                             @endif
                                         </td>
@@ -210,6 +211,7 @@
                                                 'count' => 1,
                                                 'total'=>$total,
                                                 'remaining'=>$remaining,
+                                                'is_default'=>$record->currency->is_default,
                                             ];
                                         }else{
                                             $stats[$currency]['count'] += 1;
@@ -237,7 +239,15 @@
                             </tbody>
                         </table>
                         <div class="mt-1">
-                            {{__('locale.Summary')}}
+                            <div class="d-flex justify-content-between">
+                                <span>{{__('locale.Summary')}}</span>
+
+                                <span class="text-success" type="button" data-bs-toggle="modal"
+                                data-bs-target="#changeBalanceRates">
+                                    <i class="fa fa-refresh"></i>
+                                    {{__('locale.Rates') }}
+                                </span>
+                            </div>
                         </div>
                         <table class="table table-sm table-bordered mt-1">
                             <tbody class="table-hover">
@@ -256,6 +266,81 @@
                                 @endforelse
                             </tbody>
                         </table>
+                        <div class="modal fade" id="changeBalanceRates" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-lg modal-dialog-centered modal-edit-user">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4>Enter changed rates</h4>
+                                    </div>
+                                    <div class="modal-body p-0">
+                                        <table class="table table-lg table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>{{__('locale.Currency')}}</th>
+                                                    <th>{{__('locale.Rate')}}</th>
+                                                    <th>{{__('locale.Total')}}</th>
+                                                    <th>{{__('locale.Payed')}}</th>
+                                                    <th>{{__('locale.Remaining')}}</th>
+                                                    <th>{{__('locale.Options')}}</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="table-hover">
+                                                @forelse ($stats as $key => $item)
+                                                    @if($item['is_default'] !== true)
+                                                        <tr class="text-primary border-primary"
+                                                        x-data="{
+                                                            rate:null,
+                                                            total:{{$item['total']}},
+                                                            remaining:{{$item['remaining']}},
+                                                            payed:{{$item['total'] - $item['remaining']}},
+                                                            old_value:null,
+                                                            calculate(value){
+                                                                if(value == 0 || isNaN(value)){
+                                                                    return;
+                                                                }
+                                                                this.subOldValue();
+                                                                this.total *= Number(value);
+                                                                this.remaining *= Number(value);
+                                                                this.old_value = Number(value);
+                                                                this.updatePayed();
+                                                            },
+                                                            subOldValue(){
+                                                                if(this.old_value !== null){
+                                                                    this.total /= this.old_value;
+                                                                    this.remaining /= this.old_value;
+                                                                }
+                                                            },
+                                                            updatePayed(){
+                                                                this.payed = this.total - this.remaining;
+                                                            },
+                                                            reset(){
+                                                                this.calculate(1);
+                                                            }
+                                                        }">
+                                                            <td> {{ $key}} </td>
+                                                            <td>
+                                                                <input class="form-control" type="numeric" x-model='rate'
+                                                                x-init="$watch('rate',(value)=>calculate(value) )">
+                                                            </td>
+                                                            <td x-text="total"></td>
+                                                            <td x-text="payed"></td>
+                                                            <td x-text="remaining"></td>
+                                                            <td @click="reset">
+                                                                <i class="fa fa-recycle"></i>
+                                                            </td>
+                                                        </tr>
+                                                    @endif
+                                                @empty
+                                                    <tr>
+                                                        <th> {{__('locale.Nothing found')}} </th>
+                                                    </tr>
+                                                @endforelse
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
