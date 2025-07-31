@@ -100,15 +100,18 @@ class LedgerRepository extends BaseRepository
     public function storeItem(Ledger $ledger, array $record)
     {
         $defaulted = $this->setToDefaultCurrency($record);
+        if(!in_array($record['record_type'],['credit','debit'])){
+            throw new \Exception('invalid Record type');
+        }
         if ($record['record_type'] === 'credit') {
             $ledger->cashier()->increment('total', $defaulted['quantity']);
-            $ledger->increment('end_balance', $record['quantity']);
+            $ledger->increment('end_balance', $defaulted['quantity']);
         } else {
             $ledger->cashier()->decrement('total', $defaulted['quantity']);
-            $ledger->decrement('end_balance', $record['quantity']);
+            $ledger->decrement('end_balance', $defaulted['quantity']);
         }
         $record['note'] .= $defaulted['note'];
-        return $ledger->records()->create($record);
+        $ledger->records()->create($record);
     }
 
     public function checkForDuplicates(array $records)
