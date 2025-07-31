@@ -213,7 +213,7 @@ Route::group(['middleware' => 'auth',], function () {
     });
 
     Route::group([
-        'prefix' => 'Ledger',
+        'prefix' => 'ledger',
         'controller' => LedgerController::class
     ], function () {
         Route::get('all', function(){
