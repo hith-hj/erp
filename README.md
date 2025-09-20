@@ -1,6 +1,6 @@
 # 🏢 ERP System – Enterprise Resource Planning Platform
 
-A modular, scalable ERP system built to streamline business operations across departments like finance, inventory, and logistics. This project demonstrates backend architecture, data modeling, and workflow automation using Laravel and modern web technologies.
+A modular, scalable ERP system built to streamline business operations across departments like finance, inventory, and logistics.
 
 ## 🚀 Overview
 
@@ -14,12 +14,12 @@ This ERP system centralizes core business functions into a unified platform, ena
 
 ## 🧰 Tech Stack
 
-| Layer        | Technology            |
+| Layer        | Technology             |
 |--------------|------------------------|
 | Backend      | Laravel (PHP 8.x)      |
-| Database     | MySQL / Sqlite 	|
+| Database     | MySQL / Sqlite 	    |
 | Frontend     | Blade, Tailwind CSS    |
-| Auth         | Laravel Sanctum 	|
+| Auth         | Laravel Sanctum 	    |
 | Scheduler    | Laravel Queues & Cron  |
 | API          | RESTful endpoints      |
 
