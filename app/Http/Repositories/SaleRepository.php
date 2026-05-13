@@ -81,7 +81,7 @@ class SaleRepository extends BaseRepository
         $sale->bill()->create([
             'billable_id' => $sale->id,
             'billable_type' => get_class($sale),
-            'serial' => $sale->id.Str::random(8),
+            'serial' => $sale->id . Str::random(8),
             'status' => 0,
         ]);
 
@@ -191,12 +191,15 @@ class SaleRepository extends BaseRepository
         $inventoryMaterial = $inventory->materials()
             ->wherePivot('material_id', $material->pivot->material_id)
             ->first();
+        if ($inventoryMaterial == null) {
+            $this->throw("$material->name material in $inventory->name inventory not found ");
+        }
+
         $inventory->materials()
             ->updateExistingPivot($material->pivot->material_id, [
                 'quantity' => $inventoryMaterial->pivot->quantity +
                     $this->getBaseUnitQuantity($inventoryMaterial->units, $material->pivot),
             ]);
-
     }
 
     public function delete(int $id): bool
