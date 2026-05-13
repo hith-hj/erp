@@ -27,10 +27,6 @@ class CashierDataTable extends DataTable
                             'route' => route('ledger.all', ['cashier_id' => $cashier->id]),
                             'name' => __('locale.Ledgers'),
                         ],
-                        [
-                            'route' => route('ledger.today', ['cashier_id' => $cashier->id]),
-                            'name' => __('locale.Today ledger'),
-                        ],
                     ],
                 ]);
             })

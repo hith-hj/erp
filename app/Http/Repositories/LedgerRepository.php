@@ -112,7 +112,7 @@ class LedgerRepository extends BaseRepository
             $ledger->cashier()->decrement('total', $defaulted['quantity']);
             $ledger->decrement('end_balance', $defaulted['quantity']);
         }
-        $record['note'] .= $defaulted['note'];
+        $record['note'] = $defaulted['note'];
         $ledger->records()->create($record);
     }
 
@@ -171,7 +171,7 @@ class LedgerRepository extends BaseRepository
         throw_if(! $currency, 'Currency Not Found');
         if (! $currency->is_default) {
             $record['quantity'] *= $currency->rate_to_default;
-            $record['note'] .= " rate:{$currency->rate_to_default}: ";
+            $record['note'] .= " [rate:{$currency->rate_to_default}] ";
         }
 
         return $record;

@@ -10,8 +10,38 @@
             <h4 class=""> {{ __('locale.Transactions') }} </h4>
             <div class="d-flex justify-content-around gap-1">
 
-                {{-- <button class="btn btn-sm btn-outline-success" type="button" data-bs-toggle="modal"
-                    data-bs-target="#moneyForm{{ $cashier->id }}">
+                <!-- Trigger Button -->
+                <button class="btn btn-sm btn-outline-warning ledger-modal-trigger"
+                        type="button"
+                        data-bs-toggle="modal"
+                        data-bs-target="#todayLedger{{ $cashier->id }}"
+                        title="today ledger records">
+                    {{ __('locale.Today ledger') }}
+                </button>
+
+                <!-- Modal Wrapper -->
+                <div class="modal fade ledger-lazy-modal" id="todayLedger{{ $cashier->id }}" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered modal-edit-user">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4>{{ __('locale.Amount') }}</h4>
+                                <a href="{{ route('ledger.today', ['cashier_id' => $cashier->id]) }}">
+                                    <button class="btn btn-sm btn-outline-success">
+                                        {{ __('locale.Today ledger') }}
+                                    </button>
+                                </a>
+                            </div>
+                            <div class="modal-body p-0">
+                                <iframe src="{{ route('ledger.today', ['cashier_id' => $cashier->id]) }}"
+                                    class="ledger-iframe" width="100%" height="600px" style="border: none;"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <button class="btn btn-sm btn-outline-success" type="button" data-bs-toggle="modal"
+                    data-bs-target="#moneyForm{{ $cashier->id }}" title="Transfers between cashier">
                     {{ __('locale.Transfers') }}
                 </button>
                 <div class="modal fade" id="moneyForm{{ $cashier->id }}" tabindex="-1" aria-hidden="true">
@@ -71,44 +101,38 @@
 
                                 <details class="m-1">
                                     <summary>{{__('locale.Transfers')}}</summary>
-                                    <ul>
-
-                                            <table class="table table-sm table-bordered">
-                                                <thead>
-                                                    <tr>
-                                                        <th>No</th>
-                                                        <th>{{ __('locale.ID') }}</th>
-                                                        <th>{{__('locale.from')}}</th>
-                                                        <th>{{ __('locale.Amount') }}</th>
-                                                        <th>{{ __('locale.Created at') }}</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody class="table-hover">
-                                                    @forelse ($cashierTransactions as $item)
-                                                        <tr>
-                                                            <td>{{ $loop->index + 1 }}</td>
-                                                            <td>{{ $item->id }}</td>
-                                                            <td>
-
-                                                                <a href="{{ route("cashier.show",
-                                                                 $item->cashier->id) }}">
-                                                                    {{ $item->cashier->name }}
-                                                                </a>
-                                                            </td>
-                                                            <td>{{ $item->amount }}</td>
-                                                            <td>{{ $item->created_at }}</td>
-                                                        </tr>
-                                                    @empty
-                                                        <li>{{__('locale.Nothing found')}}</li>
-                                                    @endforelse
-                                                </tbody>
-                                            </table>
-                                    </ul>
+                                    @forelse ($cashierTransactions as $item)
+                                        <table class="table table-sm table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>{{ __('locale.ID') }}</th>
+                                                    <th>{{__('locale.From')}}</th>
+                                                    <th>{{ __('locale.Amount') }}</th>
+                                                    <th>{{ __('locale.Created at') }}</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="table-hover">
+                                                <tr>
+                                                    <td>{{ $item->id }}</td>
+                                                    <td>
+                                                        <a href="{{ route("cashier.show",
+                                                         $item->cashier->id) }}">
+                                                            {{ $item->cashier->name }}
+                                                        </a>
+                                                    </td>
+                                                    <td>{{ $item->amount }}</td>
+                                                    <td>{{ $item->created_at }}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    @empty
+                                        <h6 class="text-danger">{{__('locale.Nothing found')}}</h6>
+                                    @endforelse
                                 </details>
                             </div>
                         </div>
                     </div>
-                </div> --}}
+                </div>
 
                 @if (count($bills) > 0)
                     <button class="btn btn-sm btn-outline-success" type="button" data-bs-toggle="modal"
@@ -175,11 +199,11 @@
                         <table class="table table-sm table-bordered">
                             <thead>
                                 <tr>
-                                    <th>No</th>
                                     <th>{{ __('locale.ID') }}</th>
                                     <th>{{ __('locale.On')}}</th>
                                     <th>{{ __('locale.Type') }}</th>
                                     <th>{{ __('locale.Amount') }}</th>
+                                    <th>{{ __('locale.Payed') }}</th>
                                     <th>{{ __('locale.Remaining') }}</th>
                                     <th>{{ __('locale.Transfers') }}</th>
                                     <th>{{ __('locale.Created at') }}</th>
@@ -189,7 +213,6 @@
                             <tbody class="table-hover">
                                 @forelse ($cashier->transactions as $transaction)
                                     <tr>
-                                        <td>{{ $loop->index + 1 }}</td>
                                         <td>{{ $transaction->id }}</td>
                                         <td>
                                             @php
@@ -204,17 +227,13 @@
                                         </td>
                                         <td>{{ $transaction->getType() }}</td>
                                         <td>{{ $transaction->amount }}</td>
+                                        <td>{{ $transaction->amount - $transaction->remaining }}</td>
                                         <td>{{ $transaction->remaining }}</td>
                                         <td>
                                             {{ $transaction->transfers->count() }}
                                         </td>
                                         <td>{{ $transaction->created_at }}</td>
                                         <td>
-                                            <a href="{{route('transaction.show',$transaction->id)}}">
-                                                <button class="btn btn-sm text-primary">
-                                                    {{__('locale.View')}}
-                                                </button>
-                                            </a>
                                             @if ($transaction->remaining > 0)
                                                 <button class="btn btn-sm text-success" type="button"
                                                     data-bs-toggle="modal"
@@ -227,7 +246,7 @@
                                                         class="modal-dialog modal-sm modal-dialog-centered modal-edit-user">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
-                                                                <h4>Enter Transfer Amount</h4>
+                                                                <h4>{{__('locale.Transfer Amount')}}</h4>
                                                             </div>
                                                             <div class="modal-body p-0">
                                                                 <form id="transfer_form" method="POST"
@@ -272,48 +291,76 @@
                                                     </div>
                                                 </div>
                                             @endif
-                                            <button class="btn btn-sm text-info" type="button"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#transaction{{ $transaction->id }}Transfers">
-                                                {{ __('locale.Transfers') }}
-                                            </button>
-                                            <div class="modal fade" id="transaction{{ $transaction->id }}Transfers"
-                                                tabindex="-1" aria-hidden="true">
-                                                <div class="modal-dialog modal-sm modal-dialog-centered modal-edit-user">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h4>
-                                                                {{ __('locale.Transaction') . '-' . $transaction->id }}
-                                                                {{ __('locale.Transfers') }}
-                                                            </h4>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <div class="card">
-                                                                <table class="table table-sm table-bordered">
-                                                                    <thead>
-                                                                        <tr>
-                                                                            <th>No</th>
-                                                                            <th>{{ __('locale.ID') }}</th>
-                                                                            <th>{{ __('locale.Amount') }}</th>
-                                                                            <th>{{ __('locale.Created at') }}</th>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                        @foreach ($transaction->transfers as $transfer)
-                                                                            <tr>
-                                                                                <td>{{ $loop->index + 1 }}</td>
-                                                                                <td>{{ $transfer->id }}</td>
-                                                                                <td>{{ $transfer->amount }}</td>
-                                                                                <td>{{ $transfer->created_at }}</td>
-                                                                            </tr>
-                                                                        @endforeach
-                                                                    </tbody>
-                                                                </table>
+                                            @if(count($transaction->transfers) > 0)
+                                                <button class="btn btn-sm text-info" type="button"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#transaction{{ $transaction->id }}Transfers">
+                                                    {{ __('locale.Transfers') }}
+                                                </button>
+                                                <div class="modal fade" id="transaction{{ $transaction->id }}Transfers"
+                                                    tabindex="-1" aria-hidden="true">
+                                                    <div class="modal-dialog modal-lg modal-dialog-centered modal-edit-user">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h4>
+                                                                    {{ __('locale.Transfers') }}
+                                                                </h4>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="card">
+                                                                    <div class="card-header">
+                                                                        <h4 class="card-title">
+                                                                            {{ __('locale.Type') }} :
+                                                                            {{ $transaction->getType() }}
+                                                                        </h4>
+                                                                        <div class="card-text">
+                                                                            {{ __('locale.Is Payed') }} :
+                                                                            {{ $transaction->remaining == 0 ? __('locale.Is Payed') : '-' }}
+                                                                        </div>
+                                                                        <div class="card-text">
+                                                                            {{ __('locale.Amount') }} :
+                                                                            {{ $transaction->amount }}
+                                                                        </div>
+                                                                        <div class="card-text">
+                                                                            {{ __('locale.Remaining') }} :
+                                                                            {{ $transaction->remaining }}
+                                                                        </div>
+                                                                        <div class="card-text">
+                                                                            {{ __('locale.Transfers') }} :
+                                                                            {{ $transaction->transfers()->count() }}
+                                                                        </div>
+                                                                        <div class="card-text">
+                                                                            {{ __('locale.Created at') }}
+                                                                            {{ $transaction->created_at->diffForHumans() }}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="card-body">
+                                                                        <table class="table table-sm table-bordered">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th>Id</th>
+                                                                                    <th>{{ __('locale.Amount') }}</th>
+                                                                                    <th>{{ __('locale.Created at') }}</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody class="table-hover">
+                                                                                @forelse ($transaction->transfers as $transfer)
+                                                                                    <tr>
+                                                                                        <td>{{ $transfer->id }}</td>
+                                                                                        <td>{{ $transfer->amount }}</td>
+                                                                                        <td>{{ $transfer->created_at->diffForHumans() }}</td>
+                                                                                    </tr>
+                                                                                @empty
+                                                                                @endforelse
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            @endif
                                         </td>
                                     </tr>
                                 @empty

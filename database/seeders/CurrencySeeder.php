@@ -17,7 +17,6 @@ class CurrencySeeder extends Seeder
             \App\Models\Currency::factory()->dollar()->create();
             \App\Models\Currency::factory()->pound()->create();
             \App\Models\Currency::factory()->syp()->create();
-            \App\Models\Currency::factory(2)->create();
         }
     }
 }

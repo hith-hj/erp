@@ -27,6 +27,6 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Transportation'],
             ['name' => 'Other'],
         ]);
-        \App\Models\Expense::factory(5)->create();
+        \App\Models\Expense::factory(2)->create();
     }
 }

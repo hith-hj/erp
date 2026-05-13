@@ -10,6 +10,11 @@
                 {{$cashier->name.' '.__('locale.Cashier').' '.__('locale.Ledgers')}}
             </div>
             <div class="card-text d-flex flex-wrap gap-1">
+                <a href="{{ route('ledger.today', ['cashier_id' => $cashier->id]) }}">
+                    <button class="btn btn-sm btn-outline-success ">
+                        {{ __('locale.Today ledger') }}
+                    </button>
+                </a>
                 <span onclick="printTable('printable')" title="Print table">
                     <i class="text-primary fa fa-lg fa-print" ></i>
                 </span>
@@ -46,10 +51,6 @@
                 </thead>
                 <tbody>
                     @forelse($cashier->ledgers as $ledger)
-                        @if($ledger->created_at->format('Y-m-d') === now()->format('Y-m-d'))
-                            <small>Today ledger can't be until tomorrow</small>
-                            @continue
-                        @endif
                         <tr>
                             <th>{{$loop->index + 1}}</th>
                             <th>{{ $ledger->id }}</th>

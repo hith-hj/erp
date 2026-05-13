@@ -123,7 +123,7 @@
                                             </a>
                                         </td>
                                         <td>
-                                            <a href="{{route('client.show',$purchase->vendor?->id)}}"
+                                            <a href="{{route('vendor.show',$purchase->vendor?->id)}}"
                                                 target="__blanck">
                                                 {{ $purchase->vendor?->fullName }}
                                             </a>

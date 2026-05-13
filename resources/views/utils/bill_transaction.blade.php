@@ -12,7 +12,7 @@
         <div class='modal-dialog modal-sm modal-dialog-centered modal-edit-user'>
             <div class='modal-content'>
                 <div class='modal-header'>
-                    <h4>Enter Transfer Amount</h4>
+                    <h4>{{__('locale.Transfer Amount')}}</h4>
                 </div>
                 <div class='modal-body p-0'>
                     <form id='transfer_form' method='POST' action='{{ route('cashier.billTransaction') }}'
@@ -26,20 +26,24 @@
                                         <div class='col-6'>
                                             <div class='mb-1'>
                                                 <label class='form-label' for='amount'>{{__('locale.Cashier')}}</label>
-                                                <select name="cashier_id" id="" class="form-select">
-                                                    @foreach ($cashiers as $cashier)
+                                                <select name="cashier_id" id="" class="form-select" required>
+                                                    @forelse ($cashiers as $cashier)
                                                         <option value="{{$cashier->id}}" {{$cashier->is_default ? 'selected' : ''}}  >
                                                             {{$cashier->name}}
                                                         </option>
-                                                    @endforeach
-                                                </select>                                            
+                                                    @empty
+                                                        <option disabled class='border-danger text-danger' title="add cashier first">
+                                                            {{__('locale.Not Found')}}
+                                                        </option>
+                                                    @endforelse
+                                                </select>
                                             </div>
                                         </div>
                                         <div class='col-6'>
                                             <div class='mb-1'>
                                                 <label class='form-label' for='amount'>{{__('locale.Amount')}}</label>
                                                 <input type='number' name='amount' min='0' id='amount'
-                                                    class='form-control'>
+                                                    class='form-control' required {{count($cashiers) == 0 ? 'disabled':''}}>
                                             </div>
                                         </div>
                                         <div class='col-12'>

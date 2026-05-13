@@ -117,8 +117,10 @@ class CashierController extends Controller
             'amount' => ['required', 'numeric', 'min:0'],
         ]);
         $res = $this->repo->transaction($data['cashier_id'], 'bill', $data['bill_id'], $data['amount']);
+        if($res[0] === 'error'){
+            return redirect()->back()->with(...$res);
+        }
         $bill = $this->repo->getter('bill', ['with' => ['transaction'], 'where' => [['id', $data['bill_id']]]], 'first');
-
         return redirect()->route('transaction.show', $bill->transaction->id)->with(...$res);
     }
 }

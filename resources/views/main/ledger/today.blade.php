@@ -28,6 +28,7 @@
     </li>
 </ul>
 <div class="tab-content">
+    {{-- XXXXXXXXXXXXXXXXXXXXXXXXXXXXX  First Section XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX --}}
     <div id="new_items" class="tab-pane active"
         x-data="{
             clients: {{ $clients->keyBy('id')->toJson() }},
@@ -51,59 +52,57 @@
                         <div class="w-75">
                             <div class="row">
                                 <div class="col-6">
-                                    <div class="mb-1">
-                                        <label class="form-label">{{ __('locale.Date') }}</label>
-                                        <input type="text" name="date" class="form-control" readonly
-                                            value="{{ $ledger->created_at->format('Y-m-d') }}" />
-                                    </div>
+                                    <label class="form-label">{{ __('locale.Date') }}</label>
+                                    <input type="text" name="date" class="form-control form-control-sm" readonly
+                                        value="{{ $ledger->created_at->format('Y-m-d') }}" />
                                 </div>
                                 <div class="col-6">
-                                    <div class="mb-1">
-                                        <label class="form-label" for="currency">
-                                            {{ __('locale.Currency') }}
-                                        </label>
-                                        <select id="currency" name="main_currency"
-                                            x-model="main_currency" class="form-select">
-                                            <option value="">{{ __('locale.Chose') }} </option>
-                                            @foreach ($currencies as $currency)
-                                                <option value="{{ $currency->id }}">
-                                                    {{ $currency->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                                    <label class="form-label" for="currency">
+                                        {{ __('locale.Currency') }}
+                                    </label>
+                                    <select id="currency" name="main_currency"
+                                        x-model="main_currency" class="form-select form-select-sm">
+                                        <option value="">{{ __('locale.Chose') }} </option>
+                                        @foreach ($currencies as $currency)
+                                            <option value="{{ $currency->id }}">
+                                                {{ $currency->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                         </div>
-                        <div class="w-25 d-flex align-items-center justify-content-end">
-                            <h5 class="m-0">
-                                {{ __('locale.Rows count') }}
-                            </h5>
-                            <input type="number" id="rowCount"
-                                min="1" value="1"
-                                max="30"
-                                class="w-25 form-control form-control-sm mx-1"
-                                onkeypress="
-                                if(event.which == 13) {
-                                    event.preventDefault();
-                                    addRowX($(this).val());
-                                }">
-                            <button type="button"
-                                class="btn btn-primary btn-sm"
-                                onclick="addRowX($('#rowCount').val())">
-                                <i data-feather="plus"></i>
-                            </button>
+                        <div class="w-25 d-flex justify-content-end">
+                            <div class="col-6">
+                                <label class="form-label">{{ __('locale.Rows count') }}</label>
+                                <div class="d-flex">
+                                    <input type="number" id="rowCount"
+                                        min="1" value="1" max="30"
+                                        class="form-control form-control-sm"
+                                        onkeypress="
+                                        if(event.which == 13) {
+                                            event.preventDefault();
+                                            addRowX($(this).val());
+                                        }">
+                                    <button type="button"
+                                        class="btn btn-primary btn-sm mx-1"
+                                        onclick="addRowX($('#rowCount').val())">
+                                        <i data-feather="plus"></i>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="card-body p-0 px-1">
                         <table class="table table-sm mb-1">
                             <thead class="">
                                 <tr>
+                                    <th>{{ __('locale.Currency') }}</th>
                                     <th>{{ __('locale.Debit') }}</th>
                                     <th>{{ __('locale.Credit') }}</th>
                                     <th>{{ __('locale.Account') }}</th>
-                                    <th>{{ __('locale.Currency') }}</th>
                                     <th>{{ __('locale.Note') }}</th>
+                                    <th>{{ __('locale.Total') }}</th>
                                     <th>{{ __('locale.Options') }}</th>
                                 </tr>
                             </thead>
@@ -187,6 +186,16 @@
                                     }">
                                     <input type="hidden" x-init="$watch('main_currency',(value)=>updateCurrencies(value))">
                                     <td>
+                                        <select name="currency_id" class="form-select" x-model="currency_id" required>
+                                            <option value="">{{ __('locale.Chose') }} </option>
+                                            @foreach ($currencies as $currency)
+                                                <option value="{{ $currency->id }}">
+                                                    {{ $currency->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td>
                                         <input type="hidden" name="record_type" x-model="record_type" >
                                         <input type="hidden" name="quantity" x-model="quantity" >
                                         <input type="number" class="form-control" min="1" x-model="debit"
@@ -199,42 +208,31 @@
                                             :disabled="record_type == 'debit' "/>
                                     </td>
                                     <td>
-                                        <select name="account_id" class="form-select" required >
+                                        <input list="browsers" name="account_id" id="browser" class="form-control" required>
+                                        <datalist id="browsers">
                                             <option value="">{{ __('locale.Chose') }} </option>
-                                            <option readonly disabled
-                                            x-text="'{{__('locale.Expenses')}}'" class="text-primary"></option>
                                             @foreach($expences as $expence)
                                                 <option value="{{'Expense_'.$expence->id}}">
                                                     {{$expence->name}}
                                                 </option>
                                             @endforeach
-                                            <option readonly disabled class="text-primary">
-                                                {{__('locale.Vendors')}}
-                                            </option>
-                                            <template
-                                                x-for="account in accounts"
-                                                :key="account.id">
-                                                <option
-                                                    :value="accounts_title+'_'+account.id"
-                                                    x-text="account.first_name+' '+account.last_name">
-                                                </option>
-                                            </template>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <select name="currency_id" class="form-select" x-model="currency_id" required
-                                            x-initx="$watch('currency_id',(value)=>updateBalance());"
-                                            x-onww:change="updateBalance($event.target.value)">
-                                            <option value="">{{ __('locale.Chose') }} </option>
-                                            @foreach ($currencies as $currency)
-                                                <option value="{{ $currency->id }}">
-                                                    {{ $currency->name }}
+                                            @foreach($clients as $client)
+                                                <option value="{{'Client_'.$client->id}}">
+                                                    {{$client->first_name .' '. $client->last_name}}
                                                 </option>
                                             @endforeach
-                                        </select>
+                                            @foreach($vendors as $vendor)
+                                                <option value="{{'Vendor_'.$vendor->id}}">
+                                                    {{$vendor->first_name .' '. $vendor->last_name}}
+                                                </option>
+                                            @endforeach
+                                        </datalist>
                                     </td>
                                     <td>
                                         <input type="text" name="note" class="form-control" />
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" x-model="stored_quantity" />
                                     </td>
                                     <td>
                                         <button
@@ -303,6 +301,7 @@
         </form>
     </div>
 
+    {{-- XXXXXXXXXXXXXXXXXXXXXXXXXXXXX  Second Section XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX --}}
     <div id="list_items" class="tab-pane ">
         <div class="card mb-0 mt-1">
             <h4 class="m-0 px-1">
@@ -368,7 +367,7 @@
                             <tr>
                                 <th>{{$loop->index + 1}}</th>
                                 <th>{{ $record->id }}</th>
-                                <th>{{ $record->record_type }}</th>
+                                <th>{{ __('locale.'.ucfirst($record->record_type) ) }}</th>
                                 <th>
                                     @php
                                         $class = class_basename($record->account_type);
@@ -377,7 +376,7 @@
                                     <a href="{{route($route.'.show',[$route=>$record->account_id])}}"
                                         target="__blanck"
                                         >
-                                        {{$class}}
+                                        {{$class.' - '.$record->account_id}}
                                     </a>
                                 </th>
                                 <th>{{ $record->currency?->name }}</th>

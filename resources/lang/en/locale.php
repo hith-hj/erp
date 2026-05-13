@@ -360,6 +360,7 @@ return [
     'Withdraw' => 'Withdraw',
     'ID' => 'ID',
     'Payed' => 'Payed',
+    'From'=>'From',
 
     'Ledgers' => 'Ledgers',
     'Ledger' => 'Ledger',
@@ -376,8 +377,13 @@ return [
     'Credit' => 'Credit',
     'Debit' => 'Debit',
     'Not Found'=>'Not Found',
+    'Change Rate'=>'Change Rate',
     'To' => 'To',
     'On' => 'On',
     'Stats' => 'Statistics',
     'Summary' => 'Summary',
+    'Show Tree'=>'Show Tree',
+    'Components Tree'=>'Components Tree',
+    'Transfer Amount'=>'Transfer Amount'
+
 ];

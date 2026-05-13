@@ -215,13 +215,18 @@
                                             ];
                                         }else{
                                             $stats[$currency]['count'] += 1;
-                                            $stats[$currency]['total'] += $total;
-                                            $stats[$currency]['remaining'] += $remaining;
+                                            if($record->record_type === 'credit'){
+                                                $stats[$currency]['total'] += $total;
+                                                $stats[$currency]['remaining'] += $remaining;
+                                            }else{
+                                                $stats[$currency]['total'] -= $total;
+                                                $stats[$currency]['remaining'] -= $remaining;
+                                            }
                                         }
                                     @endphp
                                     <tr>
                                         <td>{{ $record->id }}</td>
-                                        <td>{{ $record->record_type }}</td>
+                                        <td>{{ __('locale.'.ucfirst($record->record_type)) }}</td>
                                         <td>{{ $record->quantity }}</td>
                                         <td>{{ $record->currency->name }}</td>
                                         <td>{{ $record->created_at }}</td>

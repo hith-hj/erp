@@ -25,7 +25,7 @@ class Transaction extends Model
 
     public function getType()
     {
-        return $this->transaction_type[$this->type];
+        return __('locale.'.$this->transaction_type[$this->type]);
     }
 
     public function cashier()

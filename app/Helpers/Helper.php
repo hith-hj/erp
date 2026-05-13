@@ -2,7 +2,18 @@
 
 namespace App\Helpers;
 
+use App\Models\Bill;
+use App\Models\Cashier;
+use App\Models\Client;
+use App\Models\Currency;
+use App\Models\Inventory;
+use App\Models\Ledger;
+use App\Models\Material;
+use App\Models\Purchase;
+use App\Models\Sale;
+use App\Models\Unit;
 use App\Models\UserSetting;
+use App\Models\Vendor;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 
@@ -169,18 +180,222 @@ class Helper
         $fullURL = request()->fullurl();
         if (App()->environment() === 'production') {
             for ($i = 1; $i < 7; $i++) {
-                $contains = Str::contains($fullURL, 'demo-'.$i);
+                $contains = Str::contains($fullURL, 'demo-' . $i);
                 if ($contains === true) {
-                    $demo = 'demo-'.$i;
+                    $demo = 'demo-' . $i;
                 }
             }
         }
         if (isset($pageConfigs)) {
             if (count($pageConfigs) > 0) {
                 foreach ($pageConfigs as $config => $val) {
-                    Config::set('custom.'.$demo.'.'.$config, $val);
+                    Config::set('custom.' . $demo . '.' . $config, $val);
                 }
             }
         }
+    }
+
+    public static function getTreeDataOld()
+    {
+        $maxItemCount = 200;
+        return [
+            'materials' => [
+                'route' => 'material.show',
+                'data' => Material::all(['id', 'name'])->take($maxItemCount),
+            ],
+
+            'inventorys' => [
+                'route' => 'inventory.show',
+                'data' => Inventory::all(['id', 'name'])->take($maxItemCount),
+            ],
+
+            'cashiers' =>  [
+                'route' => 'cashier.show',
+                'data' => Cashier::with('ledgers')->get(['id', 'name'])->take($maxItemCount)
+                    ->map(function ($cashier) {
+                        return (object) [
+                            'id' => $cashier->id,
+                            'name' => $cashier->name,
+                            'sub' => [
+                                'route' => 'ledger.show',
+                                'data' => $cashier->ledgers,
+                            ]
+                        ];
+                    }),
+                'hasSub' => true,
+            ],
+
+            'bills' => [
+                'route' => 'bill.show',
+                'data' => Bill::all(['id', 'serial'])
+                    ->take($maxItemCount)
+                    ->map(function ($bill) {
+                        return (object) [
+                            'id' => $bill->id,
+                            'name' => $bill->serial,
+                        ];
+                    }),
+            ],
+
+            'purchases' => [
+                'route' => 'purchase.show',
+                'data' => Purchase::with(['bill'])->get(['id', 'name'])
+                    ->take($maxItemCount)
+                    ->map(function ($purchase) {
+                        return (object) [
+                            'id' => $purchase->id,
+                            'name' => $purchase->bill->serial,
+                        ];
+                    }),
+            ],
+
+            'sales' => [
+                'route' => 'sale.show',
+                'data' => Sale::with(['bill'])->get(['id', 'name'])
+                    ->take($maxItemCount)
+                    ->map(function ($sale) {
+                        return (object) [
+                            'id' => $sale->id,
+                            'name' => $sale->bill->serial,
+                        ];
+                    }),
+            ],
+
+            'clients' => [
+                'route' => 'client.show',
+                'data' => Client::all(['id', 'first_name', 'last_name'])->take($maxItemCount)
+                    ->map(function ($client) {
+                        return (object) [
+                            'id' => $client->id,
+                            'name' => $client->first_name . ' ' . $client->last_name,
+                        ];
+                    }),
+            ],
+
+            'vendors' => [
+                'route' => 'vendor.show',
+                'data' => Vendor::all(['id', 'first_name', 'last_name'])->take($maxItemCount)
+                    ->map(function ($vendor) {
+                        return (object) [
+                            'id' => $vendor->id,
+                            'name' => $vendor->first_name . ' ' . $vendor->last_name,
+                        ];
+                    }),
+            ],
+
+            'currency' => [
+                'route' => 'currency.show',
+                'data' => Currency::all(['id', 'name'])->take($maxItemCount),
+            ],
+
+            'units' => [
+                'route' => 'unit.show',
+                'data' => Unit::all(['id', 'name'])->take($maxItemCount),
+            ],
+
+        ];
+    }
+
+    public static function getTreeData()
+    {
+        $maxItemCount = 200;
+        return [
+            'Materials' => [
+                'route' => 'material.show',
+                'data' => Material::select(['id', 'name'])->take($maxItemCount)->get(),
+            ],
+
+            'Inventories' => [
+                'route' => 'inventory.show',
+                'data' => Inventory::select(['id', 'name'])->take($maxItemCount)->get(),
+            ],
+
+            'Cashiers' => [
+                'route' => 'cashier.show',
+                'data' => Cashier::with(['ledgers.records'])->take($maxItemCount)->get(['id', 'name'])
+                    ->map(function ($cashier) {
+                        return (object) [
+                            'id' => $cashier->id,
+                            'name' => $cashier->name,
+                            'sub' => [
+                                'route' => 'ledger.records',
+                                'items' => $cashier->ledgers->map(function ($ledger) {
+                                    return (object) [
+                                        'id' => $ledger->id,
+                                        'name' => $ledger->created_at  ?? 'Ledger #' . $ledger->id,
+                                    ];
+                                })
+                            ]
+                        ];
+                    }),
+            ],
+
+            'Bills' => [
+                'route' => 'bill.show',
+                // 'data' => Bill::select(['id', 'serial as name'])->take($maxItemCount)->get(),
+                'data' => Bill::all(['id', 'serial','billable_type',])
+                    ->take($maxItemCount)
+                    ->map(function ($bill) {
+                        return (object) [
+                            'id' => $bill->id,
+                            'name' => $bill->getGetTypeAttribute() .' - '.$bill->serial,
+                        ];
+                    }),
+            ],
+
+            'Purchases' => [
+                'route' => 'purchase.show',
+                'data' => Purchase::with(['bill'])->take($maxItemCount)->get(['id'])
+                    ->map(function ($purchase) {
+                        return (object) [
+                            'id' => $purchase->id,
+                            'name' => $purchase->bill->serial ?? 'No Serial',
+                        ];
+                    }),
+            ],
+
+            'Sales' => [
+                'route' => 'sale.show',
+                'data' => Sale::with(['bill'])->take($maxItemCount)->get(['id',])
+                    ->map(function ($sale) {
+                        return (object) [
+                            'id' => $sale->id,
+                            'name' => $sale->bill->serial ?? 'No Serial',
+                        ];
+                    }),
+            ],
+
+            'Clients' => [
+                'route' => 'client.show',
+                'data' => Client::select(['id', 'first_name', 'last_name'])->take($maxItemCount)->get()
+                    ->map(function ($client) {
+                        return (object) [
+                            'id' => $client->id,
+                            'name' => $client->first_name . ' ' . $client->last_name,
+                        ];
+                    }),
+            ],
+
+            'Vendors' => [
+                'route' => 'vendor.show',
+                'data' => Vendor::select(['id', 'first_name', 'last_name'])->take($maxItemCount)->get()
+                    ->map(function ($vendor) {
+                        return (object) [
+                            'id' => $vendor->id,
+                            'name' => $vendor->first_name . ' ' . $vendor->last_name,
+                        ];
+                    }),
+            ],
+
+            'Currency' => [
+                'route' => 'currency.show',
+                'data' => Currency::select(['id', 'name'])->take($maxItemCount)->get(),
+            ],
+
+            'Units' => [
+                'route' => 'unit.show',
+                'data' => Unit::select(['id', 'name'])->take($maxItemCount)->get(),
+            ],
+        ];
     }
 }

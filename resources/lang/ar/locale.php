@@ -198,6 +198,7 @@ return [
     'ID' => 'ID',
     'Payed' => 'المدفوع',
     'List' => 'قائمة',
+    'From'=>'من',
 
     'Ledgers' => 'سجلات',
     'Ledger' => 'سجل',
@@ -214,8 +215,12 @@ return [
     'Credit' => 'قبض',
     'Debit' => 'دفع',
     'Not Found'=>'لا يوجد نتيجة',
+    'Change Rate'=>'معدل التحويل',
     'To' => 'إلى',
     'On' => 'على',
     'Stats' => 'احصائيات',
     'Summary' => 'تلخيص',
+    'Show Tree'=>'عرض الشجرة',
+    'Components Tree'=>'شجرة المكونات',
+    'Transfer Amount'=>'قيمة التحويل'
 ];

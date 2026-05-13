@@ -22,15 +22,15 @@ class UserSeeder extends Seeder
                     'password' => Hash::make('password'),
                 ]
             );
-            \App\Models\User::factory(5)->create();
+            \App\Models\User::factory(2)->create();
         }
 
         if (is_null(\App\Models\Client::first())) {
-            \App\Models\Client::factory(5)->create();
+            \App\Models\Client::factory(2)->create();
         }
 
         if (is_null(\App\Models\Vendor::first())) {
-            \App\Models\Vendor::factory(5)->create();
+            \App\Models\Vendor::factory(2)->create();
         }
     }
 }
