@@ -40,7 +40,6 @@
             <table class="table table-sm mb-1 sortable">
                 <thead class="">
                     <tr id="sortable_by">
-                        <th>NO</th>
                         <th>{{ __('locale.ID') }}</th>
                         <th class="skip_sort">{{ __('locale.User') }}</th>
                         <th>{{ __('locale.Start balance') }}</th>
@@ -51,8 +50,10 @@
                 </thead>
                 <tbody>
                     @forelse($cashier->ledgers as $ledger)
+                        @if($ledger->created_at->format('Y-m-d') === now()->format('Y-m-d'))
+                            @continue
+                        @endif
                         <tr>
-                            <th>{{$loop->index + 1}}</th>
                             <th>{{ $ledger->id }}</th>
                             <th>{{ $ledger->admin?->full_name }}</th>
                             <th>{{ $ledger->start_balance }}</th>
@@ -65,7 +66,9 @@
                             </th>
                         </tr>
                     @empty
-                        not records found
+                        <tr colspan='6'>
+                            {{__('locale.Nothing found')}}
+                        </tr>
                     @endforelse
                 </tbody>
             </table>

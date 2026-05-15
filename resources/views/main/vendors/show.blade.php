@@ -107,9 +107,6 @@
                         </div>
                     </div>
                     <div class="card-body" id="printable">
-                        @php
-                            $stats = [];
-                        @endphp
                         <div class="mt-1">
                             {{__('locale.Purchases')}}
                         </div>
@@ -128,24 +125,6 @@
                             </thead>
                             <tbody class="table-hover">
                                 @forelse ($purchases as $purchase)
-                                    @php
-                                        $currency = $purchase->currency->name;
-
-                                        $total = $purchase->total;
-                                        $remaining = $purchase->remaining;
-                                        if(!isset($stats[$currency])){
-                                            $stats[$currency] = [
-                                                'count' => 1,
-                                                'total'=>$total,
-                                                'remaining'=>$remaining,
-                                                'is_default'=>$purchase->currency->is_default,
-                                            ];
-                                        }else{
-                                            $stats[$currency]['count'] += 1;
-                                            $stats[$currency]['total'] += $total;
-                                            $stats[$currency]['remaining'] += $remaining;
-                                        }
-                                    @endphp
                                     <tr>
                                         <td>{{ $purchase->id }}</td>
                                         <td>
@@ -154,7 +133,7 @@
                                                     {{ $purchase->bill?->serial }}
                                                 </a>
                                             @else
-                                                "No Bill"
+                                                " ----- "
                                             @endif
                                         </td>
                                         <td>{{ $purchase->currency->name }}</td>
@@ -202,28 +181,6 @@
                             </thead>
                             <tbody class="table-hover">
                                 @forelse ($vendor->records as $record)
-                                    @php
-                                        $currency = $record->currency->name;
-                                        $total = $record->quantity;
-                                        $remaining = 0;
-                                        if(!isset($stats[$currency])){
-                                            $stats[$currency] = [
-                                                'count' => 1,
-                                                'total'=>$total,
-                                                'remaining'=>$remaining,
-                                                'is_default'=>$record->currency->is_default,
-                                            ];
-                                        }else{
-                                            $stats[$currency]['count'] += 1;
-                                            if($record->record_type === 'credit'){
-                                                $stats[$currency]['total'] += $total;
-                                                $stats[$currency]['remaining'] += $remaining;
-                                            }else{
-                                                $stats[$currency]['total'] -= $total;
-                                                $stats[$currency]['remaining'] -= $remaining;
-                                            }
-                                        }
-                                    @endphp
                                     <tr>
                                         <td>{{ $record->id }}</td>
                                         <td>{{ __('locale.'.ucfirst($record->record_type)) }}</td>
@@ -254,15 +211,24 @@
                                 </span>
                             </div>
                         </div>
-                        <table class="table table-sm table-bordered mt-1">
+                        <table class="table table-sm table-bordered">
                             <tbody class="table-hover">
-                                @forelse ($stats as $key => $item)
+                                @forelse ($stats as $currency => $stat)
                                     <tr class="text-primary border-primary">
-                                        <th> {{ __('locale.Currency') . ' : ' . $key}} </th>
-                                        <th colspan="9"> {{ __('locale.Rows count'). ' : ' .  $item['count'] }} </th>
-                                        <th> {{ __('locale.Total') . ' : ' . $item['total']}} </th>
-                                        <th> {{ __('locale.Payed') . ' : ' . $item['total'] - $item['remaining']}} </th>
-                                        <th> {{ __('locale.Remaining') . ' : ' . $item['remaining']}} </th>
+                                        <th>
+                                            {{ $currency }}
+                                            @if($stat['is_default'])
+                                                <span class="badge bg-primary text-xs">{{ __('locale.Default') }}</span>
+                                            @endif
+                                        </th>
+                                        <th>
+                                            {{ __('locale.Total'). ' : ' .  $stat['total_count'] }}
+                                            [ {{ __('locale.Purchases'). ' : ' .  $stat['purchases_count'] }} ]
+                                            [ {{ __('locale.Records'). ' : ' .  $stat['records_count'] }} ]
+                                        </th>
+                                        <th> {{ __('locale.Credit') . ' : ' . $stat['total_credit'] }} </th>
+                                        <th> {{ __('locale.Debit') . ' : ' . $stat['total_debit'] }} </th>
+                                        <th> {{ __('locale.Balance difference') . ' : ' . $stat['net_balance']  }} </th>
                                     </tr>
                                 @empty
                                     <tr>
@@ -271,17 +237,19 @@
                                 @endforelse
                             </tbody>
                         </table>
+
                         <div class="modal fade" id="changeBalanceRates" tabindex="-1" aria-hidden="true">
                             <div class="modal-dialog modal-lg modal-dialog-centered modal-edit-user">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h4>Enter changed rates</h4>
+                                        <h4>{{__('locale.Rates')}}</h4>
                                     </div>
                                     <div class="modal-body p-0">
                                         <table class="table table-lg table-bordered">
                                             <thead>
                                                 <tr>
                                                     <th>{{__('locale.Currency')}}</th>
+                                                    <th>{{__('locale.Amount')}}</th>
                                                     <th>{{__('locale.Rate')}}</th>
                                                     <th>{{__('locale.Total')}}</th>
                                                     <th>{{__('locale.Payed')}}</th>
@@ -290,14 +258,17 @@
                                                 </tr>
                                             </thead>
                                             <tbody class="table-hover">
-                                                @forelse ($stats as $key => $item)
+                                                @forelse ($stats as $currency => $item)
                                                     @if($item['is_default'] !== true)
                                                         <tr class="text-primary border-primary"
                                                         x-data="{
                                                             rate:null,
-                                                            total:{{$item['total']}},
+                                                            {{-- total:{{$item['total']}},
                                                             remaining:{{$item['remaining']}},
-                                                            payed:{{$item['total'] - $item['remaining']}},
+                                                            payed:{{$item['total'] - $item['remaining']}}, --}}
+                                                            total:{{$item['total_debit']}},
+                                                            remaining:{{$item['total_credit']}},
+                                                            payed:{{$item['net_balance']}},
                                                             old_value:null,
                                                             calculate(value){
                                                                 if(value == 0 || isNaN(value)){
@@ -322,7 +293,8 @@
                                                                 this.calculate(1);
                                                             }
                                                         }">
-                                                            <td> {{ $key}} </td>
+                                                            <td> {{ $currency}} </td>
+                                                            <td>{{$item['total_credit'] ?? $item['total_debit'] }}</td>
                                                             <td>
                                                                 <input class="form-control" type="numeric" x-model='rate'
                                                                 x-init="$watch('rate',(value)=>calculate(value) )">

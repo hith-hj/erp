@@ -69,7 +69,7 @@ class BaseRepository implements Repository
         array $where = [],
         array $columns = ['*']
     ): Collection {
-        $model = '\App\Models\\'.ucfirst(trim($model));
+        $model = '\App\Models\\' . ucfirst(trim($model));
 
         return $model::with($with)->where($where)->get($columns);
     }
@@ -99,7 +99,7 @@ class BaseRepository implements Repository
         array $columns = ['*'],
         bool $sql = false,
     ): Collection|Model|null {
-        $model = '\App\Models\\'.ucfirst(trim($model));
+        $model = '\App\Models\\' . ucfirst(trim($model));
         $class = class_basename($model);
         if (! class_exists($model)) {
             $this->throw("class $class not found");
@@ -107,7 +107,7 @@ class BaseRepository implements Repository
         $query = $model::query();
         if (! empty($callable)) {
             foreach ($callable as $key => $value) {
-                if (in_array($key, ['has', 'whereHas'])) {
+                if (in_array($key, ['has', 'whereHas', 'orderBy'])) {
                     $query->$key(...$value);
                 } else {
                     $query->$key($value);

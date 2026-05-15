@@ -29,6 +29,8 @@ class PurchaseRepository extends BaseRepository
                     'with' => ['units:id,name,code'],
                 ]
             ) ?? [],
+            'cashiers' => $this->getter('cashier'),
+
         ];
     }
 

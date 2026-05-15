@@ -18,7 +18,7 @@
                         <div class="modal-dialog modal-sm modal-dialog-centered modal-edit-user">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h4>Enter Transfer Amount</h4>
+                                    <h4>{{__('locale.Transfer Amount')}}</h4>
                                 </div>
                                 <div class="modal-body p-0">
                                     <form id="transfer_form" method="POST"

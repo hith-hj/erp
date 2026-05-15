@@ -361,6 +361,7 @@ return [
     'ID' => 'ID',
     'Payed' => 'Payed',
     'From'=>'From',
+    'Payments'=>'Payments',
 
     'Ledgers' => 'Ledgers',
     'Ledger' => 'Ledger',

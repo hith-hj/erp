@@ -84,7 +84,7 @@ class TransactionRepository extends BaseRepository
         if (is_null($user)) {
             return $this->throw('User is required');
         }
-        $this->assertTransactionIsPossibel();
+        $this->assertTransactionIsPossibel($amount);
         $this->assertTransferIsAvailable($amount);
         try {
             DB::beginTransaction();
@@ -92,7 +92,7 @@ class TransactionRepository extends BaseRepository
             $addition = $this->transactionType() === $this->transaction_types['withdraw'] ? false : true;
             $this->updateCashier($this->cashier, $amount, $addition);
             $remaining = $this->transaction->remaining - $amount;
-            $is_payed = $remaining === 0 ? true : false;
+            $is_payed = $remaining <= 0 ? true : false;
             $this->transaction->update(['remaining' => $remaining, 'is_payed' => $is_payed]);
             DB::commit();
         } catch (\Exception $e) {
@@ -153,7 +153,6 @@ class TransactionRepository extends BaseRepository
         ]);
         $this->updateCashier($this->cashier, $amount);
         $this->updateCashier($this->belongTo, $amount, true);
-
     }
 
     private function getTotal()
@@ -192,10 +191,13 @@ class TransactionRepository extends BaseRepository
         }
     }
 
-    private function assertTransactionIsPossibel()
+    private function assertTransactionIsPossibel($amount = 0)
     {
-        $total = $this->getTotal();
-        if ($this->transactionType() == $this->transaction_types['withdraw'] && $total > $this->cashier->total) {
+        // $total = $this->getTotal();
+        if (
+            $this->transactionType() == $this->transaction_types['withdraw']
+            && $amount > $this->cashier->total
+        ) {
             $this->delete($this->transaction->id);
 
             return $this->throw('No enough money in this cashier');
@@ -204,8 +206,9 @@ class TransactionRepository extends BaseRepository
 
     private function assertTransferIsAvailable($amount)
     {
-        $remaining = $this->belongTo->item->total() - $amount;
-        if ($remaining < 0 || $amount == 0) {
+        // $remaining = $this->belongTo->item->total() - $amount;
+        $remaining = $this->transaction->remaining - $amount;
+        if ($remaining <= 0 || $amount == 0 || $this->transaction->is_payed === true) {
             return $this->throw('the amount you entered is more than the remaining');
         }
     }
@@ -224,6 +227,10 @@ class TransactionRepository extends BaseRepository
             ! in_array($this->belongTo->billable_type, [Purchase::class, Sale::class])
         ) {
             return $this->throw('Bill Type is not supported');
+        }
+
+        if ($this->belongTo->status === 0) {
+            return $this->throw('Bill must be saved to proceed');
         }
     }
 

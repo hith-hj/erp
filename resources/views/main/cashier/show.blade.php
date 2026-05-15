@@ -9,8 +9,6 @@
         <div class="d-flex justify-content-between">
             <h4 class=""> {{ __('locale.Transactions') }} </h4>
             <div class="d-flex justify-content-around gap-1">
-
-                <!-- Trigger Button -->
                 <button class="btn btn-sm btn-outline-warning ledger-modal-trigger"
                         type="button"
                         data-bs-toggle="modal"
@@ -18,8 +16,6 @@
                         title="today ledger records">
                     {{ __('locale.Today ledger') }}
                 </button>
-
-                <!-- Modal Wrapper -->
                 <div class="modal fade ledger-lazy-modal" id="todayLedger{{ $cashier->id }}" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-lg modal-dialog-centered modal-edit-user">
                         <div class="modal-content">
@@ -39,13 +35,12 @@
                     </div>
                 </div>
 
-
                 <button class="btn btn-sm btn-outline-success" type="button" data-bs-toggle="modal"
                     data-bs-target="#moneyForm{{ $cashier->id }}" title="Transfers between cashier">
                     {{ __('locale.Transfers') }}
                 </button>
                 <div class="modal fade" id="moneyForm{{ $cashier->id }}" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog modal-md modal-dialog-centered modal-edit-user">
+                    <div class="modal-dialog modal-lg modal-dialog-centered modal-edit-user">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h4>{{__('locale.Amount')}}</h4>
@@ -139,16 +134,17 @@
                         data-bs-target="#addTransaction">
                         {{ __('locale.Add') }}
                     </button>
-                @endif
-                <div class="modal fade" id="addTransaction" tabindex="-1" aria-hidden="true">
-                    <div class="modal-dialog modal-lg modal-dialog-centered modal-edit-user">
-                        <div class="modal-content">
-                            <div class="modal-body p-0">
-                                @include('utils.new_transaction_form')
+                    <div class="modal fade" id="addTransaction" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered modal-edit-user">
+                            <div class="modal-content">
+                                <div class="modal-body p-0">
+                                    @include('utils.new_transaction_form')
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                @endif
+
                 @if (!$cashier->is_default)
                     <button class="btn btn-sm btn-outline-info" form="setDefaultForm">
                         {{ __('locale.Default') }}
@@ -158,6 +154,7 @@
                         @csrf
                     </form>
                 @endif
+
                 @if ($cashier->transactions()->count() == 0 && !$cashier->is_default)
                     <button class="btn btn-sm btn-outline-danger"
                         onclick="

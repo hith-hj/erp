@@ -106,7 +106,6 @@
             <table class="table table-sm table-bordered sortable">
                 <thead class="">
                     <tr id="sortable_by">
-                        <th>NO</th>
                         <th>{{ __('locale.ID') }}</th>
                         <th>{{ __('locale.Type') }}</th>
                         <th>{{ __('locale.Account') }}</th>
@@ -135,7 +134,6 @@
                             }
                         @endphp
                         <tr>
-                            <th>{{$loop->index + 1}}</th>
                             <th>{{ $record->id }}</th>
                             <th>{{ $record->record_type }}</th>
                             <th>
@@ -146,7 +144,7 @@
                                 <a href="{{route($route.'.show',[$route=>$record->account_id])}}"
                                     target="__blanck"
                                     >
-                                    {{$class}}
+                                    {{$class .' - '. $record->account_id}}
                                 </a>
                             </th>
                             <th>{{ $record->currency?->name }}</th>

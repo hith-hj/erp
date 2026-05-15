@@ -21,6 +21,7 @@ class SaleRepository extends BaseRepository
         return [
             'sale' => $this->findWith($id, ['inventory.materials.units', 'materials.units']),
             'currencies' => $this->getter('currency'),
+            'cashiers' => $this->getter('cashier'),
         ];
     }
 
@@ -233,21 +234,21 @@ class SaleRepository extends BaseRepository
 
     public function setStatus($sale_id, $status = 0)
     {
-        $purchase = $this->find($sale_id);
-        if ($purchase->materials()->count() == 0) {
-            $this->throw('Purchase is Empty,Can\'t be saved', 10);
+        $sale = $this->find($sale_id);
+        if ($sale->materials()->count() == 0) {
+            $this->throw('Sale is Empty,Can\'t be saved', 10);
         }
-        if ($purchase->bill->status != self::Sale_stat['unsaved'] && $status == self::Sale_stat['saved']) {
-            $this->throw('Purchase Can\'t be saved', 11);
+        if ($sale->bill->status != self::Sale_stat['unsaved'] && $status == self::Sale_stat['saved']) {
+            $this->throw('Sale Can\'t be saved', 11);
         }
-        if ($purchase->bill->status != self::Sale_stat['saved'] && $status == self::Sale_stat['checked']) {
-            $this->throw('Purchase Can\'t be checked', 12);
+        if ($sale->bill->status != self::Sale_stat['saved'] && $status == self::Sale_stat['checked']) {
+            $this->throw('Sale Can\'t be checked', 12);
         }
-        if ($purchase->bill->status != self::Sale_stat['checked'] && $status == self::Sale_stat['audited']) {
-            $this->throw('Purchase Can\'t be audited', 13);
+        if ($sale->bill->status != self::Sale_stat['checked'] && $status == self::Sale_stat['audited']) {
+            $this->throw('Sale Can\'t be audited', 13);
         }
 
-        return $purchase->bill()->update(['status' => $status]);
+        return $sale->bill()->update(['status' => $status]);
     }
 
     public function save($purchase_id)

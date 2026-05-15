@@ -199,6 +199,7 @@ return [
     'Payed' => 'المدفوع',
     'List' => 'قائمة',
     'From'=>'من',
+    'Payments'=>'مدفوعات',
 
     'Ledgers' => 'سجلات',
     'Ledger' => 'سجل',

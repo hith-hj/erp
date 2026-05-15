@@ -17,7 +17,7 @@
     <!-- END: Main Menu-->
 
     <!-- BEGIN: Content-->
-    <div class="app-content content {{ $configData['pageClass'] }} py-1">
+    <div class="app-content content {{ $configData['pageClass'] }} pt-12">
         <!-- BEGIN: Header-->
         <div class="content-overlay"></div>
         <div class="header-navbar-shadow"></div>
