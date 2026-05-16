@@ -360,8 +360,8 @@ return [
     'Withdraw' => 'Withdraw',
     'ID' => 'ID',
     'Payed' => 'Payed',
-    'From'=>'From',
-    'Payments'=>'Payments',
+    'From' => 'From',
+    'Payments' => 'Payments',
 
     'Ledgers' => 'Ledgers',
     'Ledger' => 'Ledger',
@@ -377,14 +377,16 @@ return [
     'Today' => 'Today',
     'Credit' => 'Credit',
     'Debit' => 'Debit',
-    'Not Found'=>'Not Found',
-    'Change Rate'=>'Change Rate',
+    'Not Found' => 'Not Found',
+    'Change Rate' => 'Change Rate',
     'To' => 'To',
     'On' => 'On',
     'Stats' => 'Statistics',
     'Summary' => 'Summary',
-    'Show Tree'=>'Show Tree',
-    'Components Tree'=>'Components Tree',
-    'Transfer Amount'=>'Transfer Amount'
+    'Show Tree' => 'Show Tree',
+    'Components Tree' => 'Components Tree',
+    'Transfer Amount' => 'Transfer Amount',
+    'Last price' => 'Last price',
+    'Quantity value' => 'Quantity value'
 
 ];

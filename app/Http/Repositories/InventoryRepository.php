@@ -28,12 +28,40 @@ class InventoryRepository extends BaseRepository
         ];
     }
 
-    public function getShowPayload($id)
+    public function getShowPayloadx($id)
     {
         return [
             'inventory' => $this->findWith($id, ['materials']),
             'materials' => $this->getter(model: 'material'),
         ];
+    }
+
+    public function getShowPayload($id)
+    {
+        $inventory = $this->findWith($id, ['materials', 'materials.latestPurchase']);
+        return [
+            'inventory' => $inventory,
+            'materials' => $this->getter(model: 'material'),
+            'stats' => $this->getInventoryStats($inventory)
+        ];
+    }
+
+    public function getInventoryStats($inventory)
+    {
+        return $inventory->materials->map(function ($material) {
+            $quantity = $material->pivot->quantity ?? 0;
+            $latestPurchase = $material->latestPurchase->first();
+            $lastPrice = $latestPurchase ?
+                $latestPurchase->pivot->cost * $latestPurchase->rate
+                : 1;
+            return [
+                'material_id'         => $material->id,
+                'material_name'       => $material->name,
+                'quantity'       => max(0, $quantity),
+                'last_price' => $lastPrice,
+                'quantity_value'         => max(0, $quantity) * $lastPrice,
+            ];
+        });
     }
 
     public function checkForMaterialDuplication($data)
@@ -77,6 +105,5 @@ class InventoryRepository extends BaseRepository
                 ?->update(['is_default' => false]);
         }
         $this->update($id, ['is_default' => true]);
-
     }
 }

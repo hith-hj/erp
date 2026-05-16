@@ -38,12 +38,23 @@ class Material extends Model
             ->withPivot(['quantity', 'unit_id', 'cost']);
     }
 
+    public function latestPurchase()
+    {
+        return $this->purchases()->orderBy('created_at','desc')->take(1);
+    }
+
+
     public function sales()
     {
         return $this->belongsToMany(Sale::class)
             ->using(MaterialSale::class)
             ->withTimestamps()
             ->withPivot(['quantity', 'unit_id', 'cost']);
+    }
+
+    public function latestSales()
+    {
+        return $this->sales()->orderBy('created_at', 'desc')->take(1);
     }
 
     public function defaultUnit()

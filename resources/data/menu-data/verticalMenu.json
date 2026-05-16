@@ -1,12 +1,6 @@
 {
   "menu": [
     {
-      "url": "user/all",
-      "name": "Users",
-      "icon": "users",
-      "slug": "List-users"
-    },
-    {
       "url": "cashier/all",
       "name": "Cashiers",
       "icon": "server",
@@ -52,11 +46,17 @@
 
     {
       "name": "Cards",
-      "badge": "6",
+      "badge": "7",
       "badgeClass": "badge badge-light-warning rounded-pill ms-auto me-1",
       "icon": "credit-card",
       "slug": "Cards",
       "submenu": [
+        {
+          "url": "user/all",
+          "name": "Users",
+          "icon": "users",
+          "slug": "List-users"
+        },
         {
           "url": "client/all",
           "name": "Clients",

@@ -198,8 +198,8 @@ return [
     'ID' => 'ID',
     'Payed' => 'المدفوع',
     'List' => 'قائمة',
-    'From'=>'من',
-    'Payments'=>'مدفوعات',
+    'From' => 'من',
+    'Payments' => 'مدفوعات',
 
     'Ledgers' => 'سجلات',
     'Ledger' => 'سجل',
@@ -215,13 +215,15 @@ return [
     'Today' => 'اليوم',
     'Credit' => 'قبض',
     'Debit' => 'دفع',
-    'Not Found'=>'لا يوجد نتيجة',
-    'Change Rate'=>'معدل التحويل',
+    'Not Found' => 'لا يوجد نتيجة',
+    'Change Rate' => 'معدل التحويل',
     'To' => 'إلى',
     'On' => 'على',
     'Stats' => 'احصائيات',
     'Summary' => 'تلخيص',
-    'Show Tree'=>'عرض الشجرة',
-    'Components Tree'=>'شجرة المكونات',
-    'Transfer Amount'=>'قيمة التحويل'
+    'Show Tree' => 'عرض الشجرة',
+    'Components Tree' => 'شجرة المكونات',
+    'Transfer Amount' => 'قيمة التحويل',
+    'Last price' => 'اخر سعر',
+    'Quantity value' => 'قيمة الكمية'
 ];

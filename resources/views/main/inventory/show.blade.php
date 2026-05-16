@@ -5,7 +5,6 @@
 @endsection
 
 @section('content')
-    
     <section id="basic-datatable">
         <div class="row">
             <div class="col-12">
@@ -43,12 +42,12 @@
                                 {{ __('locale.Add').' '.__('locale.Material') }}
                             </button>
                             <div class="modal fade" id="addTransfer{{ $inventory->id }}" tabindex="-1" aria-hidden="true">
-                                <div class="modal-dialog modal-sm modal-dialog-centered modal-edit-user">
+                                <div class="modal-dialog modal-lg modal-dialog-centered modal-edit-user">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h4>Material and quantity</h4>
+                                            <h4>{{__('locale.Materials')}}</h4>
                                         </div>
-                                        <div class="modal-body ">
+                                        <div class="modal-body overflow-auto" style="max-height: 400px;">
                                             <form method="POST" action="{{ route('inventory.material.store', ['inventory_id' => $inventory->id]) }}">
                                                 @csrf
                                                 <div class="row px-1 inventory-materials-repeater">
@@ -108,6 +107,72 @@
                                                     </button>
                                                 </div>
                                             </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn btn-sm btn-outline-success" type="button" data-bs-toggle="modal"
+                                data-bs-target="#stats{{ $inventory->id }}">
+                                {{ __('locale.Stats') }}
+                            </button>
+                            <div class="modal fade" id="stats{{ $inventory->id }}" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog modal-lg modal-dialog-centered modal-edit-user">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4>{{__('locale.Stats')}}</h4>
+                                        </div>
+                                        <div class="modal-body" >
+                                            <div class="table-responsive">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <table class="table table-sm table-bordered" x-data="{ rate:1,}">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Id</th>
+                                                                    <td> {{__('locale.Material') }} </td>
+                                                                    <td> {{__('locale.Quantity') }} </td>
+                                                                    <td> {{__('locale.Last price') }} </td>
+                                                                    <td> {{__('locale.Quantity value') }} </td>
+                                                                    <td>
+                                                                        <div class="d-flex gap-2 align-middle">
+                                                                            <p>
+                                                                                {{__('locale.Rate')}}
+                                                                            </p>
+                                                                            <input type="number" class="form-control form-control-sm" min="1"
+                                                                            x-model="rate" placeholder="" />
+                                                                        </div>
+                                                                     </td>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody class="table-hover">
+                                                                @forelse ($stats as $stat)
+                                                                    <tr x-data="{
+                                                                        lastPrice:{{$stat['last_price']}},
+                                                                        quantity:{{$stat['quantity']}},
+                                                                        get newValue() {
+                                                                            return Number(this.lastPrice) * Number(this.rate) * Number(this.quantity);
+                                                                        }
+                                                                    }">
+                                                                        <td> {{ $stat['material_id'] }} </td>
+                                                                        <td> {{ $stat['material_name'] }} </td>
+                                                                        <td> {{ $stat['quantity'] }} </td>
+                                                                        <td> {{ $stat['last_price'] }} </td>
+                                                                        <td> {{ $stat['quantity_value'] }} </td>
+                                                                        <td x-text='newValue'></td>
+                                                                    </tr>
+                                                                @empty
+                                                                    <tr>
+                                                                        <td>
+                                                                            {{__('locale.Not found')}}
+                                                                        </td>
+                                                                    </tr>
+                                                                @endforelse
+
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
