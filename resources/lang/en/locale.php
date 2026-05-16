@@ -387,6 +387,7 @@ return [
     'Components Tree' => 'Components Tree',
     'Transfer Amount' => 'Transfer Amount',
     'Last price' => 'Last price',
-    'Quantity value' => 'Quantity value'
+    'Quantity value' => 'Quantity value',
+    'Returns' => 'Returns'
 
 ];

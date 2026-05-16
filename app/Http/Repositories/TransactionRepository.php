@@ -208,7 +208,7 @@ class TransactionRepository extends BaseRepository
     {
         // $remaining = $this->belongTo->item->total() - $amount;
         $remaining = $this->transaction->remaining - $amount;
-        if ($remaining <= 0 || $amount == 0 || $this->transaction->is_payed === true) {
+        if ($remaining < 0 || $amount == 0 || $this->transaction->is_payed === true) {
             return $this->throw('the amount you entered is more than the remaining');
         }
     }

@@ -112,4 +112,20 @@ class PurchaseController extends BaseController
 
         return back()->with('success', 'Purchase Checked');
     }
+
+    public function materialsReturns(Request $request, $id)
+    {
+        PurchaseValidator::materialReturns($request);
+        if ($id != $request->purchase_id) {
+            return back()->with('error', 'invalid operation');
+        }
+        try {
+            $purchase = $this->repo->find($id);
+            $this->repo->materialsReturn($purchase, $request->except(['_token','purchase_id']));
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
+
+        return back()->with('success', 'Material is returned');
+    }
 }

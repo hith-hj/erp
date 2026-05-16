@@ -37,4 +37,11 @@ class PurchaseValidator
             'purchases.*.material_id' => ['required', 'exists:materials,id'],
         ]);
     }
+
+    public static function materialReturns(Request $request)
+    {
+        return $request->validate([
+            'purchase_id' => ['required', 'exists:purchases,id'],
+        ]);
+    }
 }

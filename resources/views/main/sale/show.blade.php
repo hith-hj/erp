@@ -319,6 +319,7 @@
                                         <th>{{ __('locale.Client') }}</th>
                                         <th>{{ __('locale.Inventory') }}</th>
                                         <th>{{ __('locale.Currency') }}</th>
+                                        <th>{{ __('locale.Total') }}</th>
                                         <th>{{ __('locale.User') }}</th>
                                         <th>{{ __('locale.Created at') }}</th>
                                         <th>{{ __('locale.Discount') }}</th>
@@ -346,6 +347,7 @@
                                             </a>
                                         </td>
                                         <td>{{ $sale->currency->name }}</td>
+                                        <td>{{ $sale->total() }}</td>
                                         <td>{{ $sale->user?->username }}</td>
                                         <td>{{ $sale->created_at->format('Y-m-d') }}</td>
                                         <td>{{ $sale->discount }}</td>

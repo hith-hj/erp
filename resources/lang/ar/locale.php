@@ -225,5 +225,6 @@ return [
     'Components Tree' => 'شجرة المكونات',
     'Transfer Amount' => 'قيمة التحويل',
     'Last price' => 'اخر سعر',
-    'Quantity value' => 'قيمة الكمية'
+    'Quantity value' => 'قيمة الكمية',
+    'Returns' => 'مرتجعات'
 ];

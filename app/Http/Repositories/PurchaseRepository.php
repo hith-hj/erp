@@ -3,8 +3,11 @@
 namespace App\Http\Repositories;
 
 use App\Http\Repositories\InventoryRepository;
+use App\Models\Material;
 use App\Models\Purchase;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+
 
 class PurchaseRepository extends BaseRepository
 {
@@ -94,7 +97,7 @@ class PurchaseRepository extends BaseRepository
         $bill = $purchase->bill()->create([
             'billable_id' => $purchase->id,
             'billable_type' => get_class($purchase),
-            'serial' => $purchase->id.Str::random(8),
+            'serial' => $purchase->id . Str::random(8),
             'status' => 0,
         ]);
 
@@ -196,19 +199,20 @@ class PurchaseRepository extends BaseRepository
         return $purchase;
     }
 
-    public function restoreInventory($material)
+    public function restoreInventory($material, $amount = 0)
     {
+
         $inventoryRepo = new InventoryRepository;
         $inventory = $inventoryRepo->find($material->inventory_id);
         $inventoryMaterial = $inventory->materials()
             ->wherePivot('material_id', $material->pivot->material_id)
             ->first();
-        $inventory->materials()
-            ->updateExistingPivot($material->pivot->material_id, [
-                'quantity' => $inventoryMaterial->pivot->quantity -
-                    $this->getBaseUnitQuantity($inventoryMaterial->units, $material->pivot),
-            ]);
-
+        $lastAmount = $amount === 0 ?
+            $this->getBaseUnitQuantity($inventoryMaterial->units, $material->pivot) :
+            $amount;
+        $inventory->materials()->updateExistingPivot($material->pivot->material_id, [
+            'quantity' => $inventoryMaterial->pivot->quantity - $lastAmount,
+        ]);
     }
 
     public function delete(int $id): bool
@@ -226,6 +230,62 @@ class PurchaseRepository extends BaseRepository
 
         return $purchase->delete();
     }
+
+    public function materialsReturn($purchase, array $data)
+    {
+        if (empty($data)) {
+            $this->throw('No return data provided', 9);
+        }
+
+        DB::transaction(function () use ($purchase, $data) {
+            $purchase->materials->each(function ($material) use ($data, $purchase) {
+                $materialId = $material->id;
+
+                if (!array_key_exists($materialId, $data)) {
+                    // $this->throw('Material selected is not purchased', 9);
+                    return;
+                }
+
+                $returnQty = $data[$materialId];
+                if ($returnQty === null || $returnQty <= 0) {
+                    // $this->throw('No valid quantity provided', 9);
+                    return;
+                }
+
+                $purchasedQty = $material->pivot->quantity;
+                if ($purchasedQty < $returnQty) {
+                    // $this->throw('Material quantity is invalid', 9);
+                    return;
+                }
+
+                $material->inventory_id = $purchase->inventory_id;
+                $this->restoreInventory($material, $returnQty);
+
+                if ($purchasedQty == $returnQty) {
+                    $purchase->materials()->detach($materialId);
+                } else {
+                    $material->pivot->update(['quantity' => $purchasedQty - $returnQty]);
+                }
+
+                $transaction = $purchase->bill?->transaction;
+
+                if ($transaction) {
+                    $returnedCost = (int) $returnQty * $material->pivot->cost;
+                    $newAmount = $transaction->amount - $returnedCost;
+                    $newRemaining = $transaction->remaining - $returnedCost;
+
+                    $transaction->update([
+                        'amount' => $newAmount,
+                        'remaining' => $newRemaining,
+                        'is_payed' => $newRemaining <= 0,
+                    ]);
+                }
+            });
+        });
+
+        return $purchase->refresh();
+    }
+
 
     public function getBaseUnitQuantity($collection, $data)
     {

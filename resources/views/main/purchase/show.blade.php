@@ -243,7 +243,7 @@
                                     </button>
 
                                     <div class="modal fade" id="transaction{{ $transaction->id }}Transfers" aria-hidden="true">
-                                        <div class="modal-dialog modal-lg modal-dialog-centered modal-edit-user">
+                                        <div class="modal-dialog modal-xl modal-dialog-centered modal-edit-user">
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h4>
@@ -253,30 +253,28 @@
                                                 <div class="modal-body">
                                                     <div class="card">
                                                         <div class="card-header">
-                                                            <h4 class="card-title">
-                                                                {{ __('locale.Type') }} :
-                                                                {{ $transaction->getType() }}
-                                                            </h4>
-                                                            <div class="card-text">
-                                                                {{ __('locale.Is Payed') }} :
-                                                                {{ $transaction->remaining == 0 ? __('locale.Is Payed') : '-' }}
-                                                            </div>
-                                                            <div class="card-text">
-                                                                {{ __('locale.Amount') }} :
-                                                                {{ $transaction->amount }}
-                                                            </div>
-                                                            <div class="card-text">
-                                                                {{ __('locale.Remaining') }} :
-                                                                {{ $transaction->remaining }}
-                                                            </div>
-                                                            <div class="card-text">
-                                                                {{ __('locale.Transfers') }} :
-                                                                {{ $transaction->transfers()->count() }}
-                                                            </div>
-                                                            <div class="card-text">
-                                                                {{ __('locale.Created at') }}
-                                                                {{ $transaction->created_at->diffForHumans() }}
-                                                            </div>
+                                                            <table class="table table-sm table-bordered">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>{{ __('locale.Type') }}</th>
+                                                                        <th>{{ __('locale.Is Payed') }}</th>
+                                                                        <th>{{ __('locale.Amount') }} </th>
+                                                                        <th>{{ __('locale.Remaining') }} </th>
+                                                                        <th>{{ __('locale.Transfers') }} </th>
+                                                                        <th>{{ __('locale.Created at') }} </th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody class="table-hover">
+                                                                    <tr>
+                                                                        <td>{{ $transaction->getType() }}</td>
+                                                                        <td>{{ $transaction->remaining == 0 ? __('locale.Is Payed') : '-' }}</td>
+                                                                        <td>{{ $transaction->amount }}</td>
+                                                                        <td>{{ $transaction->remaining }}</td>
+                                                                        <td>{{ $transaction->transfers()->count() }}</td>
+                                                                        <td>{{ $transaction->created_at->diffForHumans() }}</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
                                                         </div>
                                                         <div class="card-body">
                                                             <table class="table table-sm table-bordered">
@@ -305,6 +303,91 @@
                                         </div>
                                     </div>
                                 @endif
+
+                                {{-- @if($purchase->bill->status === 1 && $transaction === null) --}}
+                                @if($purchase->bill->status === 1)
+                                    <button class="btn btn-sm btn-outline-info" type="button"
+                                    data-bs-toggle="modal" data-bs-target="#returns{{ $purchase->id }}">
+                                        <i data-feather='list'></i>
+                                        {{ __('locale.Returns') }}
+                                    </button>
+
+                                    <div class="modal fade" id="returns{{ $purchase->id }}" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg modal-dialog-centered modal-edit-user">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4>
+                                                        {{ __('locale.Returns') }}
+                                                    </h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="card">
+                                                        <form action="{{route('purchase.materialsReturns',
+                                                                ['id'=>$purchase->id])}}" method="Post">
+                                                            @csrf
+                                                            <input type="hidden" name="purchase_id" value="{{$purchase->id}}">
+                                                            <table class="table table-sm">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Id</th>
+                                                                        <th>{{ __('locale.Material') }}</th>
+                                                                        <th>{{ __('locale.Quantity') }}</th>
+                                                                        <th>{{ __('locale.Unit') }}</th>
+                                                                        <th>{{ __('locale.Cost') }}</th>
+                                                                        <th>{{ __('locale.Returns') }}</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @forelse($purchase->materials as $material)
+                                                                        @php
+                                                                            $pivot = $material->pivot;
+                                                                        @endphp
+                                                                        <tr>
+                                                                            <td>{{ $material->id }}</td>
+                                                                            <td>
+                                                                                <a href="{{route('material.show',$material->id)}}"
+                                                                                target="__blank">
+                                                                                    {{ $material->name }}
+                                                                                </a>
+                                                                            </td>
+                                                                            <td>{{ $pivot->quantity }}</td>
+                                                                            <td>{{ $pivot->unit?->name }}</td>
+                                                                            <td>{{ $pivot->cost }}</td>
+                                                                            <td>
+                                                                                <input type="number" min="1" max="{{$pivot->quantity}}"
+                                                                                 name="{{$material->id}}"
+                                                                                class="form-control form-control-sm"
+                                                                                oninput="this.value > {{$pivot->quantity}} ?
+                                                                                this.classList.add('border-danger') :
+                                                                                this.classList.remove('border-danger')">
+                                                                            </td>
+                                                                        </tr>
+                                                                    @empty
+                                                                        <tr>
+                                                                            <td>
+                                                                                {{__('locale.Not found')}}
+                                                                            </td>
+                                                                        </tr>
+                                                                    @endforelse
+                                                                </tbody>
+                                                            </table>
+
+                                                            <div class="col-12 mt-2">
+                                                                <button type="submit" class="btn btn-primary btn-sm w-25">
+                                                                    {{ __('locale.Store') }}
+                                                                </button>
+                                                                <button type="reset" class="btn btn-outline-primary btn-sm">
+                                                                    {{ __('locale.Reset') }}
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -318,6 +401,7 @@
                                         <th>{{ __('locale.Vendor') }}</th>
                                         <th>{{ __('locale.Inventory') }}</th>
                                         <th>{{ __('locale.Currency') }}</th>
+                                        <th>{{ __('locale.Total') }}</th>
                                         <th>{{ __('locale.User') }}</th>
                                         <th>{{ __('locale.Created at') }}</th>
                                         <th>{{ __('locale.Discount') }}</th>
@@ -345,6 +429,7 @@
                                             </a>
                                         </td>
                                         <td>{{ $purchase->currency->name }}</td>
+                                        <td>{{ $purchase->total() }}</td>
                                         <td>{{ $purchase->user?->username }}</td>
                                         <td>{{ $purchase->created_at->format('Y-m-d') }}</td>
                                         <td>{{ $purchase->discount }}</td>
@@ -404,6 +489,11 @@
                                             </td>
                                         </tr>
                                     @empty
+                                        <tr>
+                                            <td>
+                                                {{__('locale.Not found')}}
+                                            </td>
+                                        </tr>
                                     @endforelse
                                 </tbody>
                             </table>
@@ -418,12 +508,61 @@
         </div>
     </section>
 @endsection
+
+{{-- <div class="row px-1 materials-returns-repeater overflow-auto "
+style="max-height: 400px;">
+    <div data-repeater-list="materials" class="col-10 p-0" >
+        <div data-repeater-item class="row">
+            <div class="col-5">
+                <div class="mb-1">
+                    <label class="form-label" for="">
+                        {{ __('locale.Materials') }}
+                    </label>
+                    <select id="material_list" name="material_id"
+                        class="form-select" required>
+                        <option value="">{{__('locale.Chose')}}</option>
+                        @foreach ($purchase->materials as $material)
+                            <option value="{{ $material->id }}">
+                                {{ $material->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="col-5">
+                <div class="mb-1">
+                    <label class="form-label" for="">
+                        {{ __('locale.Quantity') }}
+                    </label>
+                    <input type="number" min="1" name="quantity" id="material_quantity"
+                        class="form-control @error('quantity') border-danger @enderror"
+                        placeholder="{{ __('locale.Quantity') }}" required />
+                </div>
+            </div>
+            <div class="col-2 p-0" data-repeater-delete>
+                <div class="mb-1">
+                    <label class="form-label" for="rate">{{ __('locale.Delete') }}</label>
+                    <button type="button" class="btn btn-icon btn-outline-danger w-100 ">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-2 p-0" data-repeater-create>
+        <div class="mb-1">
+            <label class="form-label" for="rate">{{ __('locale.Add') }}</label>
+            <button type="button" class="btn btn-icon btn-outline-primary w-100">
+                <i class="fa fa-plus "></i>
+            </button>
+        </div>
+    </div>
+</div> --}}
 @section('page-script')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.repeater/1.2.1/jquery.repeater.min.js"></script>
     <script>
         $(document).ready(function() {
-            $(function() {
-                'use strict';
+            $(function() { 'use strict';
                 $('.items-repeater').repeater({
                     isFirstItemUndeletable: true,
                     initEmpty: false,
@@ -434,7 +573,18 @@
                         $(this).slideUp(deleteElement);
                     },
                 });
+                $('.materials-returns-repeater').repeater({
+                    isFirstItemUndeletable: true,
+                    initEmpty: false,
+                    show: function() {
+                            $(this).slideDown();
+                    },
+                    hide: function(deleteElement) {
+                            $(this).slideUp(deleteElement);
+                    },
+                });
             });
         });
     </script>
+
 @endsection

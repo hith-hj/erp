@@ -121,6 +121,7 @@ class CashierController extends Controller
             return redirect()->back()->with(...$res);
         }
         $bill = $this->repo->getter('bill', ['with' => ['transaction'], 'where' => [['id', $data['bill_id']]]], 'first');
-        return redirect()->route('transaction.show', $bill->transaction->id)->with(...$res);
+        // return redirect()->route('transaction.show', $bill->transaction->id)->with(...$res);
+        return redirect()->back()->with(...$res);
     }
 }
