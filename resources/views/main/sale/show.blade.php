@@ -370,7 +370,12 @@
                                     @forelse($sale->materials as $material)
                                         <tr>
                                             <td>{{ $material->id }}</td>
-                                            <td>{{ $material->name }}</td>
+                                            <td>
+                                                <a href="{{route('material.show',$material->id)}}"
+                                                target="__blank">
+                                                    {{ $material->name }}
+                                                </a>
+                                            </td>
                                             <td>{{ $material->pivot->quantity }}</td>
                                             <td>{{ $material->pivot->unit?->name }}</td>
                                             <td>{{ $material->pivot->cost }}</td>

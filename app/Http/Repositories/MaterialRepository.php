@@ -14,9 +14,44 @@ class MaterialRepository extends BaseRepository
 
     public function getShowPayload($id)
     {
+        $material = $this->findWith($id, ['inventories', 'units']);
         return [
-            'material' => $this->findWith($id, ['inventories', 'units']),
+            'material' => $material,
+            'stats' => $this->getMaterialStats($material)
         ];
+    }
+
+    public function getMaterialStats($material)
+    {
+        $material->load([
+            'purchases.bill',
+            'purchases.currency',
+            'sales.bill',
+            'sales.currency'
+        ]);
+        $purchases = $this->transformTransactions($material->purchases);
+        $sales = $this->transformTransactions($material->sales);
+        return $purchases->concat($sales)->all();
+    }
+
+    private function transformTransactions($transactions)
+    {
+        return $transactions->map(function ($transaction) {
+            $quantity = $transaction->pivot->quantity ?? 0;
+            $price = $transaction->pivot->cost ?? 0;
+            $rate = $transaction->currency->rate ?? 1;
+
+            return [
+                'date'      => $transaction->created_at,
+                'bill_id' => $transaction->bill->id,
+                'bill_type' => $transaction->bill->getType,
+                'quantity'  => $quantity,
+                'price'     => $price,
+                'currency'  => $transaction->currency->name ?? 'N/A',
+                'rate'      => $rate,
+                'total'     => $quantity * $price * $rate
+            ];
+        });
     }
 
     public function getCreatePayload()

@@ -35,7 +35,15 @@ class Material extends Model
         return $this->belongsToMany(Purchase::class)
             ->using(MaterialPurchase::class)
             ->withTimestamps()
-            ->withPivot(['quantity', 'unit_id', 'currency_id', 'rate_to', 'rate', 'cost']);
+            ->withPivot(['quantity', 'unit_id', 'cost']);
+    }
+
+    public function sales()
+    {
+        return $this->belongsToMany(Sale::class)
+            ->using(MaterialSale::class)
+            ->withTimestamps()
+            ->withPivot(['quantity', 'unit_id', 'cost']);
     }
 
     public function defaultUnit()
