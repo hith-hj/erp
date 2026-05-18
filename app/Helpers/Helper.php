@@ -231,7 +231,6 @@ class Helper
 
             'Bills' => [
                 'route' => 'bill.show',
-                // 'data' => Bill::select(['id', 'serial as name'])->take($maxItemCount)->get(),
                 'data' => Bill::all(['id', 'serial','billable_type',])
                     ->take($maxItemCount)
                     ->map(function ($bill) {
@@ -244,22 +243,22 @@ class Helper
 
             'Purchases' => [
                 'route' => 'purchase.show',
-                'data' => Purchase::with(['bill'])->take($maxItemCount)->get(['id'])
+                'data' => Purchase::with(['bill','vendor'])->take($maxItemCount)->get(['id','vendor_id'])
                     ->map(function ($purchase) {
                         return (object) [
                             'id' => $purchase->id,
-                            'name' => $purchase->bill->serial ?? 'No Serial',
+                            'name' => $purchase->vendor->fullName.' - '.$purchase->bill->serial ?? 'No Serial',
                         ];
                     }),
             ],
 
             'Sales' => [
                 'route' => 'sale.show',
-                'data' => Sale::with(['bill'])->take($maxItemCount)->get(['id',])
+                'data' => Sale::with(['bill','client'])->take($maxItemCount)->get(['id','client_id'])
                     ->map(function ($sale) {
                         return (object) [
                             'id' => $sale->id,
-                            'name' => $sale->bill->serial ?? 'No Serial',
+                            'name' => $sale->client->fullName.' - '.$sale->bill->serial ?? 'No Serial',
                         ];
                     }),
             ],

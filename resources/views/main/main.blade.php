@@ -29,9 +29,10 @@
                                 {{__('locale.Components Tree')}}
                             </h4>
                         </div>
+
 					    <div class="col-6">
-					        <input type="text" id="treeSearchInput" class="form-control" placeholder="Search items">
-					    </div>
+						    <input type="text" id="treeSearchInput" class="form-control" placeholder="Tree search">
+						</div>
                     </div>
 
                     <div class="modal-body d-flex flex-column" style="min-height:400px; max-height: 500px;">

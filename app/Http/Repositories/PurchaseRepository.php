@@ -199,7 +199,7 @@ class PurchaseRepository extends BaseRepository
         return $purchase;
     }
 
-    public function restoreInventory($material, $amount = 0)
+    public function restoreInventory($material, $amount = null)
     {
 
         $inventoryRepo = new InventoryRepository;
@@ -207,9 +207,11 @@ class PurchaseRepository extends BaseRepository
         $inventoryMaterial = $inventory->materials()
             ->wherePivot('material_id', $material->pivot->material_id)
             ->first();
-        $lastAmount = $amount === 0 ?
+
+        $lastAmount = $amount == null ?
             $this->getBaseUnitQuantity($inventoryMaterial->units, $material->pivot) :
-            $amount;
+            $this->getBaseUnitQuantity($inventoryMaterial->units, $amount);
+
         $inventory->materials()->updateExistingPivot($material->pivot->material_id, [
             'quantity' => $inventoryMaterial->pivot->quantity - $lastAmount,
         ]);
@@ -229,6 +231,28 @@ class PurchaseRepository extends BaseRepository
         $purchase->bill()->delete();
 
         return $purchase->delete();
+    }
+
+    public function getBaseUnitQuantity($collection, $data)
+    {
+        if (is_array($data)) {
+            $dataId = $data['unit_id'];
+            $dataQty = $data['quantity'];
+        } else {
+            $dataId = $data->unit_id;
+            $dataQty = $data->quantity;
+        }
+
+        $unit = $collection->first(function ($value) use ($dataId) {
+            return $value->pivot->unit_id == $dataId;
+        });
+
+        $quantity = $dataQty;
+        if (! $unit->pivot->is_default) {
+            $quantity = $dataQty * $unit->pivot->rate_to_main_unit;
+        }
+
+        return $quantity;
     }
 
     public function materialsReturn($purchase, array $data)
@@ -258,8 +282,9 @@ class PurchaseRepository extends BaseRepository
                     return;
                 }
 
+                $returnData = ['unit_id' => $material->pivot->unit_id, 'quantity' => $returnQty];
                 $material->inventory_id = $purchase->inventory_id;
-                $this->restoreInventory($material, $returnQty);
+                $this->restoreInventory($material, $returnData);
 
                 if ($purchasedQty == $returnQty) {
                     $purchase->materials()->detach($materialId);
@@ -284,20 +309,6 @@ class PurchaseRepository extends BaseRepository
         });
 
         return $purchase->refresh();
-    }
-
-
-    public function getBaseUnitQuantity($collection, $data)
-    {
-        $unit = $collection->first(function ($value) use ($data) {
-            return $value->pivot->unit_id == $data->unit_id;
-        });
-        $quantity = $data->quantity;
-        if (! $unit->pivot->is_default) {
-            $quantity = $data->quantity * $unit->pivot->rate_to_main_unit;
-        }
-
-        return $quantity;
     }
 
     public function setStatus($purchase_id, $status = 0)
