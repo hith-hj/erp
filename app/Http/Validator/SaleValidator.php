@@ -36,4 +36,11 @@ class SaleValidator
             'sales.*.total' => ['required', 'numeric'],
         ]);
     }
+
+    public static function materialReturns(Request $request)
+    {
+        return $request->validate([
+            'sale_id' => ['required', 'exists:sales,id'],
+        ]);
+    }
 }

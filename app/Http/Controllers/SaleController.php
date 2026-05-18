@@ -112,4 +112,20 @@ class SaleController extends BaseController
 
         return back()->with('success', 'Sale Checked');
     }
+
+    public function materialsReturns(Request $request, $id)
+    {
+        SaleValidator::materialReturns($request);
+        if ($id != $request->sale_id) {
+            return back()->with('error', 'invalid operation');
+        }
+        try {
+            $purchase = $this->repo->find($id);
+            $this->repo->materialsReturn($purchase, $request->except(['_token', 'sale_id']));
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
+
+        return back()->with('success', 'Material is returned');
+    }
 }

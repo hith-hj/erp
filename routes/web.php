@@ -95,6 +95,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('save/{id}', 'save')->name('purchase.save');
         Route::post('audit/{id}', 'audit')->name('purchase.audit');
         Route::post('check/{id}', 'check')->name('purchase.check');
+
+        Route::post('{id}/materialsReturns', 'materialsReturns')->name('purchase.materialsReturns');
     });
 
     Route::group([
@@ -112,6 +114,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('save/{id}', 'save')->name('sale.save');
         Route::post('audit/{id}', 'audit')->name('sale.audit');
         Route::post('check/{id}', 'check')->name('sale.check');
+
+        Route::post('{id}/materialsReturns', 'materialsReturns')->name('sale.materialsReturns');
+
     });
 
     Route::group([

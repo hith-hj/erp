@@ -5,6 +5,7 @@ namespace App\Http\Repositories;
 use App\Helpers\Helper;
 use App\Http\Repositories\InventoryRepository;
 use App\Models\Sale;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class SaleRepository extends BaseRepository
@@ -185,7 +186,7 @@ class SaleRepository extends BaseRepository
         return $inventory->materials()->updateExistingPivot($data->material_id, $dataToUpdate);
     }
 
-    public function restoreInventory($material)
+    public function restoreInventory($material, $amount = null)
     {
         $inventoryRepo = new InventoryRepository;
         $inventory = $inventoryRepo->find($material->inventory_id);
@@ -195,12 +196,15 @@ class SaleRepository extends BaseRepository
         if ($inventoryMaterial == null) {
             $this->throw("$material->name material in $inventory->name inventory not found ");
         }
+        $lastAmount = $amount == null ?
+            $this->getBaseUnitQuantity($inventoryMaterial->units, $material->pivot) :
+            $this->getBaseUnitQuantity($inventoryMaterial->units, $amount);
 
         $inventory->materials()
-            ->updateExistingPivot($material->pivot->material_id, [
-                'quantity' => $inventoryMaterial->pivot->quantity +
-                    $this->getBaseUnitQuantity($inventoryMaterial->units, $material->pivot),
-            ]);
+            ->updateExistingPivot(
+                $material->pivot->material_id,
+                ['quantity' => $inventoryMaterial->pivot->quantity + $lastAmount]
+            );
     }
 
     public function delete(int $id): bool
@@ -221,15 +225,79 @@ class SaleRepository extends BaseRepository
 
     public function getBaseUnitQuantity($collection, $data)
     {
-        $unit = $collection->first(function ($value) use ($data) {
-            return $value->pivot->unit_id == $data->unit_id;
+        if (is_array($data)) {
+            $dataId = $data['unit_id'];
+            $dataQty = $data['quantity'];
+        } else {
+            $dataId = $data->unit_id;
+            $dataQty = $data->quantity;
+        }
+
+        $unit = $collection->first(function ($value) use ($dataId) {
+            return $value->pivot->unit_id == $dataId;
         });
-        $quantity = $data->quantity;
+
+        $quantity = $dataQty;
         if (! $unit->pivot->is_default) {
-            $quantity = $data->quantity * $unit->pivot->rate_to_main_unit;
+            $quantity = $dataQty * $unit->pivot->rate_to_main_unit;
         }
 
         return $quantity;
+    }
+
+    public function materialsReturn($sale, array $data)
+    {
+        if (empty($data)) {
+            $this->throw('No return data provided', 9);
+        }
+
+        DB::transaction(function () use ($sale, $data) {
+            $sale->materials->each(function ($material) use ($data, $sale) {
+                $materialId = $material->id;
+                if (!array_key_exists($materialId, $data)) {
+                    // $this->throw('Material selected is not soled', 9);
+                    return;
+                }
+
+                $returnQty = $data[$materialId];
+                if ($returnQty === null || $returnQty <= 0) {
+                    // $this->throw('No valid quantity provided', 9);
+                    return;
+                }
+
+                $soldQty = $material->pivot->quantity;
+                if ($soldQty < $returnQty) {
+                    // $this->throw('Material quantity is invalid', 9);
+                    return;
+                }
+
+                $returnData = ['unit_id' => $material->pivot->unit_id, 'quantity' => $returnQty];
+                $material->inventory_id = $sale->inventory_id;
+                $this->restoreInventory($material, $returnData);
+
+                if ($soldQty == $returnQty) {
+                    $sale->materials()->detach($materialId);
+                } else {
+                    $material->pivot->update(['quantity' => $soldQty - $returnQty]);
+                }
+
+                $transaction = $sale->bill?->transaction;
+
+                if ($transaction) {
+                    $returnedCost = (int) $returnQty * $material->pivot->cost;
+                    $newAmount = $transaction->amount - $returnedCost;
+                    $newRemaining = $transaction->remaining - $returnedCost;
+
+                    $transaction->update([
+                        'amount' => $newAmount,
+                        'remaining' => $newRemaining,
+                        'is_payed' => $newRemaining <= 0,
+                    ]);
+                }
+            });
+        });
+
+        return $sale->refresh();
     }
 
     public function setStatus($sale_id, $status = 0)
