@@ -172,7 +172,11 @@
                                 quantity:0,
                                 materialUnits:{},
                                 setMaterialUnits(id){
-                                    this.materialUnits = this.materials[id].units;
+                                    if(id){
+                                        this.materialUnits = this.materials[id].units;
+                                    }else{
+                                        this.materialUnits = {};
+                                    }
                                 },
                                 setTotal(value){
                                     if(this.currency_id == 0){
@@ -247,7 +251,7 @@
                 <div class="card-body p-1">
                     <div class="row">
                         <div class="col-12">
-                            <button typex="submit" class="btn btn-primary w-50">
+                            <button type="submit" class="btn btn-primary w-50">
                                 {{ __('locale.Store') }}
                             </button>
                             {{-- <button type="reset" class="btn btn-outline-primary">
@@ -261,6 +265,57 @@
                 </div>
             </div>
         </div>
-
     </div>
+
+        <script>
+        (function () {
+            var form = document.getElementById('purchase_form');
+            if (!form) {
+                return;
+            }
+
+            // Dynamic items repeater: remove incomplete rows before the form is
+            // submitted so that only fully-filled rows are sent with the request.
+            // A row that is empty OR partially empty (any field missing) is
+            // deleted from the DOM entirely — Laravel validation never sees it
+            // and has nothing to complain about.
+            function stripIncompleteRows(event) {
+                var list = document.getElementById('purchase_items_list');
+                if (!list) {
+                    return;
+                }
+                list.querySelectorAll('tr[data-repeater-item]').forEach(function (row) {
+                    var material = row.querySelector('select[name*="material_id"]');
+                    var unit = row.querySelector('select[name*="unit_id"]');
+                    var quantity = row.querySelector('input[name*="quantity"]');
+                    var cost = row.querySelector('input[name*="cost"]');
+
+                    function valueOf(el) {
+                        return el ? el.value.trim() : '';
+                    }
+
+                    // A row is kept ONLY when every field is filled.
+                    // If any field is missing (the row is empty or only
+                    // partially filled), the row is removed entirely so it
+                    // is never included in the request.
+                    var isComplete = valueOf(material) && valueOf(unit) && valueOf(quantity) && valueOf(cost);
+
+                    if (!isComplete) {
+                        row.remove();
+                    }
+                });
+            }
+
+            // Safety net for any kind of submit (keyboard, programmatic, ...).
+            form.addEventListener('submit', stripIncompleteRows);
+
+            var submitBtn = form.querySelector('button[type="submit"]');
+            if (submitBtn) {
+                // Bind to the button click too, because it runs *before* the
+                // browser's native `required` validation. Otherwise the empty
+                // required fields on incomplete rows would block the submission.
+                submitBtn.addEventListener('click', stripIncompleteRows);
+            }
+        })();
+    </script>
 </form>
