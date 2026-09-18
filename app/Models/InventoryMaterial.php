@@ -29,8 +29,8 @@ class InventoryMaterial extends Pivot
     {
         return match ($this->status) {
             1 => __('locale.In stock'),
-            0 => __('locale.Requested'),
-            -1 => __('locale.Out of stock'),
+            0 => __('locale.Out of stock'),
+            -1 => __('locale.Requested'),
             default => __('locale.None')
         };
     }

@@ -388,6 +388,9 @@ return [
     'Transfer Amount' => 'Transfer Amount',
     'Last price' => 'Last price',
     'Quantity value' => 'Quantity value',
-    'Returns' => 'Returns'
+    'Returns' => 'Returns',
+    'All materials' => 'All materials',
+    'Material statistics' => 'Material statistics',
+    'Select material' => 'Select material',
 
 ];

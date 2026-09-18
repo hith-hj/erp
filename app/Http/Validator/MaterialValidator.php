@@ -46,4 +46,13 @@ class MaterialValidator
             'expenses.*.cost' => ['required', 'numeric'],
         ]);
     }
+
+    public static function validateMaterialStatistics($request)
+    {
+        return $request->validate([
+            'material_id' => ['required', 'exists:materials,id'],
+            'inventories' => ['nullable', 'array',],
+            'inventories.*' => ['nullable', 'exists:inventories,id'],
+        ]);
+    }
 }

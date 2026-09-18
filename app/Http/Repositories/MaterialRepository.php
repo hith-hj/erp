@@ -4,6 +4,9 @@ namespace App\Http\Repositories;
 
 use App\Models\Account;
 use App\Models\Material;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Arr;
 
 class MaterialRepository extends BaseRepository
 {
@@ -34,14 +37,14 @@ class MaterialRepository extends BaseRepository
         return $purchases->concat($sales)->all();
     }
 
-    private function transformTransactions($transactions)
+    private function transformTransactions(Collection $transactions, bool $addInventories = false)
     {
-        return $transactions->map(function ($transaction) {
+        return $transactions->map(function ($transaction) use ($addInventories) {
             $quantity = $transaction->pivot->quantity ?? 0;
             $price = $transaction->pivot->cost ?? 0;
             $rate = $transaction->currency->rate ?? 1;
 
-            return [
+            $result = [
                 'date'      => $transaction->created_at,
                 'bill_id' => $transaction->bill->id,
                 'bill_type' => $transaction->bill->getType,
@@ -51,6 +54,14 @@ class MaterialRepository extends BaseRepository
                 'rate'      => $rate,
                 'total'     => $quantity * $price * $rate
             ];
+
+            if ($addInventories) {
+                $inventoryId = $transaction->inventory_id ?? 'unknown';
+                $inventoryName = $transaction->inventory?->name ?? 'unknown';
+                $result['inventory_id'] = $inventoryId;
+                $result['inventory_name'] = $inventoryName;
+            }
+            return $result;
         });
     }
 
@@ -81,7 +92,7 @@ class MaterialRepository extends BaseRepository
         return $material;
     }
 
-    public function getCreateManufactureModelPayload($id)
+    public function getCreateManufactureModelPayload(int $id)
     {
         return [
             'material' => $this->find($id),
@@ -133,5 +144,55 @@ class MaterialRepository extends BaseRepository
         }
 
         return $material;
+    }
+
+    public function getStatisticsPayload()
+    {
+        return [
+            'materials' => $this->getter(
+                model: 'material',
+                callable: ['has' => ['inventories'], 'with' => ['inventories:id,name,is_default']],
+                columns: ['id', 'name']
+            ),
+        ];
+    }
+
+    public function getMaterialInventoriesStats(Material $material, ?array $inventories = [])
+    {
+        $withInventories = (bool) (is_array($inventories) && count($inventories) > 0);
+        $material->load([
+            'inventories' => function ($query) use ($withInventories, $inventories) {
+                $query->when(
+                    $withInventories,
+                    fn($q) => $q->whereIn('inventory_id', array_map('intval', array_values($inventories)))
+                );
+            },
+            'purchases' => function ($query) use ($withInventories, $inventories) {
+                $query
+                    ->with(['bill', 'currency'])
+                    ->when(
+                        $withInventories,
+                        fn($q) => $q->whereIn('inventory_id', array_map('intval', array_values($inventories)))
+                    );
+            },
+            'sales' => function ($query) use ($withInventories, $inventories) {
+                $query
+                    ->with(['bill', 'currency'])
+                    ->when(
+                        $withInventories,
+                        fn($q) => $q->whereIn('inventory_id', array_map('intval', array_values($inventories)))
+                    );
+            },
+        ]);
+        $purchases = $this->transformTransactions($material->purchases, $withInventories);
+        $sales = $this->transformTransactions($material->sales, $withInventories);
+
+        $collection = $purchases->concat($sales);
+        return [
+            'withInventories' => $withInventories,
+            'collection' => $withInventories ?
+                $collection->groupBy('inventory_name')->all() :
+                $collection->all(),
+        ];
     }
 }

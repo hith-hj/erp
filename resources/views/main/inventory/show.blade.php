@@ -74,7 +74,7 @@
                                                                     <label class="form-label" for="">
                                                                         {{ __('locale.Quantity') }}
                                                                     </label>
-                                                                    <input type="number" min="1" name="quantity" id="material_quantity"
+                                                                    <input type="number" min="0" name="quantity" id="material_quantity"
                                                                         class="form-control @error('quantity') border-danger @enderror"
                                                                         placeholder="{{ __('locale.Quantity') }}" required />
                                                                 </div>

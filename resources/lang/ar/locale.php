@@ -226,5 +226,10 @@ return [
     'Transfer Amount' => 'قيمة التحويل',
     'Last price' => 'اخر سعر',
     'Quantity value' => 'قيمة الكمية',
-    'Returns' => 'مرتجعات'
+    'Returns' => 'مرتجعات',
+    'All materials' => 'جميع المواد',
+    'Material statistics' => 'جرد مادة',
+    'Select material' => 'اختر مادة',
+    'Search' => 'ابحث',
+
 ];

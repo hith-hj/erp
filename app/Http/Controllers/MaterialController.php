@@ -72,4 +72,22 @@ class MaterialController extends BaseController
 
         return redirect()->route('material.show', ['id' => $material->id]);
     }
+
+    public function statistics(Request $request)
+    {
+        return view('main.material.statistics', $this->repo->getStatisticsPayload());
+    }
+
+    public function getStatistics(Request $request)
+    {
+        MaterialValidator::validateMaterialStatistics($request);
+        $material = $this->repo->find($request->input('material_id'));
+        $result = $this->repo->getMaterialInventoriesStats($material, $request->get('inventories', []));
+
+        return view('main.material.statistics', [
+            'material_id' => $material->id,
+            'result' => $result,
+            ...$this->repo->getStatisticsPayload()
+        ]);
+    }
 }

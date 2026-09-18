@@ -52,6 +52,8 @@ Route::group(['middleware' => 'auth'], function () {
             ->name('material.create_manufacture_model');
         Route::post('store_manufacture_model', 'storeMaterialManufactureModel')
             ->name('material.store_manufacture_model');
+        Route::get('statistics', 'statistics')->name('material.statistics');
+        Route::post('getStatistics', 'getStatistics')->name('material.getStatistics');
     });
 
     Route::group([
@@ -116,7 +118,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('check/{id}', 'check')->name('sale.check');
 
         Route::post('{id}/materialsReturns', 'materialsReturns')->name('sale.materialsReturns');
-
     });
 
     Route::group([

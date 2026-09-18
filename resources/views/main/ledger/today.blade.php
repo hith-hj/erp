@@ -208,8 +208,8 @@
                                             :disabled="record_type == 'debit' "/>
                                     </td>
                                     <td>
-                                        <input list="browsers" name="account_id" id="browser" class="form-control" required>
-                                        <datalist id="browsers">
+                                        <input list="accounts" name="account_id" id="acount" class="form-control" required>
+                                        <datalist id="accounts">
                                             <option value="">{{ __('locale.Chose') }} </option>
                                             @foreach($expences as $expence)
                                                 <option value="{{'Expense_'.$expence->id}}">
