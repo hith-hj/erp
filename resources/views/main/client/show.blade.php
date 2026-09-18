@@ -115,6 +115,48 @@
                                         @if (!$sale->hasTransaction)
                                             "No Transaction Found"
                                         @endif
+                                        @if($sale->hasTransaction && $sale->hasTransfers)
+                                            <button class="btn btn-sm btn-outline-success" type="button" data-bs-toggle="modal"
+                                                data-bs-target="#transfers{{ $sale->id }}">
+                                                {{ __('locale.Transfers') }}
+                                            </button>
+                                            <div class="modal fade" id="transfers{{ $sale->id }}" tabindex="-1" aria-hidden="true">
+                                                <div class="modal-dialog modal-lg modal-dialog-centered modal-edit-user">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4>{{__('locale.Transfers')}}</h4>
+                                                        </div>
+                                                        <div class="modal-body" >
+                                                            <div class="table-responsive">
+                                                                <div class="card">
+                                                                    <div class="card-body">
+                                                                        <table class="table table-sm table-bordered">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th>Id</th>
+                                                                                    <th>{{ __('locale.Amount') }}</th>
+                                                                                    <th>{{ __('locale.Created at') }}</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody class="table-hover">
+                                                                                @forelse ($sale->bill?->transaction?->transfers as $transfer)
+                                                                                    <tr>
+                                                                                        <td>{{ $transfer->id }}</td>
+                                                                                        <td>{{ $transfer->amount }}</td>
+                                                                                        <td>{{ $transfer->created_at->diffForHumans() }}</td>
+                                                                                    </tr>
+                                                                                @empty
+                                                                                @endforelse
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
                                     </td>
                                 </tr>
                             @empty
@@ -209,8 +251,8 @@
                                 <div class="modal-header">
                                     <h4>{{__('locale.Rates')}}</h4>
                                 </div>
-                                <div class="modal-body p-0">
-                                    <table class="table table-lg table-bordered">
+                                <div class="modal-body p-2">
+                                    <table class="table table-sm table-bordered">
                                         <thead>
                                             <tr>
                                                 <th>{{__('locale.Currency')}}</th>

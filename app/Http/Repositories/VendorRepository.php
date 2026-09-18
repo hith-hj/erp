@@ -87,7 +87,7 @@ class VendorRepository extends BaseRepository
 
     private function getPurchases($vendor, $request)
     {
-        $purchases = Purchase::with(['bill.transaction', 'currency'])
+        $purchases = Purchase::with(['bill.transaction.transfers', 'currency'])
             ->when($request->filled('currency'), function ($query) use ($request) {
                 $query->whereRelation('currency', 'name', $request->currency);
             })->where('vendor_id', $vendor->id)->get();
@@ -99,13 +99,17 @@ class VendorRepository extends BaseRepository
     {
         foreach ($purchases as $purchase) {
             $purchase->hasTransaction = true;
+            $purchase->hasTransfers = true;
             $purchase->remaining = $purchase->bill?->transaction?->remaining ?? 0;
             $purchase->total = $purchase->bill?->transaction?->amount ?? 0;
             if ($purchase->bill?->transaction === null) {
                 $purchase->hasTransaction = false;
+                $purchase->hasTransfers = false;
+            }
+            if ($purchase->bill?->transaction?->transfers === null) {
+                $purchase->hasTransfers = false;
             }
             if (! $purchase->currency->is_default && $request->filled('defaultCurrencyApplyed')) {
-                // $rate = $purchase->currency->rate_to_default;
                 $rate = $purchase->rate;
                 $purchase->remaining *= $rate;
                 $purchase->total *= $rate;

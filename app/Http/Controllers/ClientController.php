@@ -24,10 +24,6 @@ class ClientController extends BaseController
 
     public function show(Request $request, Client $client)
     {
-        $request->validate([
-            'currency' => ['sometimes', 'string', 'exists:currencies,name'],
-        ]);
-
         return view('main.client.show', $this->repo->getShowPayload($client));
     }
 

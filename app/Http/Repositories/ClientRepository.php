@@ -86,7 +86,7 @@ class ClientRepository extends BaseRepository
 
     private function getFeeds($client, $request)
     {
-        $sales = Sale::with(['bill.transaction', 'currency'])
+        $sales = Sale::with(['bill.transaction.transfers', 'currency'])
             ->when($request->filled('currency'), function ($query) use ($request) {
                 $query->whereRelation('currency', 'name', $request->currency);
             })->where('client_id', $client->id)->get();
@@ -98,13 +98,17 @@ class ClientRepository extends BaseRepository
     {
         foreach ($sales as $sale) {
             $sale->hasTransaction = true;
+            $sale->hasTransfers = true;
             $sale->remaining = $sale->bill?->transaction?->remaining ?? 0;
             $sale->total = $sale->bill?->transaction?->amount ?? 0;
             if ($sale->bill?->transaction === null) {
                 $sale->hasTransaction = false;
+                $sale->hasTransfers = false;
+            }
+            if ($sale->bill?->transaction?->transfers === null) {
+                $sale->hasTransfers = false;
             }
             if (! $sale->currency->is_default && $request->filled('defaultCurrencyApplyed')) {
-                // $rate = $sale->currency->rate_to_default;
                 $rate = $sale->rate;
                 $sale->remaining *= $rate;
                 $sale->total *= $rate;
