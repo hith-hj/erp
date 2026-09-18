@@ -176,6 +176,9 @@
                                         this.materialUnits = this.materials[id].units;
                                     }else{
                                         this.materialUnits = {};
+                                        this.cost = 0;
+                                        this.total = 0;
+                                        this.quantity = 0;
                                     }
                                 },
                                 setTotal(value){
@@ -254,9 +257,6 @@
                             <button type="submit" class="btn btn-primary w-50">
                                 {{ __('locale.Store') }}
                             </button>
-                            {{-- <button type="reset" class="btn btn-outline-primary">
-                                {{ __('locale.Reset') }}
-                            </button> --}}
                             <a class="btn btn-outline-dark" data-bs-dismiss="modal" aria-label="Close">
                                 {{ __('locale.Cancel') }}
                             </a>
@@ -273,12 +273,6 @@
             if (!form) {
                 return;
             }
-
-            // Dynamic items repeater: remove incomplete rows before the form is
-            // submitted so that only fully-filled rows are sent with the request.
-            // A row that is empty OR partially empty (any field missing) is
-            // deleted from the DOM entirely — Laravel validation never sees it
-            // and has nothing to complain about.
             function stripIncompleteRows(event) {
                 var list = document.getElementById('purchase_items_list');
                 if (!list) {
@@ -293,11 +287,6 @@
                     function valueOf(el) {
                         return el ? el.value.trim() : '';
                     }
-
-                    // A row is kept ONLY when every field is filled.
-                    // If any field is missing (the row is empty or only
-                    // partially filled), the row is removed entirely so it
-                    // is never included in the request.
                     var isComplete = valueOf(material) && valueOf(unit) && valueOf(quantity) && valueOf(cost);
 
                     if (!isComplete) {
@@ -305,15 +294,9 @@
                     }
                 });
             }
-
-            // Safety net for any kind of submit (keyboard, programmatic, ...).
             form.addEventListener('submit', stripIncompleteRows);
-
             var submitBtn = form.querySelector('button[type="submit"]');
             if (submitBtn) {
-                // Bind to the button click too, because it runs *before* the
-                // browser's native `required` validation. Otherwise the empty
-                // required fields on incomplete rows would block the submission.
                 submitBtn.addEventListener('click', stripIncompleteRows);
             }
         })();

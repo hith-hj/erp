@@ -173,6 +173,9 @@
                             setMaterialUnits(id){
                                 if(!id){
                                     this.materialUnits = {};
+                                    this.cost = 0;
+                                    this.total = 0;
+                                    this.quantity = 0;
                                 }else{
                                     this.materialUnits = 0;
                                     this.limit = 0;
