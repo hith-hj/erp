@@ -392,5 +392,7 @@ return [
     'All materials' => 'All materials',
     'Material statistics' => 'Material statistics',
     'Select material' => 'Select material',
+    'Auto' => 'Auto',
+    'Manual' => 'Manual',
 
 ];

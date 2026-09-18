@@ -5,173 +5,277 @@
 @endsection
 
 @section('content')
-    <section id="basic-datatable">
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    @if ($errors->any())
-                        <div class="alert alert-danger m-1">
-                            <ul class="m-0">
-                                @foreach ($errors->all() as $error)
-                                    <li class="p-1">{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-                    <div class="card-header p-1 d-flex">
-                        <div class="div">
-                            <h3>{{$inventory->name}}</h3>
-                            {{__('locale.Materials') . ':' . $inventory->materials()->count()}}
-                        </div>
-                        <div class="div d-flex gap-1">
-                            @if($inventory->is_default == true)
-                                <span class="badge badge-light-info">
-                                    {{__('locale.Default')}}
-                                </span>
-                            @else
-                                <button class="btn btn-sm btn-outline-info" form="setDefaultInventroyForm">
-                                    {{__('locale.Default')}}
-                                </button>
-                                <form action="{{route('inventory.setDefault',['id'=>$inventory->id])}}" 
-                                    id="setDefaultInventroyForm" method="post">
-                                    @csrf
-                                </form>
-                            @endif
-                            <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="modal"
-                                data-bs-target="#addTransfer{{ $inventory->id }}">
-                                {{ __('locale.Add').' '.__('locale.Material') }}
+<section id="basic-datatable">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                @if ($errors->any())
+                    <div class="alert alert-danger m-1">
+                        <ul class="m-0">
+                            @foreach ($errors->all() as $error)
+                                <li class="p-1">{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+                <div class="card-header p-1 d-flex">
+                    <div class="div">
+                        <h3>{{$inventory->name}}</h3>
+                        {{__('locale.Materials') . ':' . $inventory->materials()->count()}}
+                    </div>
+                    <div class="div d-flex gap-1">
+                        @if($inventory->is_default == true)
+                            <span class="badge badge-light-info">
+                                {{__('locale.Default')}}
+                            </span>
+                        @else
+                            <button class="btn btn-sm btn-outline-info" form="setDefaultInventroyForm">
+                                {{__('locale.Default')}}
                             </button>
-                            <div class="modal fade" id="addTransfer{{ $inventory->id }}" tabindex="-1" aria-hidden="true">
-                                <div class="modal-dialog modal-lg modal-dialog-centered modal-edit-user">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h4>{{__('locale.Materials')}}</h4>
-                                        </div>
-                                        <div class="modal-body overflow-auto" style="max-height: 400px;">
-                                            <form method="POST" action="{{ route('inventory.material.store', ['inventory_id' => $inventory->id]) }}">
-                                                @csrf
-                                                <div class="row px-1 inventory-materials-repeater">
-                                                    <div data-repeater-list="materials" class="col-10 p-0">
-                                                        <div data-repeater-item class="row">
-                                                            <div class="col-5">
-                                                                <div class="mb-1">
-                                                                    <label class="form-label" for="">
-                                                                        {{ __('locale.Materials') }}
-                                                                    </label>
-                                                                    <select id="material_list" name="material_id" 
-                                                                        class="form-select" required>
-                                                                        <option value="">{{__('locale.Chose')}}</option>
-                                                                        @foreach ($materials as $material)
-                                                                            <option value="{{ $material->id }}">
-                                                                                {{ $material->name }}
-                                                                            </option>
-                                                                        @endforeach
-                                                                    </select>
-                                                                </div>
+                            <form action="{{route('inventory.setDefault',['id'=>$inventory->id])}}" 
+                                id="setDefaultInventroyForm" method="post">
+                                @csrf
+                            </form>
+                        @endif
+                        <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="modal"
+                            data-bs-target="#addTransfer{{ $inventory->id }}">
+                            {{ __('locale.Add').' '.__('locale.Material') }}
+                        </button>
+                        <div class="modal fade" id="addTransfer{{ $inventory->id }}" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-lg modal-dialog-centered modal-edit-user">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4>{{__('locale.Materials')}}</h4>
+                                    </div>
+                                    <div class="modal-body overflow-auto" style="max-height: 400px;">
+                                        <form method="POST" action="{{ route('inventory.material.store', ['inventory_id' => $inventory->id]) }}">
+                                            @csrf
+                                            <div class="row px-1 inventory-materials-repeater">
+                                                <div data-repeater-list="materials" class="col-10 p-0">
+                                                    <div data-repeater-item class="row">
+                                                        <div class="col-5">
+                                                            <div class="mb-1">
+                                                                <label class="form-label" for="">
+                                                                    {{ __('locale.Materials') }}
+                                                                </label>
+                                                                <select id="material_list" name="material_id" 
+                                                                    class="form-select" required>
+                                                                    <option value="">{{__('locale.Chose')}}</option>
+                                                                    @foreach ($materials as $material)
+                                                                        <option value="{{ $material->id }}">
+                                                                            {{ $material->name }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
                                                             </div>
-                                                            <div class="col-5">
-                                                                <div class="mb-1">
-                                                                    <label class="form-label" for="">
-                                                                        {{ __('locale.Quantity') }}
-                                                                    </label>
-                                                                    <input type="number" min="0" name="quantity" id="material_quantity"
-                                                                        class="form-control @error('quantity') border-danger @enderror"
-                                                                        placeholder="{{ __('locale.Quantity') }}" required />
-                                                                </div>
+                                                        </div>
+                                                        <div class="col-5">
+                                                            <div class="mb-1">
+                                                                <label class="form-label" for="">
+                                                                    {{ __('locale.Quantity') }}
+                                                                </label>
+                                                                <input type="number" min="0" name="quantity" id="material_quantity"
+                                                                    class="form-control @error('quantity') border-danger @enderror"
+                                                                    placeholder="{{ __('locale.Quantity') }}" required />
                                                             </div>
-                                                            <div class="col-2 p-0" data-repeater-delete>
-                                                                <div class="mb-1">
-                                                                    <label class="form-label" for="rate">{{ __('locale.Delete') }}</label>
-                                                                    <button type="button" class="btn btn-icon btn-outline-danger w-100 ">
-                                                                        <i class="fa fa-trash"></i>
-                                                                    </button>
-                                                                </div>
+                                                        </div>
+                                                        <div class="col-2 p-0" data-repeater-delete>
+                                                            <div class="mb-1">
+                                                                <label class="form-label" for="rate">{{ __('locale.Delete') }}</label>
+                                                                <button type="button" class="btn btn-icon btn-outline-danger w-100 ">
+                                                                    <i class="fa fa-trash"></i>
+                                                                </button>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-2 p-0" data-repeater-create>
-                                                        <div class="mb-1">
-                                                            <label class="form-label" for="rate">{{ __('locale.Add') }}</label>
-                                                            <button type="button" class="btn btn-icon btn-outline-primary w-100">
-                                                                <i class="fa fa-plus "></i>
-                                                            </button>
-                                                        </div>
+                                                </div>
+                                                <div class="col-2 p-0" data-repeater-create>
+                                                    <div class="mb-1">
+                                                        <label class="form-label" for="rate">{{ __('locale.Add') }}</label>
+                                                        <button type="button" class="btn btn-icon btn-outline-primary w-100">
+                                                            <i class="fa fa-plus "></i>
+                                                        </button>
                                                     </div>
                                                 </div>
-                                                <div class="">
-                                                    <button type="submit"
-                                                        class="btn btn-outline-primary w-50">{{ __('locale.Store') }}
-                                                    </button>
-                                                    <button type="reset"
-                                                        class="btn btn-outline-dark w-25">{{ __('locale.Reset') }}
-                                                    </button>
-                                                </div>
-                                            </form>
-                                        </div>
+                                            </div>
+                                            <div class="">
+                                                <button type="submit"
+                                                    class="btn btn-outline-primary w-50">{{ __('locale.Store') }}
+                                                </button>
+                                                <button type="reset"
+                                                    class="btn btn-outline-dark w-25">{{ __('locale.Reset') }}
+                                                </button>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
-                            <button class="btn btn-sm btn-outline-success" type="button" data-bs-toggle="modal"
-                                data-bs-target="#stats{{ $inventory->id }}">
-                                {{ __('locale.Stats') }}
-                            </button>
-                            <div class="modal fade" id="stats{{ $inventory->id }}" tabindex="-1" aria-hidden="true">
-                                <div class="modal-dialog modal-lg modal-dialog-centered modal-edit-user">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h4>{{__('locale.Stats')}}</h4>
-                                        </div>
-                                        <div class="modal-body" >
-                                            <div class="table-responsive">
-                                                <div class="card">
-                                                    <div class="card-body">
-                                                        <table class="table table-sm table-bordered" x-data="{ rate:1,}">
-                                                            <thead>
+                        </div>
+                        <button class="btn btn-sm btn-outline-success" type="button" data-bs-toggle="modal"
+                            data-bs-target="#stats{{ $inventory->id }}">
+                            {{ __('locale.Stats') }}
+                        </button>
+                        <div class="modal fade" id="stats{{ $inventory->id }}" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-lg modal-dialog-centered modal-edit-user">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4>{{__('locale.Stats')}}</h4>
+                                    </div>
+                                    <div class="modal-body" >
+                                        <ul class="nav nav-tabs mb-0" role="tablist">
+                                            <li class="nav-item">
+                                                <a class="nav-link w-100 active"
+                                                    data-bs-toggle="tab" href="#autoStats" aria-controls="autoStats" role="tab">
+                                                    {{ __('locale.Auto') }}
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link w-100"
+                                                    data-bs-toggle="tab" href="#manualStats" aria-controls="manualStats" role="tab">
+                                                    {{ __('locale.Manual') }}
+                                                </a>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content mt-2">
+                                            <div id="autoStats" class="tab-pane active">
+                                                <div class="table-responsive">
+                                                    <table class="table table-sm table-bordered" ">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Id</th>
+                                                                <td> {{__('locale.Material') }} </td>
+                                                                <td> {{__('locale.Quantity') }} </td>
+                                                                <td> {{__('locale.Last price') }} </td>
+                                                                <td> {{__('locale.Quantity value') }} </td>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody class="table-hover">
+                                                            @forelse ($stats as $stat)
                                                                 <tr>
-                                                                    <th>Id</th>
-                                                                    <td> {{__('locale.Material') }} </td>
-                                                                    <td> {{__('locale.Quantity') }} </td>
-                                                                    <td> {{__('locale.Last price') }} </td>
-                                                                    <td> {{__('locale.Quantity value') }} </td>
-                                                                    <td>
-                                                                        <div class="d-flex gap-2 align-middle">
-                                                                            <p>
-                                                                                {{__('locale.Rate')}}
-                                                                            </p>
-                                                                            <input type="number" class="form-control form-control-sm" min="1"
-                                                                            x-model="rate" placeholder="" />
-                                                                        </div>
-                                                                     </td>
+                                                                    <td> {{ $stat['material_id'] }} </td>
+                                                                    <td> {{ $stat['material_name'] }} </td>
+                                                                    <td> {{ $stat['quantity'] }} </td>
+                                                                    <td> {{ $stat['last_price'] }} </td>
+                                                                    <td> {{ $stat['quantity_value'] }} </td>
                                                                 </tr>
-                                                            </thead>
-                                                            <tbody class="table-hover">
-                                                                @forelse ($stats as $stat)
-                                                                    <tr x-data="{
-                                                                        lastPrice:{{$stat['last_price']}},
-                                                                        quantity:{{$stat['quantity']}},
-                                                                        get newValue() {
-                                                                            return Number(this.lastPrice) * Number(this.rate) * Number(this.quantity);
-                                                                        }
-                                                                    }">
-                                                                        <td> {{ $stat['material_id'] }} </td>
-                                                                        <td> {{ $stat['material_name'] }} </td>
-                                                                        <td> {{ $stat['quantity'] }} </td>
-                                                                        <td> {{ $stat['last_price'] }} </td>
-                                                                        <td> {{ $stat['quantity_value'] }} </td>
-                                                                        <td x-text='newValue'></td>
-                                                                    </tr>
-                                                                @empty
-                                                                    <tr>
-                                                                        <td>
-                                                                            {{__('locale.Not found')}}
-                                                                        </td>
-                                                                    </tr>
-                                                                @endforelse
+                                                            @empty
+                                                                <tr>
+                                                                    <td>
+                                                                        {{__('locale.Not found')}}
+                                                                    </td>
+                                                                </tr>
+                                                            @endforelse
 
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
+                                                        </tbody>
+                                                    </table>
                                                 </div>
+                                            </div>
+                                            <div id="manualStats" class="tab-pane">
+                                                {{-- <div class="table-responsive">
+                                                    <table class="table table-sm table-bordered" 
+                                                        x-data="{ 
+                                                            rate:1,
+                                                        }">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Id</th>
+                                                                <td> {{__('locale.Material') }} </td>
+                                                                <td> {{__('locale.Quantity') }} </td>
+                                                                <td>
+                                                                    <div class="d-flex gap-2 align-middle">
+                                                                        <input type="number" class="form-control form-control-sm" min="0.1"
+                                                                        x-model="rate" placeholder="{{__('locale.Rate')}}" />
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody class="table-hover">
+                                                            @forelse ($stats as $stat)
+                                                                <tr x-data="{
+                                                                    lastPrice:{{$stat['last_price']}},
+                                                                    quantity:{{$stat['quantity']}},
+                                                                    get newValue() {
+                                                                        let value = Number(this.rate) * Number(this.quantity);
+                                                                        return new Intl.NumberFormat('en-US').format(value)
+                                                                    },
+                                                                }">
+                                                                    <td> {{ $stat['material_id'] }} </td>
+                                                                    <td> {{ $stat['material_name'] }} </td>
+                                                                    <td> {{ $stat['quantity'] }} </td>
+                                                                    <td x-text='newValue'></td>
+                                                                </tr>
+                                                            @empty
+                                                                <tr>
+                                                                    <td>
+                                                                        {{__('locale.Not found')}}
+                                                                    </td>
+                                                                </tr>
+                                                            @endforelse
+                                                        </tbody>
+                                                    </table>
+                                                </div> --}}
+
+                                                <div class="table-responsive">
+                                                    <table class="table table-sm table-bordered" 
+                                                        x-data="{ 
+                                                            rate: 1,
+                                                            stats: {{ json_encode(array_values($stats->toArray())) }},
+                                                            get totalValue() {
+                                                                let total = this.stats.reduce((sum, item) => {
+                                                                    return sum + (Number(this.rate) * Number(item.quantity));
+                                                                }, 0);
+                                                                return new Intl.NumberFormat('en-US').format(total);
+                                                            }
+                                                        }">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Id</th>
+                                                                <td> {{__('locale.Material') }} </td>
+                                                                <td> {{__('locale.Quantity') }} </td>
+                                                                <td>
+                                                                    <div class="d-flex gap-2 align-middle">
+                                                                        <input type="number" class="form-control form-control-sm" min="0.1"
+                                                                        x-model="rate" placeholder="{{__('locale.Rate')}}" />
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody class="table-hover">
+                                                            @forelse ($stats as $stat)
+                                                                <tr x-data="{
+                                                                    quantity: {{$stat['quantity']}},
+                                                                    get newValue() {
+                                                                        let value = Number(rate) * Number(this.quantity);
+                                                                        return new Intl.NumberFormat('en-US').format(value)
+                                                                    },
+                                                                }">
+                                                                    <td> {{ $stat['material_id'] }} </td>
+                                                                    <td> {{ $stat['material_name'] }} </td>
+                                                                    <td> {{ $stat['quantity'] }} </td>
+                                                                    <td x-text='newValue'></td>
+                                                                </tr>
+                                                            @empty
+                                                                <tr>
+                                                                    <td colspan="4">
+                                                                        {{__('locale.Not found')}}
+                                                                    </td>
+                                                                </tr>
+                                                            @endforelse
+                                                        </tbody>
+                                                        
+                                                        <!-- 3. Dynamic Total Row Footer -->
+                                                        <tfoot class="table-lightfw-bold">
+                                                            <template x-if="stats.length > 0">
+                                                                <tr>
+                                                                    <td colspan="3" class="fw-bold">Total:</td>
+                                                                    <td x-text="totalValue" class="fw-bold"></td>
+                                                                </tr>
+                                                            </template>
+                                                        </tfoot>
+                                                    </table>
+                                                </div>
+                                               
+
                                             </div>
                                         </div>
                                     </div>
@@ -181,15 +285,16 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
-                        {{ $dataTable->table() }}
-                    </div>
+        </div>
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    {{ $dataTable->table() }}
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 @endsection
 @push('scripts')
     {{ $dataTable->scripts(attributes: ['type' => 'module']) }}

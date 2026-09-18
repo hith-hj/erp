@@ -231,5 +231,7 @@ return [
     'Material statistics' => 'جرد مادة',
     'Select material' => 'اختر مادة',
     'Search' => 'ابحث',
+    'Auto' => 'تلقائي',
+    'Manual' => 'يدوي',
 
 ];
