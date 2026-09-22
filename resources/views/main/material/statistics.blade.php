@@ -11,7 +11,7 @@
         <h4 class=""> {{ __('locale.Select material') }} </h4>
         <div class="card">
             <div class="card-header">                
-                <form id="deleteMaterialForm" method="Post"
+                <form id="deleteMaterialForm" method="get"
                     action="{{ route('material.getStatistics') }}"
                     class="row g-2 align-items-end col-12"
                     x-data="{

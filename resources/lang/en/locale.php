@@ -394,5 +394,14 @@ return [
     'Select material' => 'Select material',
     'Auto' => 'Auto',
     'Manual' => 'Manual',
+    'From date' => 'From date',
+    'To date' => 'To date',
+    'Select expense' => 'Select expense',
+    'Total Credit' => 'Total Credit',
+    'Total Debit' => 'Total Debit',
+    'Net Balance' => 'Net Balance',
+    'Source' => 'Source',
+    'All expenses' => 'All expenses',
+    'Expenses statistics' => 'Expenses statistics',
 
 ];

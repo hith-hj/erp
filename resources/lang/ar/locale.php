@@ -233,5 +233,14 @@ return [
     'Search' => 'ابحث',
     'Auto' => 'تلقائي',
     'Manual' => 'يدوي',
+    'From date' => 'من تاريخ',
+    'To date' => 'الى تاريخ',
+    'Select expense' => 'اختر نفقة',
+    'Total Credit' => 'اجمالي المقبوضات',
+    'Total Debit' => 'اجمالي المدفوعات',
+    'Net Balance' => 'الرصيد النهائي',
+    'Source' => 'المصدر',
+    'All expenses' => 'جميع النفقات',
+    'Expenses statistics' => 'احصائيات النفقات',
 
 ];

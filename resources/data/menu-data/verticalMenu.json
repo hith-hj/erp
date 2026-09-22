@@ -96,10 +96,23 @@
           "slug": "List-currency"
         },
         {
-          "url": "expense/all",
           "name": "Expenses",
           "icon": "dollar-sign",
-          "slug": "List-Expenses"
+          "slug": "Materials",
+          "submenu": [
+            {
+              "url": "expenses/all",
+              "name": "All expenses",
+              "icon": "dollar-sign",
+              "slug": "List-Expenses"
+            },
+            {
+              "url": "expense/statistics",
+              "name": "Expenses statistics",
+              "icon": "dollar-sign",
+              "slug": "expenses-statistics"
+            }        
+          ]
         },
         {
           "url": "accountType/all",

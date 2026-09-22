@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\DataTables\ExpenseDataTable;
 use App\Http\Repositories\ExpenseRepository;
+use App\Http\Validator\ExpenseValidator;
 use Illuminate\Http\Request;
 
 class ExpenseController extends Controller
@@ -27,6 +28,22 @@ class ExpenseController extends Controller
         ]);
     }
 
+    public function statistics()
+    {
+        return view('main.expense.statistics', ['expenses' => $this->repo->all()]);
+    }
+
+    public function getStatistics(Request $request)
+    {
+        ExpenseValidator::validateExpenseStatistics($request);
+        $result = $this->repo->getExpensesStats($request->all());
+
+        return view('main.expense.statistics', [
+            'result' => $result,
+            'expenses' => $this->repo->all()
+        ]);
+    }
+
     public function create()
     {
         return view('main.expense.create');
@@ -34,10 +51,8 @@ class ExpenseController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'names' => ['required', 'array', 'min:1'],
-            'names.*.name' => ['required', 'string', 'unique:expenses,name'],
-        ]);
+        ExpenseValidator::validateExpenseSTore($request);
+
         foreach ($request->names as $name) {
             $this->repo->add($name);
         }

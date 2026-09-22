@@ -17,4 +17,10 @@ class Expense extends Model
             ->withPivot(['cost', 'note'])
             ->withTimestamps();
     }
+
+    public function records()
+    {
+        return $this->hasMany(LedgerRecord::class, 'account_id')
+            ->where(['account_type' => $this::class]);
+    }
 }

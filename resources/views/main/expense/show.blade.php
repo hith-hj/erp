@@ -1,7 +1,6 @@
 @extends('layouts/contentLayoutMaster')
 
 @section('title')
-    {{-- {{ __('locale.Show') }} {{ __('locale.Material') }} --}}
     {{ $expense->name }}
 @endsection
 
@@ -14,8 +13,7 @@
                     onclick="
                         if(confirm('{{__('locale.Delete')}} ?')){
                             document.getElementById('deleteExpenseForm').submit();
-                        }
-                    " >
+                        }">
                     {{ __('locale.Delete') }}
                 </button>
                 <form id="deleteExpenseForm" 
