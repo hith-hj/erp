@@ -41,9 +41,12 @@ class MaterialValidator
             'materials.*.currency_id' => ['required', 'exists:currencies,id'],
             'materials.*.quantity' => ['required', 'numeric'],
             'materials.*.cost' => ['required', 'numeric'],
-            'expenses' => ['required', 'array', 'min:1'],
-            'expenses.*.expense_id' => ['required'],
-            'expenses.*.cost' => ['required', 'numeric'],
+            'accounts' => ['nullable', 'array', 'min:1'],
+            'accounts.*.account_id' => ['nullable', 'integer', 'exists:account_types,id'],
+            'accounts.*.expenses' => ['nullable', 'array', 'min:1'],
+            'accounts.*.expenses.*.expense_id' => ['nullable', 'integer', 'exists:expenses,id'],
+            'accounts.*.expenses.*.cost'       => ['nullable', 'numeric', 'min:0'],
+            'accounts.*.expenses.*.note'       => ['nullable', 'string', 'max:255'],
         ]);
     }
 

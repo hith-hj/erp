@@ -37,23 +37,6 @@
                         materials: {{ $materials->keyBy('id')->toJson() }}
                     }">
                         <div class="row my-1">
-                            {{-- <div class="col-12">
-                                <div class="mb-1">
-                                    <label class="form-label" for="type">{{ __('locale.Inventory') }} To store new
-                                        material</label>
-                                    <select name="inventory_to_store_id" id="type"required
-                                        class="form-select @error('type') border-danger @enderror">
-                                        <option value="">{{ __('locale.Chose') }}</option>
-                                        @forelse ($inventories as $inventory)
-                                            <option value="{{ $inventory->id }}">
-                                                {{ $inventory->name }}
-                                            </option>
-                                        @empty
-                                            <option value="">{{ __('locale.None') }}</option>
-                                        @endforelse
-                                    </select>
-                                </div>
-                            </div> --}}
                             <ul class="nav nav-tabs px-2 m-0" role="tablist">
                                 <li class="nav-item">
                                     <a class="nav-link active" id="material-tab" data-bs-toggle="tab" href="#material"
@@ -195,66 +178,81 @@
                                         </table>
                                     </div>
                                 </div>
-                                <div class="tab-pane" id="accounts" aria-labelledby="accounts-tab" role="tabpanel">
-                                    <div class="col-12">
-                                        <div class="mb-1">
-                                            <label class="form-label" for="type">                                          
-                                                {{__('locale.Account')}}
-                                            </label>
-                                            <select name="account_id" id="type" required
-                                                class="form-select @error('type') border-danger @enderror">
-                                                <option value="">{{ __('locale.Chose') }}</option>
-                                                @foreach($accountTypes as $type)
-                                                    <option value="{{$type->id}}">
-                                                        {{$type->name}}
-                                                    </option>
-                                                @endforeach 
-                                            </select>
+                                <div class="tab-pane accounts-repeater" id="accounts" aria-labelledby="accounts-tab" role="tabpanel">
+                                    <!-- Outer Repeater List -->
+                                    <div class="row" data-repeater-list="accounts">
+                                        <div class="col-12 mt-2" data-repeater-create>
+                                            <button type="button" class="btn btn-primary w-100">
+                                                {{ __('locale.Add') }}
+                                            </button>
                                         </div>
-                                    </div>
-                                    <div class="col-12 my-1">
-                                        <table class="table table-sm table-borderless expenses-repeater">
-                                            <thead>
-                                                <tr class="">
-                                                    <th class="py-1">{{ __('locale.Expense') }}</th>
-                                                    <th class="py-1">{{ __('locale.Cost') }}</th>
-                                                    <th class="py-1">{{ __('locale.Note') }}</th>
-                                                    <th data-repeater-create>
-                                                        <button type="button" class="btn btn-primary w-100">
-                                                            {{ __('locale.Add') }}
-                                                        </button>
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody data-repeater-list="expenses">
-                                                <tr data-repeater-item>
-                                                    <th class="px-0">
-                                                        <select name="expense_id" id="" class="form-select" required>
-                                                            <option value="">{{ __('locale.Chose') }}</option>
-                                                            @foreach($expenses as $expense)
-                                                                <option value="{{$expense->id}}">
-                                                                    {{$expense->name}}
-                                                                </option>
-                                                            @endforeach    
-                                                        </select>
-                                                    </th>
-                                                    <th class="">
-                                                        <input type="number" name="cost" id=""
-                                                            class="form-control"  required
-                                                            placeholder="{{__('locale.Cost')}}">
-                                                    </th>
-                                                    <th class="px-0">
-                                                        <input type="text" name="note" class="form-control"
-                                                            placeholder="{{__('locale.Note')}}">
-                                                    </th>
-                                                    <th class="" data-repeater-delete>
-                                                        <button type="button" class="btn btn-danger w-100">
-                                                            {{ __('locale.Delete') }}
-                                                        </button>
-                                                    </th>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                        
+                                        <!-- Outer Repeater Item -->
+                                        <div data-repeater-item class="row my-2 pb-2">
+                                            <div class="col-8">
+                                                <div class="mb-1">
+                                                    <label class="form-label">                                          
+                                                        {{__('locale.Account')}}
+                                                    </label>
+                                                    <select name="account_id" class="form-select @error('type') border-danger @enderror" required>
+                                                        <option value="">{{ __('locale.Chose') }}</option>
+                                                        @foreach($accountTypes as $type)
+                                                            <option value="{{$type->id}}">
+                                                                {{$type->name}}
+                                                            </option>
+                                                        @endforeach 
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-4" data-repeater-delete>
+                                                <label>{{ __('locale.Delete') }}</label>
+                                                <button type="button" class="btn btn-danger w-100">
+                                                    {{ __('locale.Delete') }}
+                                                </button>
+                                            </div>
+                                            
+                                            <div class="col-12">
+                                                <table class="table table-sm table-borderless expenses-repeater">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="py-1" style="width: 40%;">{{ __('locale.Expense') }}</th>
+                                                            <th class="py-1" style="width: 25%;">{{ __('locale.Cost') }}</th>
+                                                            <th class="py-1" style="width: 25%;">{{ __('locale.Note') }}</th>
+                                                            <th style="width: 10%;">
+                                                                <button type="button" class="btn btn-primary w-100 btn-sm" data-repeater-create>
+                                                                    {{ __('locale.Add') }}
+                                                                </button>
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody data-repeater-list="expenses">
+                                                        <tr data-repeater-item>
+                                                            <td class="px-0">
+                                                                <select name="expense_id" class="form-select" required>
+                                                                    <option value="">{{ __('locale.Chose') }}</option>
+                                                                    @foreach($expenses as $expense)
+                                                                        <option value="{{$expense->id}}">
+                                                                            {{$expense->name}}
+                                                                        </option>
+                                                                    @endforeach    
+                                                                </select>
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" name="cost" class="form-control" required placeholder="{{__('locale.Cost')}}">
+                                                            </td>
+                                                            <td class="px-0">
+                                                                <input type="text" name="note" class="form-control" placeholder="{{__('locale.Note')}}">
+                                                            </td>
+                                                            <td data-repeater-delete>
+                                                                <button type="button" class="btn btn-danger w-100">
+                                                                    {{ __('locale.Delete') }}
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -312,7 +310,29 @@
                     $(this).slideUp(deleteElement);
                 }
             });
-        })
+        });
+
+        $('.accounts-repeater').repeater({
+            initEmpty: false,
+            show: function () {
+                $(this).slideDown();
+            },
+            hide: function (deleteElement) {
+                if(confirm('Are you sure you want to delete this account?')) {
+                    $(this).slideUp(deleteElement);
+                }
+            },
+            
+            repeaters: [{
+                selector: '.expenses-repeater',
+                initEmpty: false,
+                show: function () {
+                    $(this).show();},
+                hide: function (deleteElement) {
+                    $(deleteElement).remove();
+                }
+            }]
+        });        
     });
 </script>
 @endsection

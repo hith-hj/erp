@@ -129,18 +129,19 @@ class MaterialRepository extends BaseRepository
             $material->manufactureModel()->create($item);
         }
 
-        $account = Account::create([
-            'type' => $request->account_id,
-            'accountable_id' => $material->id,
-            'accountable_type' => get_class($material),
-        ]);
+        if ($request->filled('accounts')) {
+            foreach ($request->accounts as $accountData) {
+                $account = $material->accounts()->create([
+                    'type' => $accountData['account_id'],
+                ]);
 
-        foreach ($request->expenses as $expense) {
-            $expense = (object) $expense;
-            $account->expenses()->attach($expense->expense_id, [
-                'cost' => $expense->cost,
-                'note' => $expense->note,
-            ]);
+                foreach ($accountData['expenses'] as $expense) {
+                    $account->expenses()->attach($expense['expense_id'], [
+                        'cost' => $expense['cost'],
+                        'note' => $expense['note'],
+                    ]);
+                }
+            }
         }
 
         return $material;

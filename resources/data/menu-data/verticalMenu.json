@@ -119,7 +119,7 @@
           "slug": "Materials",
           "submenu": [
             {
-              "url": "expenses/all",
+              "url": "expense/all",
               "name": "All expenses",
               "icon": "dollar-sign",
               "slug": "List-Expenses"
