@@ -100,6 +100,19 @@ class BudgetController extends Controller
     {
         $lastReport = Helper::file_data('latest_budget_report');
 
-        return view('main.budget.report', ['reportData' => $lastReport['report_data']]);
+        if ($lastReport) {
+            return view('main.budget.report', ['reportData' => $lastReport['report_data']]);
+        }
+        return back()->with('error', 'No budget report found');
+    }
+
+    public function deleteLast()
+    {
+        $lastReport = Helper::file_data('latest_budget_report', deleteFile: true);
+
+        if ($lastReport) {
+            return redirect()->route('home')->with('success', 'Last budget report is deleted');
+        }
+        return back()->with('error', 'Last budget report could not be deleted');
     }
 }

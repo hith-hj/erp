@@ -2,6 +2,7 @@
 
 namespace App\View\Components;
 
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 use Illuminate\View\Component;
 
@@ -18,21 +19,66 @@ class Trails extends Component
      */
     public function __construct($titles = [])
     {
-        if (request()->is('/')) {
-            return $this->breadcrumbs = [['link' => '/', 'name' => __('locale.Home')]];
-        }
-        $path_arr = explode('/', request()->path());
-        $name = __('locale.'.Str::ucfirst(Str::plural($path_arr[0])));
-        $tail = __('locale.'.Str::ucfirst($path_arr[1] ?? ''));
-        $link = str_contains(request()->path(), 'all') ?
-            'javascript:void(0)' :
-             $path_arr[0].'/all';
+        $this->generateBreadcrumbs();
+    }
 
-        $this->breadcrumbs = [
-            ['link' => '/', 'name' => __('locale.Home')],
-            ['link' => $link, 'name' => $name],
-            ['name' => count($titles) > 0 ? implode('-', $titles) : $tail],
+    private function generateBreadcrumbs(): void
+    {
+        // 1. Anchor node (Home)
+        $this->breadcrumbs[] = [
+            'link' => url('/'),
+            'name' => __('locale.Home'),
+            'active' => false,
         ];
+
+        $segments = request()->segments();
+        $totalSegments = count($segments);
+
+        if ($totalSegments === 0 || request()->path() === '/') {
+            $this->breadcrumbs[0]['active'] = true;
+            $this->breadcrumbs[0]['link'] = null;
+            return;
+        }
+
+        foreach ($segments as $index => $segment) {
+            $isLast = ($index === $totalSegments - 1);
+
+            if (is_numeric($segment) || Str::isUuid($segment)) {
+                continue;
+            }
+
+            if ($isLast) {
+                $link = null;
+            } else {
+                $link = str_contains(request()->path(), 'all')
+                    ? 'javascript:void(0)'
+                    : url($segment . '/all');
+            }
+
+            $this->breadcrumbs[] = [
+                'link' => $link,
+                'name' => $this->resolveSegmentName($segment, $isLast),
+                'active' => $isLast,
+            ];
+        }
+    }
+
+    /**
+     * Translate or transform URL slugs into clean title nodes.
+     */
+    private function resolveSegmentName(string $segment, bool $isLast): string
+    {
+        if ($isLast && !empty($this->titles)) {
+            return implode(' - ', $this->titles);
+        }
+
+        $translationKey = $isLast
+            ? 'locale.' . Str::studly($segment)
+            : 'locale.' . Str::studly(Str::plural($segment));
+
+        return Lang::has($translationKey)
+            ? __($translationKey)
+            : Str::headline($segment);
     }
 
     /**

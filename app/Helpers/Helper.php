@@ -305,7 +305,7 @@ class Helper
      * @param array|null $data If provided, data will be stored. If null, data will be retrieved.
      * @return array|bool Returns array on retrieval, true/false on store success.
      */
-    public static function file_data(string $filename, ?array $data = null)
+    public static function file_data(string $filename, ?array $data = null, bool $deleteFile = false)
     {
         // Ensure file extension is always .json
         $path = 'json_store/' . str_replace('.json', '', $filename) . '.json';
@@ -318,6 +318,10 @@ class Helper
         // 2. Retrieve Data (If only filename is passed)
         if (! Storage::disk('local')->exists($path)) {
             return []; // Return empty array if file doesn't exist yet
+        }
+
+        if ($deleteFile) {
+            return Storage::disk('local')->delete($path);
         }
 
         $json = Storage::disk('local')->get($path);

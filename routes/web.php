@@ -248,6 +248,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('report', 'index')->name('budget.index');
         Route::get('build', 'build')->name('budget.build');
         Route::get('last', 'last')->name('budget.last');
+        Route::get('deleteLast', 'deleteLast')->name('budget.deleteLast');
     });
 });
 

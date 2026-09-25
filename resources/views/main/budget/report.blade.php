@@ -21,11 +21,11 @@
 }">
     <!-- Header & Summary Status -->
     <div class="row align-items-center">
-        <div class="col-md-6">
+        <div class="col-md-5">
             <h1 class="h2 text-dark mb-1">{{ __('locale.Budget report') }}</h1>
             <p class="text-muted small">Generated on: {{ $reportData['summary']['generated_at'] }}</p>
         </div>
-        <div class="col-md-6 text-md-end">
+        <div class="col-md-5 text-md-end">
             <template x-if="netBalance >= 0">
                 <span class="badge bg-success fs-4 p-1 shadow-sm rounded-lg">
                     {{ __('locale.Profit') }}: +<span x-text="netBalance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})"></span>
@@ -36,6 +36,13 @@
                     {{ __('locale.Loss') }}: <span x-text="netBalance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})"></span>
                 </span>
             </template>
+        </div>
+        <div class="col-md-2">
+            <a href="{{ route('budget.deleteLast') }}">
+                <button class="btn btn-outline-danger w-100">
+                    {{ __('locale.Delete') }}
+                </button>
+            </a>
         </div>
     </div>
 
