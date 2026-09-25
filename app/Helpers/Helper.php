@@ -15,6 +15,7 @@ use App\Models\Unit;
 use App\Models\UserSetting;
 use App\Models\Vendor;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class Helper
@@ -231,34 +232,34 @@ class Helper
 
             'Bills' => [
                 'route' => 'bill.show',
-                'data' => Bill::all(['id', 'serial','billable_type',])
+                'data' => Bill::all(['id', 'serial', 'billable_type',])
                     ->take($maxItemCount)
                     ->map(function ($bill) {
                         return (object) [
                             'id' => $bill->id,
-                            'name' => $bill->getGetTypeAttribute() .' - '.$bill->serial,
+                            'name' => $bill->getGetTypeAttribute() . ' - ' . $bill->serial,
                         ];
                     }),
             ],
 
             'Purchases' => [
                 'route' => 'purchase.show',
-                'data' => Purchase::with(['bill','vendor'])->take($maxItemCount)->get(['id','vendor_id'])
+                'data' => Purchase::with(['bill', 'vendor'])->take($maxItemCount)->get(['id', 'vendor_id'])
                     ->map(function ($purchase) {
                         return (object) [
                             'id' => $purchase->id,
-                            'name' => $purchase->vendor->fullName.' - '.$purchase->bill->serial ?? 'No Serial',
+                            'name' => $purchase->vendor->fullName . ' - ' . $purchase->bill->serial ?? 'No Serial',
                         ];
                     }),
             ],
 
             'Sales' => [
                 'route' => 'sale.show',
-                'data' => Sale::with(['bill','client'])->take($maxItemCount)->get(['id','client_id'])
+                'data' => Sale::with(['bill', 'client'])->take($maxItemCount)->get(['id', 'client_id'])
                     ->map(function ($sale) {
                         return (object) [
                             'id' => $sale->id,
-                            'name' => $sale->client->fullName.' - '.$sale->bill->serial ?? 'No Serial',
+                            'name' => $sale->client->fullName . ' - ' . $sale->bill->serial ?? 'No Serial',
                         ];
                     }),
             ],
@@ -295,5 +296,32 @@ class Helper
                 'data' => Unit::select(['id', 'name'])->take($maxItemCount)->get(),
             ],
         ];
+    }
+
+    /**
+     * Store or retrieve array data from a local JSON file.
+     *
+     * @param string $filename The name of the file (e.g., 'pricing' or 'pricing.json')
+     * @param array|null $data If provided, data will be stored. If null, data will be retrieved.
+     * @return array|bool Returns array on retrieval, true/false on store success.
+     */
+    public static function file_data(string $filename, ?array $data = null)
+    {
+        // Ensure file extension is always .json
+        $path = 'json_store/' . str_replace('.json', '', $filename) . '.json';
+
+        // 1. Store Data (If data parameter is passed)
+        if ($data !== null) {
+            return Storage::disk('local')->put($path, json_encode($data, JSON_PRETTY_PRINT));
+        }
+
+        // 2. Retrieve Data (If only filename is passed)
+        if (! Storage::disk('local')->exists($path)) {
+            return []; // Return empty array if file doesn't exist yet
+        }
+
+        $json = Storage::disk('local')->get($path);
+
+        return json_decode($json, true) ?? [];
     }
 }

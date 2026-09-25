@@ -25,7 +25,25 @@
         }        
       ]
     },
-
+    {
+      "name": "Budget",
+      "icon": "credit-card",
+      "slug": "Budgets",
+      "submenu": [
+        {
+          "url": "budget/report",
+          "name": "Budget report",
+          "icon": "credit-card",
+          "slug": "Budget-report"
+        },
+        {
+          "url": "budget/last",
+          "name": "Last budget report",
+          "icon": "credit-card",
+          "slug": "Last-budget"
+        }       
+      ]
+    },
     {
       "url": "inventory/all",
       "name": "Inventories",

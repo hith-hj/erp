@@ -5,7 +5,8 @@
       !request()->is('*/create') &&
       !request()->is('*/show/*') &&
       !request()->is('bill/*') &&
-      !request()->is('ledger/*')
+      !request()->is('ledger/*') && 
+      !request()->is('budget/*') 
     )
     <div class="content-header-right col-md-3 col-12 mb-2">
       <div class="row ">

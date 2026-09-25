@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccountTypeController;
 use App\Http\Controllers\BillController;
+use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\CashierController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CP\LanguageController;
@@ -241,6 +242,12 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/changePassword/{user}', 'changePasswordForm');
         Route::post('/changePassword/{user}', 'changePassword')->name('changePassword');
         Route::post('themeCustomizer', 'themeCustomizer')->name('themeCustomizer');
+    });
+
+    Route::group(['controller' => BudgetController::class, 'prefix' => 'budget'], function () {
+        Route::get('report', 'index')->name('budget.index');
+        Route::get('build', 'build')->name('budget.build');
+        Route::get('last', 'last')->name('budget.last');
     });
 });
 

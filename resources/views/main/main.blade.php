@@ -14,13 +14,12 @@
 @endsection
 @section('content')
 <div class="row">
-	<div class="col-3 p-12 flex ">
+	<div class="col-4 p-6">
 		<button class="btn btn-sm btn-flat-primary w-100 fs-1"
-                data-bs-toggle="modal" data-bs-target="#showTree">
-            	{{-- <i class="fs-1 ficon" data-feather="list" ></i>  --}}
+                data-bs-toggle="modal" data-bs-target="#showTreeModal">
             	{{__('locale.Show Tree')}}
         </button>
-        <div class="modal fade" id="showTree" aria-hidden="true">
+        <div class="modal fade" id="showTreeModal" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered modal-edit-user">
                 <div class="modal-content">
                     <div class="modal-header row px-0 mx-0 w-full ">
