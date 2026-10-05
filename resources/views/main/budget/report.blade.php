@@ -22,8 +22,20 @@
     <!-- Header & Summary Status -->
     <div class="row align-items-center">
         <div class="col-md-5">
-            <h1 class="h2 text-dark mb-1">{{ __('locale.Budget report') }}</h1>
-            <p class="text-muted small">Generated on: {{ $reportData['summary']['generated_at'] }}</p>
+            <div class="d-flex justify-content-center align-items-center gap-2">
+                <h1 class="h2 text-dark">{{ __('locale.Budget report') }}</h1>
+                <p class="text-muted mb-0">
+                    {{ __('locale.Created at') }}: {{ $reportData['summary']['generated_at'] }}
+                </p>
+            </div>
+            <div class="d-flex gap-2">
+                <p class="text-muted mb-0">
+                    {{ __('locale.From') }}: {{ $reportData['summary']['start_date'] }}
+                </p>
+                <p class="text-muted mb-0">
+                    {{ __('locale.To date') }}: {{ $reportData['summary']['until_date'] }}
+                </p>
+            </div>
         </div>
         <div class="col-md-5 text-md-end">
             <template x-if="netBalance >= 0">

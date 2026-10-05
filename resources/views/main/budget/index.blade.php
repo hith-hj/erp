@@ -78,6 +78,21 @@
                                 required>
                         </div>
                     </div>
+                    
+                    <div class="col-12">
+                        <label for="capital_amount" class="form-label">
+                            {{ __('locale.To date') }}
+                        </label>
+                        <div class="input-group">
+                            <input 
+                                type="date" 
+                                name="until_date"
+                                id="unti_date"
+                                class="form-control"
+                                x-data
+                                x-init="$el.max = new Date().toISOString().split('T')[0]">
+                        </div>
+                    </div>
 
                     <!-- Submit Button -->
                     <div class="col-12 pt-2">
