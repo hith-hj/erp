@@ -29,12 +29,16 @@
                 </p>
             </div>
             <div class="d-flex gap-2">
-                <p class="text-muted mb-0">
-                    {{ __('locale.From') }}: {{ $reportData['summary']['start_date'] }}
-                </p>
-                <p class="text-muted mb-0">
-                    {{ __('locale.To date') }}: {{ $reportData['summary']['until_date'] }}
-                </p>
+                @if(isset($reportData['summary']['start_date']))
+                    <p class="text-muted mb-0">
+                        {{ __('locale.From') }}: {{ $reportData['summary']['start_date'] }}
+                    </p>
+                @endif
+                @if(isset($reportData['summary']['until_date']))
+                    <p class="text-muted mb-0">
+                        {{ __('locale.To date') }}: {{ $reportData['summary']['until_date'] }}
+                    </p>
+                @endif
             </div>
         </div>
         <div class="col-md-5 text-md-end">
